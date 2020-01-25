@@ -114,8 +114,34 @@ namespace SlimShader.DebugParser
 		{
 			var result = _reader.ReadBytes(count);
 			var entry = AddEntry(name, (uint)result.Length + 1);
-			entry.Value = $"byte[{result.Length}]";
+			entry.Value = $"byte[{result.Length}] {FormatBytes(result)}";
 			return result;
+		}
+		private string FormatBytes(byte[] data)
+		{
+			StringBuilder sb = new StringBuilder();
+			sb.Append("hex(");
+			for (int i = 0; i < data.Length; i++)
+			{
+				var hex = data[i].ToString("X2");
+				sb.Append(hex);
+				if ((i + 1) % 4 == 0 && i != 0 && i < data.Length - 1) sb.Append(" ");
+			}
+			sb.Append("), chr(");
+			for (int i = 0; i < data.Length; i++)
+			{
+				var c = (char)data[i];
+				if (char.IsControl(c) || char.IsWhiteSpace(c))
+				{
+					sb.Append(".");
+				}
+				else
+				{
+					sb.Append(c);
+				}
+			}
+			sb.Append(")");
+			return sb.ToString();
 		}
 		public string DumpStructure()
 		{
@@ -142,13 +168,23 @@ namespace SlimShader.DebugParser
 				if (!used[i])
 				{
 					int next = 1;
+					int fillerCount = _buffer[i] == 0xAB ? 1 : 0;
 					while(i + next < used.Length && used[i + next] == false)
 					{
+						if (_buffer[i + next] == 0xAB) fillerCount++;
 						next++;
 					}
-					var closest = sorted
-						.Last(e => e.AbsoluteIndex < i);
-					sb.AppendLine($"Unread Memory {i}:{i+next - 1} (See {closest.AbsoluteIndex}:{closest.AbsoluteIndex+closest.Size} - {closest.Name})");
+					//Strings are padded to 4 byte boundary with 0xAB
+					if (fillerCount != next)
+					{
+						var closest = sorted
+							.Last(e => e.AbsoluteIndex < i);
+						var rel = i - (closest.AbsoluteIndex - closest.RelativeIndex);
+						sb.Append($"Unread Memory {i}:{i + next - 1}[{rel}:{rel + next - 1}] (See {closest.AbsoluteIndex}:{closest.AbsoluteIndex + closest.Size} - {closest.Name})");
+						var subset = _buffer.Skip(i).Take(next).ToArray();
+						sb.Append(" ");
+						sb.AppendLine(FormatBytes(subset));
+					}
 					i += next;
 				}
 			}

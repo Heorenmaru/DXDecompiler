@@ -17,7 +17,7 @@ namespace SlimShader.DebugParser
 		{
 			var member = this;
 			var indent = new string(' ', (int)member.Indent * 2);
-			return $"{indent}{member.AbsoluteIndex}:{member.AbsoluteIndex+ member.Size - 1}[{member.RelativeIndex}] - {member.Name}={member.Value}\n";
+			return $"{indent}{member.AbsoluteIndex}:{member.AbsoluteIndex + member.Size - 1}[{member.RelativeIndex}:{member.RelativeIndex + member.Size - 1}] - {member.Name}={member.Value}\n";
 		}
 	}
 }

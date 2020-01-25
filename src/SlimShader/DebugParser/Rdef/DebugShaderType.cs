@@ -13,13 +13,18 @@ namespace SlimShader.DebugParser.Rdef
 		public ushort Columns { get; private set; }
 		public ushort ElementCount { get; private set; }
 		public List<DebugShaderTypeMember> Members { get; private set; }
+		public DebugShaderType SubType { get; private set; }
+		public DebugShaderType BaseClass { get; private set; }
+		public List<DebugShaderType> Interfaces { get; private set; }
 		public string BaseTypeName { get; private set; }
+		public uint NumberOfInterfaces { get; private set; }
 
 		public DebugShaderType(int indent, bool isFirst)
 		{
 			_indent = indent;
 			_isFirst = isFirst;
 			Members = new List<DebugShaderTypeMember>();
+			Interfaces = new List<DebugShaderType>();
 		}
 
 		public static DebugShaderType Parse(DebugBytecodeReader reader, DebugBytecodeReader typeReader, DebugShaderVersion target,
@@ -39,27 +44,35 @@ namespace SlimShader.DebugParser.Rdef
 
 			if (target.MajorVersion >= 5)
 			{
-				var parentTypeOffset = typeReader.ReadUInt32("parentTypeOffset"); // Guessing
-				if (parentTypeOffset != 0)
+				var subTypeOffset = typeReader.ReadInt32("subTypeOffset"); // Guessing
+				if (subTypeOffset != 0)
 				{
-					var parentTypeReader = reader.CopyAtOffset("parentTypeReader", typeReader,(int)parentTypeOffset);
-					var parentTypeClass = (ShaderVariableClass)parentTypeReader.ReadUInt16("parentTypeClass");
-					var unknown1 = parentTypeReader.ReadUInt16("unknown1");
+					var parentInterfaceReader = reader.CopyAtOffset("subtypeReader", typeReader, (int)subTypeOffset);
+					result.SubType = DebugShaderType.Parse(reader, parentInterfaceReader, target,
+						indent + 4, true, parentOffset);
 				}
 
-				var unknown2 = typeReader.ReadUInt32("unknown2");
-				if (unknown2 != 0)
+				var baseClassOffset = typeReader.ReadUInt32("baseClassOffset");
+				if (baseClassOffset != 0)
 				{
-					var unknownReader = reader.CopyAtOffset("unknownReader", typeReader, (int)unknown2);
-					uint unknown3 = unknownReader.ReadUInt32("unknownReader");
+					var baseClassReader = reader.CopyAtOffset("baseClassReader", typeReader, (int)baseClassOffset);
+					result.BaseClass = DebugShaderType.Parse(reader, baseClassReader, target,
+						indent + 4, true, parentOffset);
 				}
 
-				var unknown4 = typeReader.ReadUInt32("unknown4");
-				var unknown5 = typeReader.ReadUInt32("unknown5");
-				if (unknown5 != 0)
+				result.NumberOfInterfaces = typeReader.ReadUInt32("NumberOfInterfaces");
+
+				var interfaceSectionOffset = typeReader.ReadUInt32("InterfaceSectionOffset");
+				if (interfaceSectionOffset != 0)
 				{
-					var unknownReader = reader.CopyAtOffset("unknownReader", typeReader, (int)unknown5);
-					var unknown6 = unknownReader.ReadUInt32("unknown6");
+					var interfaceSectionReader = reader.CopyAtOffset("interfaceSectionReader", typeReader, (int)interfaceSectionOffset);
+					for (int i = 0; i < result.NumberOfInterfaces; i++)
+					{
+						var interfaceTypeOffset = interfaceSectionReader.ReadUInt32($"UnkInterface{i}");
+						var interfaceReader = reader.CopyAtOffset("interfaceReader", typeReader, (int)interfaceTypeOffset);
+						result.Interfaces.Add(DebugShaderType.Parse(reader, interfaceReader,
+							target, indent + 4, i == 0, parentOffset));
+					}
 				}
 
 				var parentNameOffset = typeReader.ReadUInt32("parentNameOffset");

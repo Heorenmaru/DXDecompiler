@@ -1,5 +1,7 @@
 ﻿using SlimShader.Chunks;
+using SlimShader.DebugParser.Icfe;
 using SlimShader.DebugParser.Rdef;
+using SlimShader.DebugParser.Stat;
 using SlimShader.Util;
 using System;
 using System.Collections.Generic;
@@ -39,7 +41,7 @@ namespace SlimShader.DebugParser
 		public static DebugBytecodeChunk ParseChunk(DebugBytecodeReader chunkReader, DebugBytecodeContainer container)
 		{
 			// Type of chunk this is.
-			uint fourCc = chunkReader.ReadUInt32("fourCc");
+			uint fourCc = BitConverter.ToUInt32(chunkReader.ReadBytes("fourCc", 4), 0);
 
 			// Total length of the chunk in bytes.
 			uint chunkSize = chunkReader.ReadUInt32("chunkSize");
@@ -61,7 +63,7 @@ namespace SlimShader.DebugParser
 			switch (chunkType)
 			{
 				case ChunkType.Ifce:
-					//chunk = InterfacesChunk.Parse(chunkContentReader, chunkSize);
+					chunk = DebugInterfacesChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				case ChunkType.Isgn:
 				case ChunkType.Osgn:
@@ -87,7 +89,7 @@ namespace SlimShader.DebugParser
 					//chunk = ShaderProgramChunk.Parse(chunkContentReader);
 					break;
 				case ChunkType.Stat:
-					//chunk = StatisticsChunk.Parse(chunkContentReader, chunkSize);
+					chunk = DebugStatisticsChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				case ChunkType.Xnas:
 				case ChunkType.Xnap:

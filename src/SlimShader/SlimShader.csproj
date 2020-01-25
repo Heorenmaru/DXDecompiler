@@ -62,7 +62,10 @@
     <Compile Include="DebugParser\DebugBytecodeReader.cs" />
     <Compile Include="DebugParser\DebugEntry.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
-    <Compile Include="DebugParser\DebugUnknownChunk.cs" />
+    <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
+    <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
+    <Compile Include="DebugParser\Icfe\DebugInterfaceSlot.cs" />
+    <Compile Include="DebugParser\Icfe\InterfacesChunk.cs" />
     <Compile Include="DebugParser\IDumpable.cs" />
     <Compile Include="DebugParser\Rdef\DebugConstantBuffer.cs" />
     <Compile Include="DebugParser\Rdef\DebugResourceBinding.cs" />
@@ -70,6 +73,7 @@
     <Compile Include="DebugParser\Rdef\DebugShaderType.cs" />
     <Compile Include="DebugParser\Rdef\DebugShaderTypeMember.cs" />
     <Compile Include="DebugParser\Rdef\DebugShaderVariable.cs" />
+    <Compile Include="DebugParser\Stat\DebugStatisticsChunk.cs" />
     <Compile Include="Decompiler\ComparisonType.cs" />
     <Compile Include="Decompiler\Declarations.cs" />
     <Compile Include="Decompiler\DXDecompiler.cs" />
