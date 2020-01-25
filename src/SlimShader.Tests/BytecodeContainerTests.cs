@@ -153,6 +153,20 @@ namespace SlimShader.Tests
 			}
 
 		}
+		[TestCaseSource("TestShaders")]
+		public void DumpStructure(string relPath)
+		{
+			var file = $"{ShaderDirectory}/{relPath}";
+			var relDir = Path.GetDirectoryName(relPath);
+			Directory.CreateDirectory($"{OutputDir}/{relDir}");
+			var sourceName = GetSourceNameFromObject($"{ShaderDirectory}/{relPath}.o");
+			if (ShaderDirectory != OutputDir) File.Copy($"{ShaderDirectory}/{relDir}/{sourceName}", $"{OutputDir}/{relDir}/{sourceName}", true);
+			var binaryFileBytes = File.ReadAllBytes(file + ".o");
+			var shaderBytecode = DebugParser.DebugBytecodeContainer.Parse(binaryFileBytes);
+			var result = shaderBytecode.Dump();
+			File.WriteAllText($"{OutputDir}/{relPath}.d.txt", result);
+		}
+
 		/// <summary>
 		/// Compare with actual Direct3D reflected objects.
 		/// </summary>
