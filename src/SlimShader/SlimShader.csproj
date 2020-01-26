@@ -57,6 +57,12 @@
     <Compile Include="Chunks\Sfi0\Sfi0Chunk.cs" />
     <Compile Include="Chunks\Xsgn\MinPrecision.cs" />
     <Compile Include="Chunks\Xsgn\SignatureParameterDescriptionCollection.cs" />
+    <Compile Include="DebugParser\Aon9\DebugConstantBufferMapping.cs" />
+    <Compile Include="DebugParser\Aon9\DebugLevel9ShaderChunk.cs" />
+    <Compile Include="DebugParser\Aon9\DebugLoopRegisterMapping.cs" />
+    <Compile Include="DebugParser\Aon9\DebugRuntimeConstantMapping.cs" />
+    <Compile Include="DebugParser\Aon9\DebugSamplerMapping.cs" />
+    <Compile Include="DebugParser\Aon9\DebugUnknown1Mapping.cs" />
     <Compile Include="DebugParser\DebugBytecodeChunk.cs" />
     <Compile Include="DebugParser\DebugBytecodeContainer.cs" />
     <Compile Include="DebugParser\DebugBytecodeContainerHeader.cs" />
@@ -66,7 +72,7 @@
     <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
     <Compile Include="DebugParser\Icfe\DebugInterfaceSlot.cs" />
-    <Compile Include="DebugParser\Icfe\InterfacesChunk.cs" />
+    <Compile Include="DebugParser\Icfe\DebugInterfacesChunk.cs" />
     <Compile Include="DebugParser\IDumpable.cs" />
     <Compile Include="DebugParser\Rdef\DebugConstantBuffer.cs" />
     <Compile Include="DebugParser\Rdef\DebugResourceBinding.cs" />
@@ -74,7 +80,14 @@
     <Compile Include="DebugParser\Rdef\DebugShaderType.cs" />
     <Compile Include="DebugParser\Rdef\DebugShaderTypeMember.cs" />
     <Compile Include="DebugParser\Rdef\DebugShaderVariable.cs" />
+    <Compile Include="DebugParser\Sfi0\DebugSfi0Chunk.cs" />
     <Compile Include="DebugParser\Stat\DebugStatisticsChunk.cs" />
+    <Compile Include="DebugParser\Xsgn\DebugInputOutputSignatureChunk.cs" />
+    <Compile Include="DebugParser\Xsgn\DebugInputSignatureChunk.cs" />
+    <Compile Include="DebugParser\Xsgn\DebugOutputSignatureChunk.cs" />
+    <Compile Include="DebugParser\Xsgn\DebugPatchConstantSignatureChunk.cs" />
+    <Compile Include="DebugParser\Xsgn\DebugSignatureParameterDescription.cs" />
+    <Compile Include="DebugParser\Xsgn\DebugSignatureParameterDescriptionCollection.cs" />
     <Compile Include="Decompiler\ComparisonType.cs" />
     <Compile Include="Decompiler\Declarations.cs" />
     <Compile Include="Decompiler\DXDecompiler.cs" />

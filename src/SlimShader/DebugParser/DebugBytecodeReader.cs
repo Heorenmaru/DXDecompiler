@@ -97,6 +97,14 @@ namespace SlimShader.DebugParser
 			return (T)result;
 		}
 
+		public T ReadEnum8<T>(string name) where T : System.Enum
+		{
+			var result = Enum.ToObject(typeof(T), _reader.ReadByte());
+			var entry = AddEntry(name, 1);
+			entry.Value = result.ToString();
+			return (T)result;
+		}
+
 		public string ReadString(string name)
 		{
 			var sb = new StringBuilder();

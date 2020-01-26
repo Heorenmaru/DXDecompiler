@@ -22,10 +22,10 @@ namespace SlimShader.DebugParser.Icfe
 
 			var count = interfaceSlotReader.ReadUInt32("count");
 
-			var typeIDsOffset = interfaceSlotReader.ReadUInt32("");
+			var typeIDsOffset = interfaceSlotReader.ReadUInt32("typeIDsOffset");
 			var typeIDsReader = reader.CopyAtOffset("typeIDsReader", interfaceSlotReader, (int)typeIDsOffset);
 
-			var tableIDsOffset = interfaceSlotReader.ReadUInt32("");
+			var tableIDsOffset = interfaceSlotReader.ReadUInt32("tableIDsOffset");
 			var tableIDsReader = reader.CopyAtOffset("tableIDsReader", interfaceSlotReader, (int)tableIDsOffset);
 
 			var result = new DebugInterfaceSlot

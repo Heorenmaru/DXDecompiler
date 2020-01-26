@@ -48,5 +48,18 @@ namespace SlimShader.DebugParser
 				ProgramType = programType
 			};
 		}
+
+		public static DebugShaderVersion ParseAon9(DebugBytecodeReader reader)
+		{
+			byte minor = reader.ReadByte("minorVersion");
+			byte major = reader.ReadByte("majorVersion");
+			ushort shaderType = reader.ReadUInt16("programType");
+			return new DebugShaderVersion
+			{
+				MinorVersion = minor,
+				MajorVersion = major,
+				ProgramType = shaderType == 0xFFFF ? ProgramType.PixelShader : ProgramType.VertexShader
+			};
+		}
 	}
 }

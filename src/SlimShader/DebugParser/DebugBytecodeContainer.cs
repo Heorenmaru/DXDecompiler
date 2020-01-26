@@ -1,4 +1,5 @@
 ﻿using SlimShader.Chunks;
+using SlimShader.DebugParser.Rdef;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace SlimShader.DebugParser
 		}
 		public DebugBytecodeContainerHeader Header { get; private set; }
 		public List<DebugBytecodeChunk> Chunks { get; private set; }
+
+		public DebugResourceDefinitionChunk ResourceDefinition => Chunks
+			.OfType<DebugResourceDefinitionChunk>()
+			.First();
+
 		DebugBytecodeReader _reader;
 		string Error = "";
 		public DebugBytecodeContainer(byte[] rawBytes)

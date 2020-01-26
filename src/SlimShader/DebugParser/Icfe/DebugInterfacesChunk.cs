@@ -40,6 +40,10 @@ namespace SlimShader.DebugParser.Icfe
 			var interfaceSlotOffset = headerReader.ReadUInt32("interfaceSlotOffset");
 			var interfaceSlotReader = reader.CopyAtOffset("interfaceSlotReader", headerReader, (int)interfaceSlotOffset);
 
+			var unknown1 = headerReader.ReadBytes("InterfaceChunkUnknown1", 4);
+			var unknown2 = headerReader.ReadUInt16("InterfaceChunkUnknown2");
+			var unknown3 = headerReader.ReadUInt16("InterfaceChunkUnknown3");
+
 			for (uint i = 0; i < classTypeCount; i++)
 			{
 				var classType = DebugClassType.Parse(reader, availableClassReader);

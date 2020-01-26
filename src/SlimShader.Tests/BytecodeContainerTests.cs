@@ -160,15 +160,21 @@ namespace SlimShader.Tests
 		[TestCaseSource("TestShaders")]
 		public void DumpStructure(string relPath)
 		{
+			// Arrange.
 			var file = $"{ShaderDirectory}/{relPath}";
 			var relDir = Path.GetDirectoryName(relPath);
 			Directory.CreateDirectory($"{OutputDir}/{relDir}");
 			var sourceName = GetSourceNameFromObject($"{ShaderDirectory}/{relPath}.o");
 			if (ShaderDirectory != OutputDir) File.Copy($"{ShaderDirectory}/{relDir}/{sourceName}", $"{OutputDir}/{relDir}/{sourceName}", true);
 			var binaryFileBytes = File.ReadAllBytes(file + ".o");
+
+			// Act.
 			var shaderBytecode = DebugParser.DebugBytecodeContainer.Parse(binaryFileBytes);
 			var result = shaderBytecode.Dump();
 			File.WriteAllText($"{OutputDir}/{relPath}.d.txt", result);
+
+			// Assert.
+			Assert.That(!result.Contains("Unread Memory"));
 		}
 
 		/// <summary>
