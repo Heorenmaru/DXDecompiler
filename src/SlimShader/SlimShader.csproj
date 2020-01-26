@@ -68,6 +68,7 @@
     <Compile Include="DebugParser\DebugBytecodeContainerHeader.cs" />
     <Compile Include="DebugParser\DebugBytecodeReader.cs" />
     <Compile Include="DebugParser\DebugEntry.cs" />
+    <Compile Include="DebugParser\DebugNumber.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
@@ -81,6 +82,9 @@
     <Compile Include="DebugParser\Rdef\DebugShaderTypeMember.cs" />
     <Compile Include="DebugParser\Rdef\DebugShaderVariable.cs" />
     <Compile Include="DebugParser\Sfi0\DebugSfi0Chunk.cs" />
+    <Compile Include="DebugParser\Shex\DebugOpcodeHeader.cs" />
+    <Compile Include="DebugParser\Shex\Tokens\DebugOpcodeToken.cs" />
+    <Compile Include="DebugParser\Shex\DebugShaderProgramChunk.cs" />
     <Compile Include="DebugParser\Stat\DebugStatisticsChunk.cs" />
     <Compile Include="DebugParser\Xsgn\DebugInputOutputSignatureChunk.cs" />
     <Compile Include="DebugParser\Xsgn\DebugInputSignatureChunk.cs" />
@@ -292,6 +296,7 @@
     <Compile Include="Chunks\DescriptionAttribute.cs" />
     <Compile Include="Util\DoubleConverter.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -17,7 +17,14 @@ namespace SlimShader.DebugParser
 		{
 			var member = this;
 			var indent = new string(' ', (int)member.Indent * 2);
-			return $"{indent}{member.AbsoluteIndex}:{member.AbsoluteIndex + member.Size - 1}[{member.RelativeIndex}:{member.RelativeIndex + member.Size - 1}] - {member.Name}={member.Value}\n";
+			var sb = new StringBuilder();
+			sb.Append(indent);
+			if (DebugBytecodeReader.DumpOffsets)
+			{
+				sb.Append($"{member.AbsoluteIndex}:{member.AbsoluteIndex + member.Size - 1}[{member.RelativeIndex}:{member.RelativeIndex + member.Size - 1}] - ");
+			}
+			sb.Append($"{member.Name}={member.Value}\n");
+			return sb.ToString();
 		}
 	}
 }

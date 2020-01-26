@@ -15,6 +15,7 @@ namespace SlimShader.DebugParser
 		private int _parentOffset;
 		private List<IDumpable> Members = new List<IDumpable>();
 		DebugBytecodeReader Root = null;
+		public static bool DumpOffsets = true;
 		string _name;
 		public bool EndOfBuffer
 		{
@@ -51,6 +52,20 @@ namespace SlimShader.DebugParser
 				Indent = Indent
 			};
 			Root.Members.Add(result);
+			return result;
+		}
+		public uint PeakUint32()
+		{
+			var result = _reader.ReadUInt32();
+			_reader.BaseStream.Position -= 4;
+			return result;
+		}
+		public uint PeakUInt32At(int offset)
+		{
+			var oldPos = _reader.BaseStream.Position;
+			_reader.BaseStream.Position += offset;
+			var result = _reader.ReadUInt32();
+			_reader.BaseStream.Position = oldPos;
 			return result;
 		}
 		public uint ReadUInt32(string name)
@@ -204,8 +219,14 @@ namespace SlimShader.DebugParser
 			string next = _offset + _buffer.Length == _buffer.Length ?
 					"*" :
 					(_offset + _buffer.Length - 1).ToString();
-			var result = $"{indent}Container: {_name} [{_offset}:{next}]\n";
-			return result;
+			var sb = new StringBuilder();
+			sb.Append($"{indent}Container: {_name}");
+			if (DumpOffsets)
+			{
+				sb.Append($"[{_offset}:{next}]");
+			}
+			sb.AppendLine();
+			return sb.ToString(); ;
 		}
 		public DebugBytecodeReader CopyAtCurrentPosition(string name, DebugBytecodeReader parent, int? count = null)
 		{

@@ -1,4 +1,5 @@
 ﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,21 @@ namespace SlimShader.DebugParser
 				MinorVersion = minorVersion,
 				ProgramType = programType
 			};
+		}
+
+		public static DebugShaderVersion FromShexToken(uint versionToken)
+		{
+			return new DebugShaderVersion
+			{
+				MinorVersion = versionToken.DecodeValue<byte>(0, 3),
+				MajorVersion = versionToken.DecodeValue<byte>(4, 7),
+				ProgramType = versionToken.DecodeValue<ProgramType>(16, 31)
+			};
+		}
+		public static DebugShaderVersion ParseShex(DebugBytecodeReader reader)
+		{
+			uint versionToken = reader.ReadUInt32("Version");
+			return FromShexToken(versionToken);
 		}
 
 		public static DebugShaderVersion ParseAon9(DebugBytecodeReader reader)

@@ -3,6 +3,7 @@ using SlimShader.DebugParser.Aon9;
 using SlimShader.DebugParser.Icfe;
 using SlimShader.DebugParser.Rdef;
 using SlimShader.DebugParser.Sfi0;
+using SlimShader.DebugParser.Shex;
 using SlimShader.DebugParser.Stat;
 using SlimShader.DebugParser.Xsgn;
 using SlimShader.Util;
@@ -90,7 +91,7 @@ namespace SlimShader.DebugParser
 					break;
 				case ChunkType.Shdr:
 				case ChunkType.Shex:
-					//chunk = ShaderProgramChunk.Parse(chunkContentReader);
+					chunk = DebugShaderProgramChunk.Parse(chunkContentReader);
 					break;
 				case ChunkType.Stat:
 					chunk = DebugStatisticsChunk.Parse(chunkContentReader, chunkSize);
