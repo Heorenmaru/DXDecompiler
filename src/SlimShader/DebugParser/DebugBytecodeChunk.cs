@@ -36,6 +36,7 @@ namespace SlimShader.DebugParser
 			{ "XNAS".ToFourCc(), ChunkType.Xnas },
 			{ "XNAP".ToFourCc(), ChunkType.Xnap },
 			{ "PRIV".ToFourCc(), ChunkType.Priv },
+			{ "RTS0".ToFourCc(), ChunkType.Rts0 },
 		};
 
 		public DebugBytecodeContainer Container { get; private set; }
