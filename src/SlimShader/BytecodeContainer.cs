@@ -106,9 +106,9 @@ namespace SlimShader
 			{
 				sb.AppendLine($"{chunk.ChunkType} {chunk.GetType()}");
 			}
-			if (Chunks.OfType<LibhChunk>().Any())
+			if (Chunks.OfType<LibHeaderChunk>().Any())
 			{
-				foreach (var chunk in Chunks.OfType<LibhChunk>())
+				foreach (var chunk in Chunks.OfType<LibHeaderChunk>())
 				{
 					sb.Append(chunk.ToString());
 				}

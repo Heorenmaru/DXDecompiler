@@ -80,6 +80,18 @@ rem Debug information is not deterministic
 rem CALL CompileShader.bat Internal/Misc DebugTest.hlsl DebugTest ps_5_0 PSMain /Zi  || GOTO :error
 CALL CompileShader.bat Internal/Misc EarlyDepthStencil.hlsl EarlyDepthStencil ps_5_0 main || GOTO :error
 CALL CompileShader.bat Internal/Misc ShaderWithRootSignature.hlsl ShaderWithRootSignature ps_5_0 main || GOTO :error
+CALL CompileShader.bat Internal/Misc ShaderWithRootSignature1_0.hlsl ShaderWithRootSignature_1_0 ps_5_0 main /force_rootsig_ver rootsig_1_0 /DRS1_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_0 lib_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_1 lib_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_5_0 lib_5_0 || GOTO :error
+
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_1 lib_4_0_level_9_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3 lib_4_0_level_9_3 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_1_VS lib_4_0_level_9_1_vs_only || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_1_PS lib_4_0_level_9_1_ps_only || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3_VS lib_4_0_level_9_3_vs_only || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3_PS lib_4_0_level_9_3_ps_only || GOTO :error
+
 CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_0 lib_4_0 || GOTO :error
 CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_1 lib_4_1 || GOTO :error
 CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_5_0 lib_5_0 || GOTO :error

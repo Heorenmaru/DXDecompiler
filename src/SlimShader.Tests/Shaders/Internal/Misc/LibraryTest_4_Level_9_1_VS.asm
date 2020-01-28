@@ -19,6 +19,14 @@
 // TestFunction                                                o0    1   xyz  out float3
 // input                                      v0    1   xyz                   in float3
 //
+//
+// Level9 shader bytecode:
+//
+    lib_4_0_vs_2_0
+    dcl_texcoord v0
+    add oT0.xyz, v0, v0
+
+// approximately 1 instruction slot used
 lib_4_0
 dcl_input v0.xyz
 dcl_output o0.xyz
@@ -38,6 +46,14 @@ ret
 // input                                      v0    1   xyz                   in float3
 // foo                                        v1    1   x                     in uint1
 //
+//
+// Level9 shader bytecode:
+//
+    lib_4_0_vs_2_0
+    dcl_texcoord v0
+    add oT0.xyz, v0, v0
+
+// approximately 1 instruction slot used
 lib_4_0
 dcl_input v0.xyz
 dcl_output o0.xyz
@@ -57,6 +73,18 @@ ret
 // input                                      v0    1   x                     in uint
 // foo                  COLOR                 v1    3   xyzw                  in int4x3
 //
+//
+// Level9 shader bytecode:
+//
+    lib_4_0_vs_2_0
+    dcl_texcoord v0
+    add r0, v0.x, v0.x
+    mov oT0, r0.w
+    mov oT1, r0.w
+    mov oT2, r0.w
+    mov oT3, r0
+
+// approximately 5 instruction slots used
 lib_4_0
 dcl_input v0.x
 dcl_output o0.xyzw
@@ -102,6 +130,23 @@ ret
 // TestFunction4                                               o0    1   xyzw out float4
 // input                                      v0    1   x                     in uint
 //
+//
+// Constant buffer to DX9 shader constant mappings:
+//
+// Target Reg Buffer  Start Reg # of Regs        Data Conversion
+// ---------- ------- --------- --------- ----------------------
+// c0         cb0             0         1  ( FLT, FLT, FLT, FLT)
+//
+//
+// Level9 shader bytecode:
+//
+    lib_4_0_vs_2_0
+    def c1, 2, 0, 0, 0
+    dcl_texcoord v0
+    mov r0.x, c1.x
+    mad oT0, v0.x, r0.x, c0
+
+// approximately 2 instruction slots used
 lib_4_0
 dcl_constantbuffer CB0[1], immediateIndexed
 dcl_input v0.x

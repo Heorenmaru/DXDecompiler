@@ -114,7 +114,7 @@ namespace SlimShader.Chunks
 					chunk = LibfChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				case ChunkType.Libh:
-					chunk = LibhChunk.Parse(chunkContentReader, chunkSize);
+					chunk = LibHeaderChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				default :
 					throw new ParseException("Invalid chunk type: " + chunkType);
