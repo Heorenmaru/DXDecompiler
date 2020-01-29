@@ -95,6 +95,7 @@ CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3_P
 CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_0 lib_4_0 || GOTO :error
 CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_1 lib_4_1 || GOTO :error
 CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_5_0 lib_5_0 || GOTO :error
+
 CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_5_0 fx_5_0 || GOTO :error
 CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_0 fx_4_0 || GOTO :error
 CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_1 fx_4_1 || GOTO :error
@@ -163,6 +164,8 @@ CALL CompileShader.bat HlslCrossCompiler/gs4 PipesGS.fx PipesGS gs_4_0 GSCrawlPi
 CALL CompileShader.bat HlslCrossCompiler/gs5 instance.fx instance gs_5_0 main || GOTO :error
 CALL CompileShader.bat HlslCrossCompiler/gs5 stream.fx stream gs_5_0 main || GOTO :error
 
+CALL CompileShader2.bat Sdk/Direct3D10/BasicHLSL10 BasicHLSL10.fx BasicHLSL10 fx_4_0 || GOTO :error
+
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_VS vs_4_0 VS_CubeMap || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_GS gs_4_0 GS_CubeMap || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_PS ps_4_0 PS_EnvMappedScene || GOTO :error
@@ -174,6 +177,7 @@ CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx T
 
 CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_FX fx_4_0 || GOTO :error
 CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_FX fx_4_1 "/DDX10_1_ENABLED=1" "/DMSAA_SAMPLES=4" || GOTO :error
+
 
 
 CALL CompileShader.bat Sdk/Direct3D11/AdaptiveTessellationCS40 TessellatorCS40_EdgeFactorCS.hlsl TessellatorCS40_EdgeFactorCS cs_4_0 CSEdgeFactor || GOTO :error

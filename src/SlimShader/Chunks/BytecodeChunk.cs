@@ -80,7 +80,7 @@ namespace SlimShader.Chunks
 				case ChunkType.Isg1:
 				case ChunkType.Osg1:
 					chunk = InputOutputSignatureChunk.Parse(chunkContentReader, chunkType,
-						container.ResourceDefinition.Target.ProgramType);
+						container.Version.ProgramType);
 					break;
 				case ChunkType.Rdef:
 					chunk = ResourceDefinitionChunk.Parse(chunkContentReader);
@@ -90,7 +90,7 @@ namespace SlimShader.Chunks
 					chunk = DebuggingChunk.Parse(chunkContentReader, chunkType, chunkSize);
 					break;
 				case ChunkType.Sfi0:
-					chunk = Sfi0Chunk.Parse(chunkContentReader, container.Shader.Version, chunkSize);
+					chunk = Sfi0Chunk.Parse(chunkContentReader, container.Version, chunkSize);
 					break;
 				case ChunkType.Shdr:
 				case ChunkType.Shex:

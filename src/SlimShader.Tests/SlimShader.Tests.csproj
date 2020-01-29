@@ -63,6 +63,78 @@
   <ItemGroup>
     <Compile Include="AssertTraceListener.cs" />
     <Compile Include="DX9Tests.cs" />
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2a.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2b.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_3.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_3sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2a.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2a.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2b.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2a.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3sw.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Internal\BasicHLSL_PS_5_1.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -318,6 +390,7 @@
     <Content Include="ShadersDX9\CompileShaders.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="ShadersDX9\CompileShader2.bat" />
     <None Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -496,10 +569,40 @@
     <None Include="ShadersDX9\Sdk\Direct3D\AntiAlias\AntiAlias_TextureVS.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS.o">
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS.o">
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2a.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2b.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_3.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_3sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2a.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3sw.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Sdk\Direct3D\CompiledEffect\CompiledEffect_PS.o">
@@ -850,10 +953,40 @@
     <None Include="ShadersDX9\Sdk\Direct3D\ShadowVolume\ShadowVolume_ShowDirtyStencilPS.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS.o">
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS.o">
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2a.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2b.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2a.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3sw.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Sdk\Direct3D\SkinnedMesh\SkinnedMesh_VS.o">
@@ -962,6 +1095,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\CompileShader.bat" />
+    <None Include="Shaders\CompileShader2.bat" />
     <None Include="Shaders\CompileShaders.bat" />
     <Content Include="ShadersDX9\Sdk\Direct3D\AntiAlias\AntiAlias_ColorPS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -1440,12 +1574,6 @@
     <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS.asm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS.asm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\SkinnedMesh\skinnedmesh.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1633,12 +1761,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL.fx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS.asm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\CompiledEffect\CompiledEffect.fx">
@@ -2335,6 +2457,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\readme.txt" />
+    <Content Include="Shaders\Sdk\Direct3D10\BasicHLSL10\BasicHLSL10.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D10\BasicHLSL10\BasicHLSL10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Sdk\Direct3D10\CubeMapGS\CubeMapGS_GS.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2979,6 +3107,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Internal\UbfeTest.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D10\BasicHLSL10\BasicHLSL10.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Sdk\Direct3D10\TransparencyAA10.1\Sprite_FX.o">

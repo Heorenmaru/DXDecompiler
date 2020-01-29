@@ -66,10 +66,27 @@ namespace SlimShader
 		{
 			get { return Chunks.OfType<InterfacesChunk>().SingleOrDefault(); }
 		}
+		/// <summary>
+		/// Version is stored in both Resource Definition and Shader chunks.
+		/// Generally the resource definition chunk is the first chunk in the container
+		/// but in the case of library linked functions, it can be near the end. 
+		/// Version is needed for parsing certain chunks, such as input/output
+		/// </summary>
 
 		public ShaderVersion Version
 		{
-			get { return Shader.Version; }
+			get 
+			{ 
+				if(ResourceDefinition != null)
+				{
+					return ResourceDefinition.Target;
+				}
+				if(Shader != null)
+				{
+					return Shader.Version;
+				}
+				return null;
+			}
 		}
 
 		public BytecodeContainer(byte[] rawBytes)
