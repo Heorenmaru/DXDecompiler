@@ -39,6 +39,7 @@ namespace SlimShader.Chunks
 			{ "RTS0".ToFourCc(), ChunkType.Rts0 },
 			{ "LIBF".ToFourCc(), ChunkType.Libf },
 			{ "LIBH".ToFourCc(), ChunkType.Libh },
+			{ "LFS0".ToFourCc(), ChunkType.Lfs0 },
 		};
 
 		public BytecodeContainer Container { get; private set; }
@@ -115,6 +116,9 @@ namespace SlimShader.Chunks
 					break;
 				case ChunkType.Libh:
 					chunk = LibHeaderChunk.Parse(chunkContentReader, chunkSize);
+					break;
+				case ChunkType.Lfs0:
+					chunk = LibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				default :
 					throw new ParseException("Invalid chunk type: " + chunkType);

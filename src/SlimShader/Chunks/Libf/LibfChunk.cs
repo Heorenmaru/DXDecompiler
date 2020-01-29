@@ -12,10 +12,14 @@ namespace SlimShader.Chunks.Libf
 	public class LibfChunk : BytecodeChunk
 	{
 		public byte[] Data;
+		BytecodeContainer Container;
 		public static LibfChunk Parse(BytecodeReader reader, uint chunkSize)
 		{
 			var result = new LibfChunk();
-			result.Data = reader.ReadBytes((int)chunkSize);
+			var chunkReader = reader.CopyAtCurrentPosition();
+			var data = chunkReader.ReadBytes((int)chunkSize);
+			result.Data = data;
+			result.Container = new BytecodeContainer(data);
 			return result;
 		}
 		public static string FormatReadable(byte[] data)
@@ -59,7 +63,8 @@ namespace SlimShader.Chunks.Libf
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine("LibfChunk");
-			sb.Append(FormatReadable(Data));
+			//sb.Append(FormatReadable(Data));
+			sb.AppendLine(Container.ToString());
 			return sb.ToString();
 		}
 	}

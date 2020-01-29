@@ -5,11 +5,11 @@ using System.Text;
 
 namespace SlimShader.Chunks.Libf
 {
-	public class FunctionDesc
+	public class LibraryDesc
 	{
 		public string Name { get; private set; }
 		public ProfileMode Mode { get; private set; }
-		public FunctionDesc(string name, ProfileMode mode)
+		public LibraryDesc(string name, ProfileMode mode)
 		{
 			Name = name;
 			Mode = mode;

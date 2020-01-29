@@ -52,6 +52,11 @@ namespace SlimShader
 			get { return Chunks.OfType<Sfi0Chunk>().SingleOrDefault(); }
 		}
 
+		public LibraryParameterSignatureChunk LibrarySignature
+		{
+			get { return Chunks.OfType<LibraryParameterSignatureChunk>().SingleOrDefault(); }
+		}
+
 		public ShaderProgramChunk Shader
 		{
 			get { return Chunks.OfType<ShaderProgramChunk>().SingleOrDefault(); }
@@ -187,6 +192,11 @@ namespace SlimShader
 			sb.AppendLine(@"//");
 
 			sb.Append(OutputSignature);
+
+			if(LibrarySignature != null)
+			{
+				sb.Append(LibrarySignature);
+			}
 
 			sb.Append(Statistics);
 

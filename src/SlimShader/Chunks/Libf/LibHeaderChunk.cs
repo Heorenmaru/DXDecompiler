@@ -11,14 +11,14 @@ namespace SlimShader.Chunks.Libf
 	{
 		public byte[] Data;
 		public string CreatorString { get; private set; }
-		public List<FunctionDesc> FunctionDescs { get; private set; }
+		public List<LibraryDesc> FunctionDescs { get; private set; }
 		/// <summary>
 		/// Only guessing, library chunk never seems to flags set. 
 		/// </summary>
 		public uint Flags { get; private set; }
 		public LibHeaderChunk()
 		{
-			FunctionDescs = new List<FunctionDesc>();
+			FunctionDescs = new List<LibraryDesc>();
 		}
 		public static LibHeaderChunk Parse(BytecodeReader reader, uint chunkSize)
 		{
@@ -49,57 +49,22 @@ namespace SlimShader.Chunks.Libf
 				var functionNameOffset = functionInfoReader.ReadUInt32();
 				var functionNameReader = reader.CopyAtOffset((int)functionNameOffset);
 				var name = functionNameReader.ReadString();
-				result.FunctionDescs.Add(new FunctionDesc(name, mode));
+				result.FunctionDescs.Add(new LibraryDesc(name, mode));
 			}
 			result.Data = reader.ReadBytes((int)chunkSize);
 			return result;
 		}
-		public static string FormatReadable(byte[] data)
-		{
-			var sb = new StringBuilder();
-			for (int i = 0; i < data.Length; i += 16)
-			{
-				for (int j = i; j < i + 16; j++)
-				{
-					if (j < data.Length)
-					{
-						sb.Append(data[j].ToString("X2"));
-					} else
-					{
-						sb.Append("  ");
-					}
-					if ((j + 1) % 4 == 0)
-					{
-						sb.Append(" ");
-					}
-				}
-				sb.Append("\t");
-				for (int j = i; j < i + 16 && j < data.Length; j++)
-				{
-					var c = (char)data[j];
-					if (!char.IsControl(c))
-					{
-						sb.Append(c);
-					} else
-					{
-						sb.Append('.');
-					}
-				}
-				sb.AppendLine();
-			}
-			return sb.ToString();
-		}
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			sb.AppendLine("LibhChunk");
-			sb.AppendLine($"CreatorString: {CreatorString}");
+			sb.AppendLine(string.Format("// Library  flags 0, {0} functions: ", FunctionDescs.Count()));
 			for (int i = 0; i < FunctionDescs.Count; i++)
 			{
-				var desc = FunctionDescs[i];
-				sb.AppendLine($"FunctionName[{i}]: {desc.Name}     {desc.Mode}");
+				sb.AppendLine(string.Format("//   {0}  {1}", 
+					i, FunctionDescs[i].Name));
 			}
-			sb.Append(FormatReadable(Data));
+			sb.AppendLine("//");
+			sb.AppendLine($"// Created by: {CreatorString}");
 			return sb.ToString();
 		}
 	}
