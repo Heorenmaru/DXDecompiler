@@ -19,5 +19,42 @@ namespace SlimShader.Tests
 			Uri folderUri = new Uri(folder);
 			return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
 		}
+		public static string FormatReadable(byte[] data)
+		{
+			var sb = new StringBuilder();
+			for (int i = 0; i < data.Length; i += 16)
+			{
+				for (int j = i; j < i + 16; j++)
+				{
+					if (j < data.Length)
+					{
+						sb.Append(data[j].ToString("X2"));
+					}
+					else
+					{
+						sb.Append("  ");
+					}
+					if ((j + 1) % 4 == 0)
+					{
+						sb.Append(" ");
+					}
+				}
+				sb.Append("\t");
+				for (int j = i; j < i + 16 && j < data.Length; j++)
+				{
+					var c = (char)data[j];
+					if (!char.IsControl(c))
+					{
+						sb.Append(c);
+					}
+					else
+					{
+						sb.Append('.');
+					}
+				}
+				sb.AppendLine();
+			}
+			return sb.ToString();
+		}
 	}
 }

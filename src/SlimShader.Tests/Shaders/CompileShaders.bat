@@ -51,6 +51,7 @@ CALL CompileShader.bat Internal/Operations Texture_Texture2DMSArray.hlsl Texture
 CALL CompileShader.bat Internal/Operations Texture_Texture3D.hlsl Texture_Texture3D ps_5_0 main /Od || GOTO :error
 CALL CompileShader.bat Internal/Operations Texture_TextureCube.hlsl Texture_TextureCube ps_5_0 main /Od || GOTO :error
 CALL CompileShader.bat Internal/Operations Texture_TextureCubeArray.hlsl Texture_TextureCubeArray ps_5_0 main /Od || GOTO :error
+CALL CompileShader.bat Internal/Operations Texture_Legacy.hlsl Texture_Legacy ps_5_0 main /Od /Gec || GOTO :error
 CALL CompileShader.bat Internal/Operations UAV_AppendStructuredBuffer.hlsl UAV_AppendStructuredBuffer ps_5_0 main /Od || GOTO :error
 CALL CompileShader.bat Internal/Operations UAV_ConsumeStructuredBuffer.hlsl UAV_ConsumeStructuredBuffer ps_5_0 main /Od || GOTO :error
 CALL CompileShader.bat Internal/Operations UAV_RWBuffer.hlsl UAV_RWBuffer ps_5_0 main /Od || GOTO :error
@@ -75,8 +76,29 @@ CALL CompileShader.bat Internal/HullShaders HullShader_PartitioningFractionalEve
 CALL CompileShader.bat Internal/HullShaders HullShader_PartitioningPow2.hlsl HullShader_PartitioningPow2 hs_5_0 main  || GOTO :error
 
 CALL CompileShader.bat Internal/Misc PrivateDataTest.hlsl PrivateDataTest ps_5_0 PSMain /setprivate Internal/Misc/PrivateData.txt  || GOTO :error
-CALL CompileShader.bat Internal/Misc DebugTest.hlsl DebugTest ps_5_0 PSMain /Zi  || GOTO :error
+rem Debug information is not deterministic
+rem CALL CompileShader.bat Internal/Misc DebugTest.hlsl DebugTest ps_5_0 PSMain /Zi  || GOTO :error
+CALL CompileShader.bat Internal/Misc EarlyDepthStencil.hlsl EarlyDepthStencil ps_5_0 main || GOTO :error
 CALL CompileShader.bat Internal/Misc ShaderWithRootSignature.hlsl ShaderWithRootSignature ps_5_0 main || GOTO :error
+CALL CompileShader.bat Internal/Misc ShaderWithRootSignature_1_0.hlsl ShaderWithRootSignature_1_0 ps_5_0 main /force_rootsig_ver rootsig_1_0 /DRS1_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_0 lib_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_1 lib_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_5_0 lib_5_0 || GOTO :error
+
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_1 lib_4_0_level_9_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3 lib_4_0_level_9_3 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_1_VS lib_4_0_level_9_1_vs_only || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_1_PS lib_4_0_level_9_1_ps_only || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3_VS lib_4_0_level_9_3_vs_only || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest.hlsl LibraryTest_4_Level_9_3_PS lib_4_0_level_9_3_ps_only || GOTO :error
+
+CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_4_0 lib_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_4_1 lib_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_5_0 lib_5_0 || GOTO :error
+
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_5_0 fx_5_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_0 fx_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_1 fx_4_1 || GOTO :error
 
 Set UNITY_INCLUDES="%cd%\Unity\CGIncludes"
 CALL CompileShader.bat Unity fog_test.hlsl fog_test_Exp2_VS_25 vs_5_0 vert "/I%UNITY_INCLUDES%" /Gec "/DFOG_EXP2=1" "/DSHADER_TARGET=25" "/DUNITY_REVERSED_Z=1" || GOTO :error
@@ -142,14 +164,21 @@ CALL CompileShader.bat HlslCrossCompiler/gs4 PipesGS.fx PipesGS gs_4_0 GSCrawlPi
 CALL CompileShader.bat HlslCrossCompiler/gs5 instance.fx instance gs_5_0 main || GOTO :error
 CALL CompileShader.bat HlslCrossCompiler/gs5 stream.fx stream gs_5_0 main || GOTO :error
 
+CALL CompileShader2.bat Sdk/Direct3D10/BasicHLSL10 BasicHLSL10.fx BasicHLSL10 fx_4_0 || GOTO :error
+
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_VS vs_4_0 VS_CubeMap || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_GS gs_4_0 GS_CubeMap || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_PS ps_4_0 PS_EnvMappedScene || GOTO :error
 
 CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_VS vs_4_0 VsSprite || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_PS ps_4_0 PsSprite || GOTO :error
-CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_VS vs_4_1 VsRenderScene || GOTO :error|| GOTO :error
+CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_VS vs_4_1 VsRenderScene || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_PS ps_4_1 PsTransparencyAA "/DDX10_1_ENABLED=1" "/DMSAA_SAMPLES=4" || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_FX fx_4_1 "/DDX10_1_ENABLED=1" "/DMSAA_SAMPLES=4" || GOTO :error
+
+
 
 CALL CompileShader.bat Sdk/Direct3D11/AdaptiveTessellationCS40 TessellatorCS40_EdgeFactorCS.hlsl TessellatorCS40_EdgeFactorCS cs_4_0 CSEdgeFactor || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D11/AdaptiveTessellationCS40 TessellatorCS40_NumVerticesIndicesCS.hlsl TessellatorCS40_NumVerticesIndicesCS cs_4_0 CSNumVerticesIndices || GOTO :error
