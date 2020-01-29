@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using System;
 using System.Collections.Generic;
 
@@ -68,7 +69,7 @@ namespace SlimShader.DebugParser.Rdef
 				Flags = flags
 			};
 
-			if (target.MajorVersion >= 5)
+			if (target.MajorVersion >= 5 || target.ProgramType == ProgramType.LibraryShader)
 			{
 				result.StartTexture = variableReader.ReadInt32("startTexture");
 				result.TextureSize = variableReader.ReadInt32("textureSize");

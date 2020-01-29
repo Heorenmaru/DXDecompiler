@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using SlimShader.Util;
 using System;
 using System.Collections.Generic;
@@ -43,7 +44,7 @@ namespace SlimShader.DebugParser.Rdef
 				Creator = creator
 			};
 
-			if (target.MajorVersion == 5)
+			if (target.MajorVersion == 5 || target.ProgramType == ProgramType.LibraryShader)
 			{
 				if (target.MinorVersion == 0)
 				{

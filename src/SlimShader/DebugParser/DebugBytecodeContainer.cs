@@ -50,6 +50,31 @@ namespace SlimShader.DebugParser
 				Error = ex.ToString();
 			}
 		}
+		public DebugBytecodeContainer(DebugBytecodeReader reader)
+		{
+			try
+			{
+				Chunks = new List<DebugBytecodeChunk>();
+
+				_reader = reader;
+
+				Header = DebugBytecodeContainerHeader.Parse(reader);
+
+				for (uint i = 0; i < Header.ChunkCount; i++)
+				{
+					uint chunkOffset = reader.ReadUInt32("chunkOffset");
+					var chunkReader = reader.CopyAtOffset("BytecodeChunk", reader, (int)chunkOffset);
+
+					var chunk = DebugBytecodeChunk.ParseChunk(chunkReader, this);
+					if (chunk != null)
+						Chunks.Add(chunk);
+				}
+			}
+			catch (Exception ex)
+			{
+				Error = ex.ToString();
+			}
+		}
 		public static DebugBytecodeContainer Parse(byte[] bytes)
 		{
 			return new DebugBytecodeContainer(bytes);
@@ -60,6 +85,14 @@ namespace SlimShader.DebugParser
 			if (!string.IsNullOrEmpty(Error))
 			{
 				dump += "\n" + Error;
+			}
+			var libraryChunks = Chunks.OfType<Libf.DebugLibfChunk>().ToList();
+			foreach (var chunk in libraryChunks)
+			{
+				if (!string.IsNullOrEmpty(chunk.LibraryContainer.Error))
+				{
+					dump += $"\nError in Library {libraryChunks.IndexOf(chunk)}\n" + chunk.LibraryContainer.Error;
+				}
 			}
 			return dump;
 		}

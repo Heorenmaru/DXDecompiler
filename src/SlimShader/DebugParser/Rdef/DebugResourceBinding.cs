@@ -14,6 +14,7 @@ namespace SlimShader.DebugParser.Rdef
 		public ShaderResourceViewDimension Dimension { get; private set; }
 		public ResourceReturnType ReturnType { get; private set; }
 		public uint NumSamples { get; private set; }
+		public uint SpaceIndex { get; private set; }
 
 		public static DebugResourceBinding Parse(DebugBytecodeReader reader, DebugBytecodeReader resourceBindingReader, DebugShaderVersion target)
 		{
@@ -32,7 +33,7 @@ namespace SlimShader.DebugParser.Rdef
 			};
 			if (target.MajorVersion == 5 && target.MinorVersion == 1)
 			{
-				var unk0 = resourceBindingReader.ReadUInt32("unk0");
+				result.SpaceIndex = resourceBindingReader.ReadUInt32("SpaceIndex");
 				result.ID = resourceBindingReader.ReadUInt32("ID");
 			}
 			else
