@@ -12,6 +12,10 @@ namespace SlimShader.Chunks.Libf
 		public byte[] Data;
 		public string CreatorString { get; private set; }
 		public List<FunctionDesc> FunctionDescs { get; private set; }
+		/// <summary>
+		/// Only guessing, library chunk never seems to flags set. 
+		/// </summary>
+		public uint Flags { get; private set; }
 		public LibHeaderChunk()
 		{
 			FunctionDescs = new List<FunctionDesc>();
@@ -26,8 +30,8 @@ namespace SlimShader.Chunks.Libf
 			Debug.Assert(unknown1 == 1, $"LibraryHeader.unknown1 is {unknown1}");
 			var creatorStringOffset = chunkReader.ReadUInt32();
 			//flags?
-			var unknown2 = chunkReader.ReadUInt32();
-			Debug.Assert(unknown2 == 0, $"LibraryHeader.unknown1 is {unknown1}");
+			result.Flags = chunkReader.ReadUInt32();
+
 			var functionCount = chunkReader.ReadUInt32();
 			//Contains function strings and function flags
 			var functionInfoOffset = chunkReader.ReadUInt32();
