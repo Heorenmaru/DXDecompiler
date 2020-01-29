@@ -48,8 +48,12 @@
     <Compile Include="Chunks\Aon9\ConstantBufferMapping.cs" />
     <Compile Include="Chunks\Aon9\SamplerMapping.cs" />
     <Compile Include="Chunks\Libf\FunctionInfo.cs" />
+    <Compile Include="Chunks\Libf\InterpolationMode.cs" />
+    <Compile Include="Chunks\Libf\LibraryParameterDescription.cs" />
+    <Compile Include="Chunks\Libf\LibraryParameterSignatureChunk.cs" />
     <Compile Include="Chunks\Libf\LibfChunk.cs" />
     <Compile Include="Chunks\Libf\LibHeaderChunk.cs" />
+    <Compile Include="Chunks\Libf\ParameterFlags.cs" />
     <Compile Include="Chunks\Libf\ProfileMode.cs" />
     <Compile Include="Chunks\Priv\PrivateChunk.cs" />
     <Compile Include="Chunks\RTS0\ComparisonFunc.cs" />
