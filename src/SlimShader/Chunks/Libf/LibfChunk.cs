@@ -6,6 +6,9 @@ using SlimShader.Util;
 
 namespace SlimShader.Chunks.Libf
 {
+	/// <summary>
+	/// Might be related to D3D11_FUNCTION_DESC
+	/// </summary>
 	public class LibfChunk : BytecodeChunk
 	{
 		public byte[] Data;
