@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using SlimShader.Chunks;
 using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Fx10;
 using SlimShader.Chunks.Ifce;
 using SlimShader.Chunks.Libf;
 using SlimShader.Chunks.Rdef;
@@ -141,6 +142,17 @@ namespace SlimShader
 			if (Chunks.OfType<LibfChunk>().Any())
 			{
 				WriteLibShader(sb);
+				return sb.ToString();
+			}
+			if (Chunks.OfType<FX10Chunk>().Any())
+			{
+				foreach (var chunk in Chunks.OfType<FX10Chunk>()) {
+					sb.AppendLine(chunk.ToString());
+				}
+				foreach(var chunk in Chunks)
+				{
+					sb.AppendLine($"{chunk.ChunkType} {chunk.GetType()}");
+				}
 				return sb.ToString();
 			}
 			sb.AppendLine("//");
