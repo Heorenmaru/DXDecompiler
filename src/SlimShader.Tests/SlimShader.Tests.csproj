@@ -608,29 +608,6 @@
     <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_2sw.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_3.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_PS_3sw.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2a.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_2sw.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_VS_3sw.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -995,26 +972,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2sw.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3sw.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2a.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_2sw.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_3.o">
