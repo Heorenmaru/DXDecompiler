@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using SlimShader.Chunks.Aon9;
+using SlimShader.Chunks.Fx10;
 using SlimShader.Chunks.Ifce;
 using SlimShader.Chunks.Libf;
 using SlimShader.Chunks.Priv;
@@ -40,6 +41,7 @@ namespace SlimShader.Chunks
 			{ "LIBF".ToFourCc(), ChunkType.Libf },
 			{ "LIBH".ToFourCc(), ChunkType.Libh },
 			{ "LFS0".ToFourCc(), ChunkType.Lfs0 },
+			{ "FX10".ToFourCc(), ChunkType.Fx10 },
 		};
 
 		public BytecodeContainer Container { get; private set; }
@@ -119,6 +121,9 @@ namespace SlimShader.Chunks
 					break;
 				case ChunkType.Lfs0:
 					chunk = LibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
+					break;
+				case ChunkType.Fx10:
+					chunk = FX10Chunk.Parse(chunkContentReader, chunkSize);
 					break;
 				default :
 					throw new ParseException("Invalid chunk type: " + chunkType);
