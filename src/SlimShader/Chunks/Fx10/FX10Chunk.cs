@@ -12,21 +12,54 @@ namespace SlimShader.Chunks.Fx10
 	public class FX10Chunk : BytecodeChunk
 	{
 		public byte[] Data;
-
+		uint probablyVersion;
+		uint variableCount;
+		uint bufferCount;
+		uint localObjectCount;
+		uint unknown1;
+		uint unknown2;
+		uint unknown3;
+		uint techniqueCount;
+		uint unknown4;
+		uint unknown5;
+		uint unknown6;
+		uint unknown7;
+		uint unknown8;
+		uint unknown9;
+		uint unknown10;
+		uint unknown11;
+		uint unknown12;
+		uint numberOfShaders1;
+		uint numberOfShaders2;
+		uint unknown15;
 		public static FX10Chunk Parse(BytecodeReader reader, uint size)
 		{
 			var chunkReader = reader.CopyAtCurrentPosition();
 			var dataReader = reader.CopyAtCurrentPosition();
 			var result = new FX10Chunk();
-			var probablyVersion = chunkReader.ReadUInt32();
-			var bufferCount = chunkReader.ReadUInt32();
+			var probablyVersion = result.probablyVersion = chunkReader.ReadUInt32();
+			var bufferCount = result.bufferCount = chunkReader.ReadUInt32();
 			//Global Variable Count
-			var variableCount = chunkReader.ReadUInt32();
-			var localObjectCount = chunkReader.ReadUInt32();
-			var unknown1 = chunkReader.ReadUInt32();
-			var unknown2 = chunkReader.ReadUInt32();
-			var unknown3 = chunkReader.ReadUInt32();
-			var techniqueCount = chunkReader.ReadUInt32();
+			var variableCount = result.variableCount = chunkReader.ReadUInt32();
+			var localObjectCount = result.localObjectCount = chunkReader.ReadUInt32();
+			var unknown1 = result.unknown1 = chunkReader.ReadUInt32();
+			var unknown2 = result.unknown2 = chunkReader.ReadUInt32();
+			var unknown3 = result.unknown3 = chunkReader.ReadUInt32();
+			var techniqueCount = result.techniqueCount = chunkReader.ReadUInt32();
+			//probably a size or offset
+			var unknown4 = result.unknown4 = chunkReader.ReadUInt32();
+			var unknown5 = result.unknown5 = chunkReader.ReadUInt32();
+			var unknown6 = result.unknown6 = chunkReader.ReadUInt32();
+			var unknown7 = result.unknown7 = chunkReader.ReadUInt32();
+			var unknown8 = result.unknown8 = chunkReader.ReadUInt32();
+			var unknown9 = result.unknown9 = chunkReader.ReadUInt32();
+			var unknown10 = result.unknown10 = chunkReader.ReadUInt32();
+			var unknown11 = result.unknown11 = chunkReader.ReadUInt32();
+			var unknown12 = result.unknown12 = chunkReader.ReadUInt32();
+			var numberOfShaders1 = result.numberOfShaders1 = chunkReader.ReadUInt32();
+			var numberOfShaders2 = result.numberOfShaders2 = chunkReader.ReadUInt32();
+			var unknown15 = result.unknown15 = chunkReader.ReadUInt32();
+
 			result.Data = dataReader.ReadBytes((int)size);
 			return result;
 		}
@@ -48,20 +81,27 @@ namespace SlimShader.Chunks.Fx10
 					}
 					if ((j + 1) % 4 == 0)
 					{
-						sb.Append(" ");
+						sb.Append("  ");
 					}
 				}
-				sb.Append("\t");
 				for (int j = i; j < i + 16 && j < data.Length; j++)
 				{
 					var c = (char)data[j];
-					if (!char.IsControl(c))
+					if (char.IsControl(c))
 					{
-						sb.Append(c);
+						sb.Append("_");
+					}
+					else if (c > 0x7E)
+					{
+						sb.Append('.');
+					}
+					else if (char.IsWhiteSpace(c))
+					{
+						sb.Append('.');
 					}
 					else
 					{
-						sb.Append('.');
+						sb.Append(c);
 					}
 				}
 				sb.AppendLine();
@@ -71,6 +111,27 @@ namespace SlimShader.Chunks.Fx10
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
+
+			sb.AppendLine($"probablyVersion: {probablyVersion}");
+			sb.AppendLine($"variableCount: {variableCount}");
+			sb.AppendLine($"bufferCount: {bufferCount}");
+			sb.AppendLine($"localObjectCount: {localObjectCount}");
+			sb.AppendLine($"unknown1: {unknown1}");
+			sb.AppendLine($"unknown2: {unknown2}");
+			sb.AppendLine($"unknown3: {unknown3}");
+			sb.AppendLine($"techniqueCount: {techniqueCount}");
+			sb.AppendLine($"unknown4: {unknown4} {unknown4.ToString("X4")}");
+			sb.AppendLine($"unknown5: {unknown5}");
+			sb.AppendLine($"unknown6: {unknown6}");
+			sb.AppendLine($"unknown7: {unknown7}");
+			sb.AppendLine($"unknown8: {unknown8}");
+			sb.AppendLine($"unknown9: {unknown9}");
+			sb.AppendLine($"unknown10: {unknown10}");
+			sb.AppendLine($"unknown12: {unknown11}");
+			sb.AppendLine($"unknown11: {unknown12}");
+			sb.AppendLine($"numberOfShaders1: {numberOfShaders1}");
+			sb.AppendLine($"numberOfShaders2: {numberOfShaders2}");
+			sb.AppendLine($"unknown15: {unknown15}");
 			sb.AppendLine("FX10 Data:");
 			sb.AppendLine(FormatReadable(Data));
 			return sb.ToString();

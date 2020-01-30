@@ -71,6 +71,7 @@ namespace SlimShader.Tests
 				.Select(x => x.Trim()));
 
 			File.WriteAllText($"{file}.d.asm", decompiledAsmText);
+			File.WriteAllText($"{file}.x", FileUtil.FormatReadable(bytecode));
 
 			decompiledAsmText = TestUtils.NormalizeAssembly(decompiledAsmText);
 			asmFileText = TestUtils.NormalizeAssembly(asmFileText);
