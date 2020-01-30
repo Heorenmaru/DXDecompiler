@@ -8,29 +8,11 @@ using System.Text;
 namespace SlimShader.Chunks.Libf
 {
 	/// <summary>
-<<<<<<< HEAD
-	/// LibraryParameterDescription
-=======
 	/// Describes a library function's input/output parameter
->>>>>>> origin/master
 	/// Based on D3D12_PARAMETER_DESC
 	/// </summary>
 	public class LibraryParameterDescription
 	{
-<<<<<<< HEAD
-		public string Name { get; private set; }
-		public string SemanticName { get; private set; }
-		public ShaderVariableType VariableType { get; private set; }
-		public ShaderVariableClass VariableClass { get; private set; }
-		public uint Rows { get; private set; }
-		public uint Column { get; private set; }
-		public InterpolationMode InterpolationMode { get; private set; }
-		public ParameterFlags Flags { get; private set; }
-		public uint FirstInRegister { get; private set; }
-		public uint FirstInComponent { get; private set; }
-		public uint FirstOutRegister { get; private set; }
-		public uint FirstOutComponent { get; private set; }
-=======
 		/// <summary>
 		/// Parameter name.
 		/// </summary>
@@ -91,7 +73,6 @@ namespace SlimShader.Chunks.Libf
 		/// </summary>
 		public uint FirstOutComponent { get; private set; }
 		
->>>>>>> origin/master
 		public string InputDescription
 		{
 			get
@@ -110,15 +91,9 @@ namespace SlimShader.Chunks.Libf
 		{
 			get
 			{
-<<<<<<< HEAD
-				if (FirstInRegister != uint.MaxValue)
-				{
-					return $"v{FirstInRegister}";
-=======
 				if (FirstOutRegister != uint.MaxValue)
 				{
 					return $"o{FirstOutRegister}";
->>>>>>> origin/master
 				}
 				else
 				{
@@ -237,11 +212,7 @@ namespace SlimShader.Chunks.Libf
 				outNum = Rows.ToString();
 				outMask = GetMask();
 			}
-<<<<<<< HEAD
-			var result = string.Format("// {0,-20} {1,-19} {2,3} {3,4}   {4,-4} {5,4} {6,4}   {7,4} {8}",
-=======
 			var result = string.Format("// {0,-20} {1,-19}  {2,3} {3,4}   {4,-4} {5,4} {6,4}   {7,-4} {8}",
->>>>>>> origin/master
 				Name, SemanticName, inDesc, inNum, inMask, outDesc, outNum, outMask, TypeName);
 			return result;
 		}
