@@ -123,18 +123,10 @@ namespace SlimShader
 		}
 		private void WriteLibShader(StringBuilder sb)
 		{
-			sb.AppendLine("Chunks");
-			foreach(var chunk in Chunks)
-			{
-				sb.AppendLine($"{chunk.ChunkType} {chunk.GetType()}");
-			}
-			if (Chunks.OfType<LibHeaderChunk>().Any())
-			{
-				foreach (var chunk in Chunks.OfType<LibHeaderChunk>())
-				{
-					sb.Append(chunk.ToString());
-				}
-			}
+			sb.AppendLine("//");
+			var libHeader = Chunks.OfType<LibHeaderChunk>().Single();
+			sb.Append(libHeader.ToString());
+			sb.AppendLine("//");
 			if (Chunks.OfType<LibfChunk>().Any())
 			{
 				foreach (var chunk in Chunks.OfType<LibfChunk>())
@@ -196,6 +188,7 @@ namespace SlimShader
 			if(LibrarySignature != null)
 			{
 				sb.Append(LibrarySignature);
+				sb.AppendLine(@"//");
 			}
 
 			sb.Append(Statistics);

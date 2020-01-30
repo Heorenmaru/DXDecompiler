@@ -9,13 +9,8 @@ namespace SlimShader.Chunks.Libf
 {
 	public class LibHeaderChunk : BytecodeChunk
 	{
-		public byte[] Data;
 		public string CreatorString { get; private set; }
 		public List<LibraryDesc> FunctionDescs { get; private set; }
-		/// <summary>
-		/// Only guessing, library chunk never seems to flags set. 
-		/// </summary>
-		public uint Flags { get; private set; }
 		public LibHeaderChunk()
 		{
 			FunctionDescs = new List<LibraryDesc>();
@@ -29,9 +24,9 @@ namespace SlimShader.Chunks.Libf
 			var unknown1 = chunkReader.ReadUInt32();
 			Debug.Assert(unknown1 == 1, $"LibraryHeader.unknown1 is {unknown1}");
 			var creatorStringOffset = chunkReader.ReadUInt32();
-			//flags?
-			result.Flags = chunkReader.ReadUInt32();
-
+			//guessing flags, library chunk never seems to flags set.
+			var unknown0 = chunkReader.ReadUInt32();
+			Debug.Assert(unknown0 == 0, "Unexpected value for LibHeaderChunk.Unknown0");
 			var functionCount = chunkReader.ReadUInt32();
 			//Contains function strings and function flags
 			var functionInfoOffset = chunkReader.ReadUInt32();
@@ -51,20 +46,19 @@ namespace SlimShader.Chunks.Libf
 				var name = functionNameReader.ReadString();
 				result.FunctionDescs.Add(new LibraryDesc(name, mode));
 			}
-			result.Data = reader.ReadBytes((int)chunkSize);
 			return result;
 		}
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			sb.AppendLine(string.Format("// Library  flags 0, {0} functions: ", FunctionDescs.Count()));
+			sb.AppendLine(string.Format("// Library:  flags 0, {0} functions: ", FunctionDescs.Count()));
 			for (int i = 0; i < FunctionDescs.Count; i++)
 			{
 				sb.AppendLine(string.Format("//   {0}  {1}", 
 					i, FunctionDescs[i].Name));
 			}
 			sb.AppendLine("//");
-			sb.AppendLine($"// Created by: {CreatorString}");
+			sb.AppendLine($"// Created by:  {CreatorString}");
 			return sb.ToString();
 		}
 	}

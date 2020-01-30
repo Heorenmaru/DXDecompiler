@@ -10,7 +10,7 @@ namespace SlimShader.Chunks.Rdef
 {
 	/// <summary>
 	/// Describes a shader variable.
-	/// Based on D3D11_SHADER_VARIABLE_DESC.
+	/// Based on D3D12_SHADER_VARIABLE_DESC.
 	/// </summary>
 	public class ShaderVariable
 	{
@@ -127,7 +127,7 @@ namespace SlimShader.Chunks.Rdef
 				Flags = flags
 			};
 
-			if (target.MajorVersion >= 5)
+			if (target.MajorVersion >= 5 || target.ProgramType == ProgramType.LibraryShader)
 			{
 				result.StartTexture = variableReader.ReadInt32();
 				result.TextureSize = variableReader.ReadInt32();

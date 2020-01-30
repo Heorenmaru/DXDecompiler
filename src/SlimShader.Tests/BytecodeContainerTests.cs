@@ -312,7 +312,7 @@ namespace SlimShader.Tests
 			var desc = libReflection.Description;
 			Assert.AreEqual(desc.Creator, libHeader.CreatorString);
 			Assert.AreEqual(desc.FunctionCount, libHeader.FunctionDescs.Count);
-			Assert.AreEqual(desc.Flags, libHeader.Flags);
+			Assert.AreEqual(desc.Flags, 0);
 		}
 
 		private static void CompareConstantBuffer(SharpDX.D3DCompiler.ConstantBuffer expected, Chunks.Rdef.ConstantBuffer actual)
