@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,7 +14,7 @@ namespace SlimShader.Chunks.Fx10
 	public class FX10Chunk : BytecodeChunk
 	{
 		public byte[] Data;
-		uint probablyVersion;
+		public ShaderVersion Version { get; private set; }
 		/// <summary>
 		/// Number of global variables in this effect, excluding the effect pool.
 		/// </summary>
@@ -48,7 +49,7 @@ namespace SlimShader.Chunks.Fx10
 			var dataReader = reader.CopyAtCurrentPosition();
 			var result = new FX10Chunk();
 			result.Size = size;
-			var probablyVersion = result.probablyVersion = chunkReader.ReadUInt32();
+			result.Version = ShaderVersion.ParseRdef(chunkReader);
 			var bufferCount = result.ConstantBuffers = chunkReader.ReadUInt32();
 			//Global Variable Count
 			var variableCount = result.GlobalVariables = chunkReader.ReadUInt32();
@@ -81,7 +82,7 @@ namespace SlimShader.Chunks.Fx10
 			result.Data = dataReader.ReadBytes((int)size);
 			return result;
 		}
-		public static string FormatReadable(byte[] data)
+		public static string FormatReadable(byte[] data, bool endian = false)
 		{
 			var sb = new StringBuilder();
 			for (int i = 0; i < data.Length; i += 16)
@@ -89,9 +90,10 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendFormat("// {0}:  ", i.ToString("X4"));
 				for (int j = i; j < i + 16; j++)
 				{
-					if (j < data.Length)
+					var index = endian ? j : j + (3 - (j % 4) * 2);
+					if (index < data.Length)
 					{
-						sb.Append(data[j].ToString("X2"));
+						sb.Append(data[index].ToString("X2"));
 					}
 					else
 					{
@@ -131,7 +133,7 @@ namespace SlimShader.Chunks.Fx10
 			var sb = new StringBuilder();
 
 			sb.AppendLine($"Size: {Size}");
-			sb.AppendLine($"probablyVersion: {probablyVersion}");
+			sb.AppendLine($"probablyVersion: {Version}");
 			sb.AppendLine($"variableCount: {GlobalVariables}");
 			sb.AppendLine($"bufferCount: {ConstantBuffers}");
 			sb.AppendLine($"localObjectCount: {ObjectCount}");
