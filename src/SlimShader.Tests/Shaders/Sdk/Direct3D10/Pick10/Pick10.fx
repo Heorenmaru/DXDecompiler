@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
-// File: BasicHLSL10.fx
+// File: Pick10.fx
 //
-// The effect file for the BasicHLSL sample.  
+// The effect file for the Pick10 sample.  
 // 
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
@@ -12,12 +12,8 @@
 //--------------------------------------------------------------------------------------
 float4 g_MaterialAmbientColor;      // Material's ambient color
 float4 g_MaterialDiffuseColor;      // Material's diffuse color
-int g_nNumLights;
-
-float3 g_LightDir[3];               // Light's direction in world space
-float4 g_LightDiffuse[3];           // Light's diffuse color
-float4 g_LightAmbient;              // Light's ambient color
-
+float3 g_LightDir;                  // Light's direction in world space
+float4 g_LightDiffuse;              // Light's diffuse color
 Texture2D g_MeshTexture;            // Color texture for mesh
 
 float    g_fTime;                   // App's time in seconds
@@ -34,6 +30,16 @@ DepthStencilState EnableDepth
     DepthFunc = LESS_EQUAL;
 };
 
+RasterizerState rsWireframe
+{
+    FillMode = WireFrame;
+};
+
+RasterizerState rsSolid
+{
+    FillMode = Solid;
+};
+
 //--------------------------------------------------------------------------------------
 // Texture samplers
 //--------------------------------------------------------------------------------------
@@ -45,56 +51,41 @@ SamplerState MeshTextureSampler
 };
 
 
+
 //--------------------------------------------------------------------------------------
 // Vertex shader output structure
 //--------------------------------------------------------------------------------------
 struct VS_OUTPUT
 {
-    float4 Position   : SV_POSITION; // vertex position 
-    float4 Diffuse    : COLOR0;      // vertex diffuse color (note that COLOR0 is clamped from 0..1)
-    float2 TextureUV  : TEXCOORD0;   // vertex texture coords 
+    float4 Position   : SV_POSITION;   // vertex position 
+    float4 Diffuse    : COLOR0;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
+    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
 };
 
 
 //--------------------------------------------------------------------------------------
 // This shader computes standard transform and lighting
 //--------------------------------------------------------------------------------------
-VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
+VS_OUTPUT RenderSceneVS( float4 vPos : POSITION, 
                          float3 vNormal : NORMAL,
-                         float2 vTexCoord0 : TEXCOORD,
-                         uniform int nNumLights,
-                         uniform bool bTexture,
-                         uniform bool bAnimate )
+                         float2 vTexCoord0 : TEXCOORD0 )
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-  
-    float4 vAnimatedPos = vPos;
-    
-    // Animation the vertex based on time and the vertex's object space position
-    if( bAnimate )
-		vAnimatedPos += float4(vNormal, 0) * (sin(g_fTime+5.5)+0.5)*5;
     
     // Transform the position from object space to homogeneous projection space
-    Output.Position = mul(vAnimatedPos, g_mWorldViewProjection);
+    Output.Position = mul(vPos, g_mWorldViewProjection);
     
     // Transform the normal from object space to world space    
     vNormalWorldSpace = normalize(mul(vNormal, (float3x3)g_mWorld)); // normal (world space)
-    
-    // Compute simple directional lighting equation
-    float3 vTotalLightDiffuse = float3(0,0,0);
-    for(int i=0; i<nNumLights; i++ )
-        vTotalLightDiffuse += g_LightDiffuse[i] * max(0,dot(vNormalWorldSpace, g_LightDir[i]));
-        
-    Output.Diffuse.rgb = g_MaterialDiffuseColor * vTotalLightDiffuse + 
-                         g_MaterialAmbientColor * g_LightAmbient;   
+
+    // Calc diffuse color    
+    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) + 
+                         g_MaterialAmbientColor;   
     Output.Diffuse.a = 1.0f; 
     
     // Just copy the texture coordinate through
-    if( bTexture ) 
-        Output.TextureUV = vTexCoord0; 
-    else
-        Output.TextureUV = 0; 
+    Output.TextureUV = vTexCoord0; 
     
     return Output;    
 }
@@ -105,76 +96,53 @@ VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
 //--------------------------------------------------------------------------------------
 struct PS_OUTPUT
 {
-    float4 RGBColor : SV_Target;  // Pixel color
+    float4 RGBColor : SV_TARGET;  // Pixel color    
 };
 
 
 //--------------------------------------------------------------------------------------
 // This shader outputs the pixel's color by modulating the texture's
-//       color with diffuse material color
+// color with diffuse material color
 //--------------------------------------------------------------------------------------
-PS_OUTPUT RenderScenePS( VS_OUTPUT In,
-                         uniform bool bTexture ) 
+PS_OUTPUT RenderScenePS( VS_OUTPUT In ) 
 { 
     PS_OUTPUT Output;
 
     // Lookup mesh texture and modulate it with diffuse
-    if( bTexture )
-        Output.RGBColor = g_MeshTexture.Sample(MeshTextureSampler, In.TextureUV) * In.Diffuse;
-    else
-        Output.RGBColor = In.Diffuse;
+    Output.RGBColor = g_MeshTexture.Sample(MeshTextureSampler, In.TextureUV) * In.Diffuse;
 
     return Output;
 }
 
 
 //--------------------------------------------------------------------------------------
-// Renders scene to render target using D3D10 Techniques
+// Renders scene 
 //--------------------------------------------------------------------------------------
-technique10 RenderSceneWithTexture1Light
-{
-    pass P0
-    {
-        SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 1, true, true ) ) );
-        SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( true ) ) );
-
-        SetDepthStencilState( EnableDepth, 0 );
-    }
-}
-
-technique10 RenderSceneWithTexture2Light
+technique10 RenderScene
 {
     pass P0
     {          
-        SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 2, true, true ) ) );
+        SetVertexShader( CompileShader( vs_4_0, RenderSceneVS(  ) ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( true ) ) ); 
-        
+        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( ) ) );
+
         SetDepthStencilState( EnableDepth, 0 );
+        SetRasterizerState( rsSolid );
     }
 }
 
-technique10 RenderSceneWithTexture3Light
+//--------------------------------------------------------------------------------------
+// Renders scene 
+//--------------------------------------------------------------------------------------
+technique10 RenderSceneWireframe
 {
     pass P0
     {          
-        SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 3, true, true ) ) );
+        SetVertexShader( CompileShader( vs_4_0, RenderSceneVS(  ) ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( true ) ) );
+        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( ) ) );
 
         SetDepthStencilState( EnableDepth, 0 );
-    }
-}
-
-technique10 RenderSceneNoTexture
-{
-    pass P0
-    {          
-        SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 1, true, true ) ) );
-        SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( false ) ) );
-
-        SetDepthStencilState( EnableDepth, 0 );
+        SetRasterizerState( rsWireframe );
     }
 }

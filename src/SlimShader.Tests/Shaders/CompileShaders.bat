@@ -96,12 +96,15 @@ CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_4_0 lib_4_0
 CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_4_1 lib_4_1 || GOTO :error
 CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_5_0 lib_5_0 || GOTO :error
 
-CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_5_0 fx_5_0 || GOTO :error
-CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_0 fx_4_0 || GOTO :error
-CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_1 fx_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_5_0_FX fx_5_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_0_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_1_FX fx_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_5_0_Child_FX fx_5_0 /Gch || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_0_Child_FX fx_4_0 /Gch || GOTO :error
+CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_1_Child_FX fx_4_1 /Gch || GOTO :error
 
-CALL CompileShader2.bat Internal/Misc EffectsVersions.fx EffectsVersions_4 fx_4_0 || GOTO :error
-CALL CompileShader2.bat Internal/Misc EffectsVersions.fx EffectsVersions_5 fx_5_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc EffectsVersions.fx EffectsVersions_4_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc EffectsVersions.fx EffectsVersions_5_FX fx_5_0 || GOTO :error
 
 Set UNITY_INCLUDES="%cd%\Unity\CGIncludes"
 CALL CompileShader.bat Unity fog_test.hlsl fog_test_Exp2_VS_25 vs_5_0 vert "/I%UNITY_INCLUDES%" /Gec "/DFOG_EXP2=1" "/DSHADER_TARGET=25" "/DUNITY_REVERSED_Z=1" || GOTO :error
@@ -167,7 +170,80 @@ CALL CompileShader.bat HlslCrossCompiler/gs4 PipesGS.fx PipesGS gs_4_0 GSCrawlPi
 CALL CompileShader.bat HlslCrossCompiler/gs5 instance.fx instance gs_5_0 main || GOTO :error
 CALL CompileShader.bat HlslCrossCompiler/gs5 stream.fx stream gs_5_0 main || GOTO :error
 
-CALL CompileShader2.bat Sdk/Direct3D10/BasicHLSL10 BasicHLSL10.fx BasicHLSL10 fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/10BitScanout10 10BitScanout10.fx 10BitScanout10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/AdvancedParticles AdvancedParticles.fx AdvancedParticles_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/AdvancedParticles Meshes.fx Meshes_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/AdvancedParticles Paint.fx Paint_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/AdvancedParticles RenderToVolume.fx RenderToVolume_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/BasicHLSL BasicHLSL.fx BasicHLSL_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/ContentStreaming ContentStreaming.fx ContentStreaming_FX fx_4_0 /Gec || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/DDSWithoutD3DX DDSWithoutD3DX.fx DDSWithoutD3DX_FX fx_4_0 /Gec  || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/DeferredParticles DeferredParticles.fx DeferredParticles_FX fx_4_0 "/DMAX_INSTANCES=4" "/DMAX_GLOWLIGHTS=4" || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/DepthOfField10.1 DepthOfField10.1.fx DepthOfField10.1_FX fx_4_1 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/DrawPredicated DrawPredicated.fx DrawPredicated_FX fx_4_1 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/EffectPools EffectPools1.fx EffectPools1_FX fx_4_0 /Gch /Gec "/DD3D10=1" || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/EffectPools EffectPools2.fx EffectPools2_FX fx_4_0 /Gch /Gec "/DD3D10=1" || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/EffectPools EffectPools3.fx EffectPools3_FX fx_4_0 /Gch /Gec "/DD3D10=1" || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/FixedFuncEMU FixedFuncEMU.fx FixedFuncEMU_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/GPUBoids GPUBoids.fx GPUBoids_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/GPUSpectrogram GPUSpectrogram.fx GPUSpectrogram_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/HDAO10.1 HDAO10.1.fx HDAO10.1_FX fx_4_1 || GOTO :error
+
+
+CALL CompileShader2.bat Sdk/Direct3D10/HDRFormats10 HDRFormats10.fx HDRFormats10_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/HDRFormats10 Skybox10.fx Skybox10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/Instancing Instancing.fx Instancing_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/MotionBlur10 MotionBlur10.fx MotionBlur10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/MultiMon10 MultiMon10.fx MultiMon10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/MultiStreamRendering MultiStreamRendering.fx MultiStreamRendering_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/NBodyGravity NBodyGravity.fx NBodyGravity_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/ParticlesGS ParticlesGS.fx ParticlesGS_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/Pick10 Pick10.fx Pick10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/PipesGS PipesGS.fx PipesGS_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/ProceduralMaterials ProceduralMaterials.fx ProceduralMaterials_FX fx_4_0 "/DNUM_SLIDERS=4" || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/RaycastTerrain RaycastTerrain.fx RaycastTerrain_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/ShadowVolume10 ShadowVolume10.fx ShadowVolume10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/SimpleSample10 SimpleSample10.fx SimpleSample10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/Skinning10 Skinning10.fx Skinning10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/SoftParticles SoftParticles.fx SoftParticles_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/SparseMorphTargets SparseMorphTargets.fx SparseMorphTargets_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/SubD10 SubD10.fx SubD10_FX fx_4_0 || GOTO :error
+
+CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_FX fx_4_1 "/DDX10_1_ENABLED=1" "/DMSAA_SAMPLES=4" || GOTO :error
+
+
+
 
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_VS vs_4_0 VS_CubeMap || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/CubeMapGS CubeMapGS.fx CubeMapGS_GS gs_4_0 GS_CubeMap || GOTO :error
@@ -178,12 +254,6 @@ CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_PS ps_
 CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_VS vs_4_1 VsRenderScene || GOTO :error
 CALL CompileShader.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_PS ps_4_1 PsTransparencyAA "/DDX10_1_ENABLED=1" "/DMSAA_SAMPLES=4" || GOTO :error
 
-CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 Sprite.fx Sprite_FX fx_4_0 || GOTO :error
-CALL CompileShader2.bat Sdk/Direct3D10/TransparencyAA10.1 TransparencyAA10_1.fx TransparencyAA10_1_FX fx_4_1 "/DDX10_1_ENABLED=1" "/DMSAA_SAMPLES=4" || GOTO :error
-
-CALL CompileShader2.bat Sdk/Direct3D10/BasicHLSL BasicHLSL.fx BasicHLSL_FX fx_4_0 || GOTO :error
-
-CALL CompileShader2.bat Sdk/Direct3D10/SimpleSample SimpleSample.fx SimpleSample_FX fx_4_0 || GOTO :error
 
 
 

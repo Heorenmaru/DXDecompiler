@@ -1,65 +1,83 @@
 ﻿using SlimShader.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 namespace SlimShader.Chunks.Fx10
 {
 	/// <summary>
-	/// Looks vaguely similar to D3D10_EFFECT_DESC
+	/// Looks vaguely similar to D3D10_EFFECT_DESC and D3D10_STATE_BLOCK_MASK
 	/// </summary>
 	public class FX10Chunk : BytecodeChunk
 	{
 		public byte[] Data;
 		uint probablyVersion;
-		uint variableCount;
-		uint bufferCount;
-		uint localObjectCount;
-		uint unknown1;
-		uint unknown2;
-		uint unknown3;
-		uint techniqueCount;
+		/// <summary>
+		/// Number of global variables in this effect, excluding the effect pool.
+		/// </summary>
+		uint GlobalVariables;
+		uint ConstantBuffers;
+		uint ObjectCount;
+		uint IsChildEffect;
+		uint SharedGlobalVariables;
+		/// <summary>
+		/// Resources such as textures and SamplerState
+		/// </summary>
+		uint SharedObjectCount;
+		uint Techniques;
 		uint unknown4;
 		uint unknown5;
-		uint unknown6;
-		uint unknown7;
-		uint unknown8;
-		uint unknown9;
-		uint unknown10;
+		uint LocalTextureCount;
+		uint DepthStencilStateCount;
+		uint BlendStateCount;
+		uint RasterizerStateCount;
+		uint LocalSamplerCount;
 		uint unknown11;
 		uint unknown12;
-		uint numberOfShaders1;
-		uint numberOfShaders2;
+		uint ShaderCount;
+		uint UsedShaderCount;
 		uint unknown15;
+		uint Size;
+
+		public byte[] UnknownData;
 		public static FX10Chunk Parse(BytecodeReader reader, uint size)
 		{
 			var chunkReader = reader.CopyAtCurrentPosition();
 			var dataReader = reader.CopyAtCurrentPosition();
 			var result = new FX10Chunk();
+			result.Size = size;
 			var probablyVersion = result.probablyVersion = chunkReader.ReadUInt32();
-			var bufferCount = result.bufferCount = chunkReader.ReadUInt32();
+			var bufferCount = result.ConstantBuffers = chunkReader.ReadUInt32();
 			//Global Variable Count
-			var variableCount = result.variableCount = chunkReader.ReadUInt32();
-			var localObjectCount = result.localObjectCount = chunkReader.ReadUInt32();
-			var unknown1 = result.unknown1 = chunkReader.ReadUInt32();
-			var unknown2 = result.unknown2 = chunkReader.ReadUInt32();
-			var unknown3 = result.unknown3 = chunkReader.ReadUInt32();
-			var techniqueCount = result.techniqueCount = chunkReader.ReadUInt32();
+			var variableCount = result.GlobalVariables = chunkReader.ReadUInt32();
+			var localObjectCount = result.ObjectCount = chunkReader.ReadUInt32();
+			var IsChildEffect = result.IsChildEffect = chunkReader.ReadUInt32();
+			var SharedVariableCount = result.SharedGlobalVariables = chunkReader.ReadUInt32();
+			var SharedObjectCount = result.SharedObjectCount = chunkReader.ReadUInt32();
+			var techniqueCount = result.Techniques = chunkReader.ReadUInt32();
 			//probably a size or offset
 			var unknown4 = result.unknown4 = chunkReader.ReadUInt32();
 			var unknown5 = result.unknown5 = chunkReader.ReadUInt32();
-			var unknown6 = result.unknown6 = chunkReader.ReadUInt32();
-			var unknown7 = result.unknown7 = chunkReader.ReadUInt32();
-			var unknown8 = result.unknown8 = chunkReader.ReadUInt32();
-			var unknown9 = result.unknown9 = chunkReader.ReadUInt32();
-			var unknown10 = result.unknown10 = chunkReader.ReadUInt32();
+			Debug.Assert(unknown5 == 0, $"FX10Chunkl.unknown5 is {unknown5}");
+			var TextureCount = result.LocalTextureCount = chunkReader.ReadUInt32();
+			var DepthStencilStateCount = result.DepthStencilStateCount = chunkReader.ReadUInt32();
+			var BlendStateCount = result.BlendStateCount = chunkReader.ReadUInt32();
+			var RasterizerStateCount = result.RasterizerStateCount = chunkReader.ReadUInt32();
+			var SamplerCount = result.LocalSamplerCount = chunkReader.ReadUInt32();
 			var unknown11 = result.unknown11 = chunkReader.ReadUInt32();
+			Debug.Assert(unknown11 == 0, $"FX10Chunkl.unknown11 is {unknown11}");
 			var unknown12 = result.unknown12 = chunkReader.ReadUInt32();
-			var numberOfShaders1 = result.numberOfShaders1 = chunkReader.ReadUInt32();
-			var numberOfShaders2 = result.numberOfShaders2 = chunkReader.ReadUInt32();
+			Debug.Assert(unknown12 == 0, $"FX10Chunkl.unknown12 is {unknown12}");
+			var ShaderCount = result.ShaderCount = chunkReader.ReadUInt32();
+			var UsedShaderCount = result.UsedShaderCount = chunkReader.ReadUInt32();
 			var unknown15 = result.unknown15 = chunkReader.ReadUInt32();
-
+			Debug.Assert(unknown15 == 0, $"FX10Chunkl.unknown15 is {unknown15}");
+			
+			//proper offset is unknown4 + 48?
+			var unknownReader = reader.CopyAtOffset((int)unknown4);
+			result.UnknownData = unknownReader.ReadBytes((int)(size - unknown4));
 			result.Data = dataReader.ReadBytes((int)size);
 			return result;
 		}
@@ -112,26 +130,29 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 
+			sb.AppendLine($"Size: {Size}");
 			sb.AppendLine($"probablyVersion: {probablyVersion}");
-			sb.AppendLine($"variableCount: {variableCount}");
-			sb.AppendLine($"bufferCount: {bufferCount}");
-			sb.AppendLine($"localObjectCount: {localObjectCount}");
-			sb.AppendLine($"unknown1: {unknown1}");
-			sb.AppendLine($"unknown2: {unknown2}");
-			sb.AppendLine($"unknown3: {unknown3}");
-			sb.AppendLine($"techniqueCount: {techniqueCount}");
-			sb.AppendLine($"unknown4: {unknown4} {unknown4.ToString("X4")}");
+			sb.AppendLine($"variableCount: {GlobalVariables}");
+			sb.AppendLine($"bufferCount: {ConstantBuffers}");
+			sb.AppendLine($"localObjectCount: {ObjectCount}");
+			sb.AppendLine($"IsChildEffect: {IsChildEffect}");
+			sb.AppendLine($"SharedVariableCount: {SharedGlobalVariables}");
+			sb.AppendLine($"SharedObjectCount: {SharedObjectCount}");
+			sb.AppendLine($"techniqueCount: {Techniques}");
+			sb.AppendLine($"unknown4: {unknown4} - {unknown4.ToString("X4")}, {Size - unknown4}");
 			sb.AppendLine($"unknown5: {unknown5}");
-			sb.AppendLine($"unknown6: {unknown6}");
-			sb.AppendLine($"unknown7: {unknown7}");
-			sb.AppendLine($"unknown8: {unknown8}");
-			sb.AppendLine($"unknown9: {unknown9}");
-			sb.AppendLine($"unknown10: {unknown10}");
+			sb.AppendLine($"TextureCount: {LocalTextureCount}");
+			sb.AppendLine($"DepthStencilStateCount: {DepthStencilStateCount}");
+			sb.AppendLine($"BlendStateCount: {BlendStateCount}");
+			sb.AppendLine($"RasterizerStateCount: {RasterizerStateCount}");
+			sb.AppendLine($"SamplerCount: {LocalSamplerCount}");
 			sb.AppendLine($"unknown12: {unknown11}");
 			sb.AppendLine($"unknown11: {unknown12}");
-			sb.AppendLine($"numberOfShaders1: {numberOfShaders1}");
-			sb.AppendLine($"numberOfShaders2: {numberOfShaders2}");
+			sb.AppendLine($"ShaderCount: {ShaderCount}");
+			sb.AppendLine($"UsedShaderCount: {UsedShaderCount}");
 			sb.AppendLine($"unknown15: {unknown15}");
+			sb.AppendLine("UnknownData:");
+			sb.AppendLine(FormatReadable(UnknownData));
 			sb.AppendLine("FX10 Data:");
 			sb.AppendLine(FormatReadable(Data));
 			return sb.ToString();
