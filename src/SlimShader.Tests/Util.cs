@@ -24,6 +24,7 @@ namespace SlimShader.Tests
 			var sb = new StringBuilder();
 			for (int i = 0; i < data.Length; i += 16)
 			{
+				sb.AppendFormat("// {0}:  ", i.ToString("X4"));
 				for (int j = i; j < i + 16; j++)
 				{
 					if (j < data.Length)
@@ -36,20 +37,26 @@ namespace SlimShader.Tests
 					}
 					if ((j + 1) % 4 == 0)
 					{
-						sb.Append(" ");
+						sb.Append("  ");
 					}
 				}
-				sb.Append("\t");
 				for (int j = i; j < i + 16 && j < data.Length; j++)
 				{
 					var c = (char)data[j];
-					if (!char.IsControl(c))
+					if (char.IsControl(c))
 					{
-						sb.Append(c);
+						sb.Append("_");
+					} else if(c > 0x7E)
+					{
+						sb.Append('.');
+					}
+					else if (char.IsWhiteSpace(c))
+					{
+						sb.Append('.');
 					}
 					else
 					{
-						sb.Append('.');
+						sb.Append(c);
 					}
 				}
 				sb.AppendLine();

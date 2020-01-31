@@ -69,8 +69,11 @@ namespace SlimShader.Chunks.Common
 				case 0x4353:
 					programType = ProgramType.ComputeShader;
 					break;
-				case 0x4c46:
+				case 0x4C46:
 					programType = ProgramType.LibraryShader;
+					break;
+				case 0xFEFF:
+					programType = ProgramType.EffectsShader;
 					break;
 				default:
 					throw new ParseException(string.Format("Unknown program type: 0x{0:X}", programTypeValue));
