@@ -1,7 +1,7 @@
 //
 // FX Version: fx_5_0
 //
-// 1 local buffer(s)
+// 2 local buffer(s)
 //
 cbuffer $Globals
 {
@@ -9,18 +9,35 @@ cbuffer $Globals
     float   g_fTime;                    // Offset:   16, size:    4
     float4x4 g_mWorld;                  // Offset:   32, size:   64
     float4x4 g_mWorldViewProjection;    // Offset:   96, size:   64
+    float4  defaultValue = { 1, 2, 3, 4 };// Offset:  160, size:   16
+}
+
+cbuffer TestShared
+{
+    float4  sharedValue;                // Offset:    0, size:   16
 }
 
 //
-// 5 local object(s)
+// 6 local object(s)
 //
 Texture2D g_MeshTexture;
 SamplerState MeshTextureSampler
+<
+    int blabla = 27;
+    String blacksheep = "Hello There";
+>
 {
-    Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
     AddressU = uint(WRAP /* 1 */);
-    AddressV = uint(WRAP /* 1 */);
+    AddressV = uint(CLAMP /* 3 */);
+    AddressW = uint(MIRROR /* 2 */);
+    BorderColor = float4(2, 3, 4, 5);
+    Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
+    MaxAnisotropy = uint(5);
+    MaxLOD   = float(6);
+    MinLOD   = float(7);
+    MipLODBias = float(8);
 };
+Texture2D sharedTexture;
 ByteAddressBuffer Buffer0;
 ByteAddressBuffer Buffer1;
 RWByteAddressBuffer BufferOut;

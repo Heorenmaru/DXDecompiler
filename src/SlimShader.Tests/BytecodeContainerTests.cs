@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SharpDX.D3DCompiler;
+using SharpDX.Direct3D11;
 using SlimShader.Chunks;
+using SlimShader.Chunks.Fx10;
 using SlimShader.Chunks.Libf;
 using SlimShader.Chunks.Rdef;
 using SlimShader.Chunks.Shex;
@@ -159,6 +161,8 @@ namespace SlimShader.Tests
 			}
 
 		}
+
+
 		/// <summary>
 		/// Compare with actual Direct3D reflected objects.
 		/// </summary>
@@ -170,10 +174,23 @@ namespace SlimShader.Tests
 			var binaryFileBytes = File.ReadAllBytes(file + ".o");
 
 			// Act.
+			if( binaryFileBytes[0] == 0x01 &&
+				binaryFileBytes[1] == 0x20 &&
+				binaryFileBytes[2] == 0xFF &&
+				binaryFileBytes[3] == 0xFE)
+			{
+				Effects11.CompareEffect(null, binaryFileBytes, Path.GetFileNameWithoutExtension(relPath));
+				return;
+			}
 			var container = BytecodeContainer.Parse(binaryFileBytes);
 			if (container.Chunks.OfType<LibHeaderChunk>().Any())
 			{
 				CompareLibrary(container, binaryFileBytes);
+				return;
+			}
+			if (container.Chunks.OfType<FX10Chunk>().Any())
+			{
+				Effects10.CompareEffect(container, binaryFileBytes, Path.GetFileNameWithoutExtension(relPath));
 				return;
 			}
 			using (var shaderBytecode = ShaderBytecode.FromStream(new MemoryStream(binaryFileBytes)))

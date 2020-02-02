@@ -1,6 +1,6 @@
 //
 // FX Version: fx_4_0
-// Child effect (requires effect pool): false
+// Child effect (requires effect pool): true
 //
 // 1 local buffer(s)
 //
@@ -10,6 +10,7 @@ cbuffer $Globals
     float   g_fTime;                    // Offset:   16, size:    4
     float4x4 g_mWorld;                  // Offset:   32, size:   64
     float4x4 g_mWorldViewProjection;    // Offset:   96, size:   64
+    float4  defaultValue = { 1, 2, 3, 4 };// Offset:  160, size:   16
 }
 
 //
@@ -17,11 +18,34 @@ cbuffer $Globals
 //
 Texture2D g_MeshTexture;
 SamplerState MeshTextureSampler
+<
+    int blabla = 27;
+    String blacksheep = "Hello There";
+>
 {
-    Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
     AddressU = uint(WRAP /* 1 */);
-    AddressV = uint(WRAP /* 1 */);
+    AddressV = uint(CLAMP /* 3 */);
+    AddressW = uint(MIRROR /* 2 */);
+    BorderColor = float4(2, 3, 4, 5);
+    Filter   = uint(MIN_MAG_MIP_LINEAR /* 21 */);
+    MaxAnisotropy = uint(5);
+    MaxLOD   = float(6);
+    MinLOD   = float(7);
+    MipLODBias = float(8);
 };
+
+//
+// 1 shared buffer(s)
+//
+cbuffer TestShared
+{
+    float4  sharedValue;                // Offset:    0, size:   16
+}
+
+//
+// 1 shared object(s)
+//
+Texture2D sharedTexture;
 
 //
 // 2 technique(s)

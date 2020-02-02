@@ -95,7 +95,7 @@ namespace DXDecompilerCmd
 			{
 				if (programType == ProgramType.Unknown)
 				{
-					Console.Error.WriteLine("Input is not a valid shader object file");
+					Console.Error.WriteLine($"Unable to identify shader object format");
 					Environment.Exit(1);
 				}
 				else if (programType == ProgramType.DXBC)

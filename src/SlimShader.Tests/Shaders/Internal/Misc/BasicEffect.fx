@@ -1,21 +1,30 @@
 // Global variables
 float4 g_MaterialAmbientColor;      // Material's ambient color
-
-Texture2D g_MeshTexture;            // Color texture for mesh
-
 float    g_fTime;                   // App's time in seconds
 float4x4 g_mWorld;                  // World matrix for object
 float4x4 g_mWorldViewProjection;    // World * View * Projection matrix
 
+float4    defaultValue = float4(1, 2, 3, 4);
 
+shared cbuffer TestShared {
+	float4 sharedValue;
+}
+Texture2D g_MeshTexture;            // Color texture for mesh
 // Texture samplers
 SamplerState MeshTextureSampler
+<int blabla = 27; string blacksheep = "Hello There"; >
 {
-	Filter = MIN_MAG_MIP_LINEAR;
 	AddressU = Wrap;
-	AddressV = Wrap;
+	AddressV = Clamp;
+	AddressW = MIrror;
+	BorderColor = float4(2.0f, 3.0f, 4.0f, 5.0f);
+	Filter = MIN_MAG_MIP_LINEAR;
+	MaxAnisotropy = 5;
+	MaxLOD = 6;
+	MinLOD = 7;
+	MipLODBias = 8;
 };
-
+shared Texture2D sharedTexture;            // Color texture for mesh
 struct VS_OUTPUT
 {
 	float4 Position   : SV_POSITION; // vertex position 
