@@ -85,6 +85,7 @@ namespace SlimShader.Tests
 			var annotations = GetAnnotations(reflectionVariable);
 			if (typeDesc.Class == ShaderVariableClass.Struct)
 			{
+				//TODO: SharpDx has GetMemberValues on the EffectType.  
 				for (int i = 0; i < typeDesc.Members; i++)
 				{
 					var reflectionMember = reflectionVariable.GetMemberByIndex(i);
@@ -98,11 +99,74 @@ namespace SlimShader.Tests
 				var annotation = variable.Annotations[i];
 				CompareVariable(reflectionAnnotation, annotation);
 			}
-			if(typeDesc.Type == ShaderVariableType.Sampler)
+			if (typeDesc.Type == ShaderVariableType.Blend)
 			{
-				EffectSamplerVariable sampVariable = reflectionVariable.AsSampler();
-				SamplerState samplerState = sampVariable.GetSampler();
-				var sampDesc = samplerState.Description;
+				var specDesc = reflectionVariable
+								.AsBlend()
+								.GetBlendState()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.ConstantBuffer)
+			{
+				var specDesc = reflectionVariable
+								.AsConstantBuffer()
+								.GetConstantBuffer()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.DepthStencil)
+			{
+				var specDesc = reflectionVariable
+								.AsDepthStencil()
+								.GetDepthStencilState()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.DepthStencilView)
+			{
+				var specDesc = reflectionVariable
+								.AsDepthStencilView()
+								.GetDepthStencil()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.Rasterizer)
+			{
+				var specDesc = reflectionVariable
+								.AsRasterizer()
+								.GetRasterizerState()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.Rasterizer)
+			{
+				var specDesc = reflectionVariable
+								.AsRasterizer()
+								.GetRasterizerState()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.RenderTargetView)
+			{
+				var specDesc = reflectionVariable
+								.AsRenderTargetView()
+								.GetRenderTarget()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.Sampler)
+			{
+				var specDesc = reflectionVariable
+								.AsSampler()
+								.GetSampler()
+								.Description;
+			}
+			if (typeDesc.Type == ShaderVariableType.PixelShader ||
+				typeDesc.Type == ShaderVariableType.VertexShader ||
+				typeDesc.Type == ShaderVariableType.GeometryShader)
+			{
+				var shader = reflectionVariable
+								.AsShader();
+			}
+			if (false)
+			{
+
+				var shader = reflectionVariable
+								.AsShaderResource();
 			}
 		}
 		public static List<EffectVariable> GetAnnotations(EffectVariable reflectionVariable)
