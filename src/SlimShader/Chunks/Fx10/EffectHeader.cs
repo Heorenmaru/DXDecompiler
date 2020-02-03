@@ -1,9 +1,5 @@
 ﻿using SlimShader.Chunks.Common;
 using SlimShader.Util;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.Chunks.Fx10
@@ -29,7 +25,7 @@ namespace SlimShader.Chunks.Fx10
 		public uint SharedObjectCount;
 		public uint Techniques;
 		public uint FooterOffset;
-		public uint unknown5;
+		public uint StringCount;
 		public uint LocalTextureCount;
 		public uint DepthStencilStateCount;
 		public uint BlendStateCount;
@@ -38,16 +34,16 @@ namespace SlimShader.Chunks.Fx10
 		public uint RenderTargetViewCount;
 		public uint DepthStencilViewCount;
 		public uint ShaderCount;
-		public uint UsedShaderCount;
+		public uint InlineShaderCount;
 
 		/// <summary>
 		/// Start of fx_5_0 members
 		/// </summary>
 		public uint GroupCount;
 		public uint UAVCount;
-		public uint unknown17;
-		public uint unknown18;
-		public uint unknown19;
+		public uint InterfaceVariableCount;
+		public uint InterfaceVariableElementCount;
+		public uint ClassInstanceElementCount;
 		public static EffectHeader Parse(BytecodeReader chunkReader)
 		{
 			var result = new EffectHeader();
@@ -62,8 +58,7 @@ namespace SlimShader.Chunks.Fx10
 			var techniqueCount = result.Techniques = chunkReader.ReadUInt32();
 			//probably a size or offset
 			var unknown4 = result.FooterOffset = chunkReader.ReadUInt32();
-			var unknown5 = result.unknown5 = chunkReader.ReadUInt32();
-			Debug.Assert(unknown5 == 0, $"FX10Chunkl.unknown5 is {unknown5}");
+			var unknown5 = result.StringCount = chunkReader.ReadUInt32();
 			var TextureCount = result.LocalTextureCount = chunkReader.ReadUInt32();
 			var DepthStencilStateCount = result.DepthStencilStateCount = chunkReader.ReadUInt32();
 			var BlendStateCount = result.BlendStateCount = chunkReader.ReadUInt32();
@@ -72,14 +67,14 @@ namespace SlimShader.Chunks.Fx10
 			result.RenderTargetViewCount = chunkReader.ReadUInt32();
 			result.DepthStencilViewCount = chunkReader.ReadUInt32();
 			var ShaderCount = result.ShaderCount = chunkReader.ReadUInt32();
-			var UsedShaderCount = result.UsedShaderCount = chunkReader.ReadUInt32();
+			var UsedShaderCount = result.InlineShaderCount = chunkReader.ReadUInt32();
 			if(result.Version.MajorVersion >= 5)
 			{
 				result.GroupCount = chunkReader.ReadUInt32();
 				result.UAVCount = chunkReader.ReadUInt32();
-				result.unknown17 = chunkReader.ReadUInt32();
-				result.unknown18 = chunkReader.ReadUInt32();
-				result.unknown19 = chunkReader.ReadUInt32();
+				result.InterfaceVariableCount = chunkReader.ReadUInt32();
+				result.InterfaceVariableElementCount = chunkReader.ReadUInt32();
+				result.ClassInstanceElementCount = chunkReader.ReadUInt32();
 			}
 			return result;
 
@@ -96,7 +91,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  SharedObjectCount: {SharedObjectCount}");
 			sb.AppendLine($"  TechniqueCount: {Techniques}");
 			sb.AppendLine($"  FooterOffset: {FooterOffset} - {FooterOffset.ToString("X4")}");
-			sb.AppendLine($"  unknown5: {unknown5}");
+			sb.AppendLine($"  StringCount: {StringCount}");
 			sb.AppendLine($"  LocalTextureCount: {LocalTextureCount}");
 			sb.AppendLine($"  DepthStencilStateCount: {DepthStencilStateCount}");
 			sb.AppendLine($"  BlendStateCount: {BlendStateCount}");
@@ -105,14 +100,14 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  RenderTargetViewCount: {RenderTargetViewCount}");
 			sb.AppendLine($"  DepthStencilViewCount: {DepthStencilViewCount}");
 			sb.AppendLine($"  ShaderCount: {ShaderCount}");
-			sb.AppendLine($"  UsedShaderCount: {UsedShaderCount}");
+			sb.AppendLine($"  InlineShaderCount: {InlineShaderCount}");
 			if (Version.MajorVersion >= 5)
 			{
 				sb.AppendLine($"  GroupCount: {GroupCount}");
 				sb.AppendLine($"  UAVCount: {UAVCount}");
-				sb.AppendLine($"  unknown17: {unknown17}");
-				sb.AppendLine($"  unknown18: {unknown18}");
-				sb.AppendLine($"  unknown19: {unknown19}");
+				sb.AppendLine($"  InterfaceVariableCount: {InterfaceVariableCount}");
+				sb.AppendLine($"  InterfaceVariableElementCount: {InterfaceVariableElementCount}");
+				sb.AppendLine($"  ClassInstanceElementCount: {ClassInstanceElementCount}");
 			}
 			return sb.ToString();
 		}
