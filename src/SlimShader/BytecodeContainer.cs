@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -101,7 +102,12 @@ namespace SlimShader
 			Chunks = new List<BytecodeChunk>();
 
 			var reader = new BytecodeReader(rawBytes, 0, rawBytes.Length);
-
+			var magicNumber = BitConverter.ToUInt32(rawBytes, 0);
+			if(magicNumber == 0xFEFF2001)
+			{
+				Chunks.Add(FX11Chunk.Parse(reader, (uint)rawBytes.Length));
+				return;
+			}
 			Header = BytecodeContainerHeader.Parse(reader);
 
 			for (uint i = 0; i < Header.ChunkCount; i++)

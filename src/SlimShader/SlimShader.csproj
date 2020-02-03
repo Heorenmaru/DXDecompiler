@@ -55,6 +55,7 @@
     <Compile Include="Chunks\Fx10\EffectShader.cs" />
     <Compile Include="Chunks\Fx10\EffectShaderType.cs" />
     <Compile Include="Chunks\Fx10\EffectStateAnnotation.cs" />
+    <Compile Include="Chunks\Fx10\EffectStateAnnotationType.cs" />
     <Compile Include="Chunks\Fx10\EffectTechnique.cs" />
     <Compile Include="Chunks\Fx10\EffectVariableType.cs" />
     <Compile Include="Chunks\Fx10\Extensions.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Chunks\Fx10\EffectType.cs" />
     <Compile Include="Chunks\Fx10\IEffectVariable.cs" />
     <Compile Include="Chunks\Fx10\VariableFlags.cs" />
+    <Compile Include="Chunks\FX11\FX11Chunk.cs" />
     <Compile Include="Chunks\Libf\FunctionInfo.cs" />
     <Compile Include="Chunks\Libf\InterpolationMode.cs" />
     <Compile Include="Chunks\Libf\LibraryParameterDescription.cs" />
@@ -305,6 +307,7 @@
     <Compile Include="Chunks\DescriptionAttribute.cs" />
     <Compile Include="Util\DoubleConverter.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

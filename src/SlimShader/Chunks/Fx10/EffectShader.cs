@@ -11,29 +11,29 @@ namespace SlimShader.Chunks.Fx10
 	/// </summary>
 	public class EffectShader
 	{
-		public uint ShaderType;
+		public EffectShaderType ShaderType;
 		public uint Unknown1;
-		public uint Unknown2;
-		public uint Unknown3;
+		public uint GuessType;
+		public uint GuessShaderOffset;
 		public string Name;
 		public static EffectShader Parse(BytecodeReader reader, BytecodeReader passReader)
 		{
 			var result = new EffectShader();
-			//6 = vertex, 7 = pixel, 8 = geometry
-			result.ShaderType = passReader.ReadUInt32();
+			result.ShaderType = (EffectShaderType)passReader.ReadUInt32();
 			result.Unknown1 = passReader.ReadUInt32();
-			result.Unknown2 = passReader.ReadUInt32();
+			result.GuessType = passReader.ReadUInt32();
 			//String for assigned variable, offset to DXBC otherwise i think
-			var nameOffset = result.Unknown3 = passReader.ReadUInt32();
-			//2 for shader with variable, 7 for compiled inside pass
-			if (result.Unknown2 == 2)
+			var nameOffset = result.GuessShaderOffset = passReader.ReadUInt32();
+			//2 for shader with variable, 7 for compiled inside pass, 1 for StateParamter
+			if (result.GuessType == 2)
 			{
 				var nameReader = reader.CopyAtOffset((int)nameOffset);
 				result.Name = nameReader.ReadString();
 			}
 			else
 			{
-				result.Name = "NoName";
+				//TODO: GetValue
+				result.Name = "$Anonymous";
 			}
 			return result;
 		}
@@ -41,10 +41,10 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectShader");
-			sb.AppendLine($"  ShaderType {ShaderType} ({(EffectShaderType)ShaderType})");
-			sb.AppendLine($"  Unknown1 {Unknown1}");
-			sb.AppendLine($"  Unknown2 {Unknown2}");
-			sb.AppendLine($"  Unknown3 {Unknown3} ({Unknown3.ToString("X4")})");
+			sb.AppendLine($"  ShaderType {ShaderType} ({(uint)ShaderType})");
+			sb.AppendLine($"  EffectShader.Unknown1 {Unknown1} ({Unknown1.ToString("X4")})");
+			sb.AppendLine($"  EffectShader.GuessType {GuessType} ({GuessType.ToString("X4")})");
+			sb.AppendLine($"  EffectShader.GuessShaderOffset {GuessShaderOffset} ({GuessShaderOffset.ToString("X4")})");
 			sb.AppendLine($"  Name {Name}");
 			return sb.ToString();
 		}

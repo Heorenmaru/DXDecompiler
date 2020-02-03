@@ -4,21 +4,13 @@ using SharpDX.Direct3D10;
 using Fx10 = SlimShader.Chunks.Fx10;
 using System.Collections.Generic;
 using System.Linq;
+using SlimShader.Tests.DX10Util;
 
 namespace SlimShader.Tests
 {
 	class Effects10
 	{
-		static HashSet<string> BadTests = new HashSet<string>()
-		{
-			"TransparencyAA10_1_FX",
-			"EffectPools1_FX",
-			"EffectPools2_FX",
-			"EffectPools3_FX",
-			"DrawPredicated_FX",
-			"DepthOfField10"
-		};
-		public static void CompareShareResourceView(ShaderResourceView reflectionResourceView)
+		public static void CompareShaderResourceView(ShaderResourceView reflectionResourceView)
 		{
 
 		}
@@ -32,33 +24,25 @@ namespace SlimShader.Tests
 			Assert.AreEqual(desc.CpuAccessFlags, desc.CpuAccessFlags);
 			Assert.AreEqual(desc.OptionFlags, desc.OptionFlags);
 		}
-		static ShaderResourceView TryGetTextureView(EffectConstantBuffer effectBuffer)
+		public static void CompareConstantBuffer(EffectConstantBuffer reflectionEffectBuffer, Fx10.EffectBuffer buffer)
 		{
-			try
+			var desc = reflectionEffectBuffer.Description;
+			Assert.AreEqual(desc.Name, buffer.Name);
+			Assert.AreEqual(desc.Semantic ?? "", "");
+			Assert.AreEqual((uint)desc.Flags, 0);
+			Assert.AreEqual(desc.AnnotationCount, 0);
+			Assert.AreEqual(desc.BufferOffset, 0);
+			Assert.AreEqual(desc.ExplicitBindPoint, buffer.RegisterNumber == uint.MaxValue ? 0 : buffer.RegisterNumber);
+			Assert.AreEqual(reflectionEffectBuffer.TypeInfo.Description.Type, (ShaderVariableType)buffer.Type);
+			if(reflectionEffectBuffer.TypeInfo.Description.Type == ShaderVariableType.ConstantBuffer)
 			{
-				return effectBuffer.GetTextureBuffer();
-			} catch (SharpDX.SharpDXException ex)
+				var cbufferDesc = reflectionEffectBuffer.GetConstantBuffer().Description;
+				//TODO: Compare cbufferDesc
+			} else
 			{
-				return null;
+				var tbufferDesc = reflectionEffectBuffer.GetTextureBuffer().Description;
+				//TODO: Compare tbufferDesc
 			}
-		}
-		static Buffer TryGetConstantBuffer(EffectConstantBuffer effectBuffer)
-		{
-			try
-			{
-				return effectBuffer.GetConstantBuffer();
-			}
-			catch (SharpDX.SharpDXException ex)
-			{
-				return null;
-			}
-		}
-		public static void CompareConstantBuffer(EffectConstantBuffer reflectionEffectBuffer, Fx10.EffectBuffer containerBuffer)
-		{
-			//Buffer reflectionBuffer = TryGetConstantBuffer(reflectionEffectBuffer);
-			//ShaderResourceView reflectionTextureBuffer = TryGetTextureView(reflectionEffectBuffer);
-			//CompareBuffer(reflectionBuffer);
-			//CompareShareResourceView(reflectionTextureBuffer);
 		}
 		public static void CompareVariable(EffectVariable reflectionVariable, Fx10.IEffectVariable variable)
 		{
@@ -154,6 +138,7 @@ namespace SlimShader.Tests
 								.AsSampler()
 								.GetSampler()
 								.Description;
+				var stateAnnotations = (variable as Fx10.EffectTexture).StateAnnotations;
 			}
 			if (typeDesc.Type == ShaderVariableType.PixelShader ||
 				typeDesc.Type == ShaderVariableType.VertexShader ||
@@ -179,24 +164,6 @@ namespace SlimShader.Tests
 			}
 			return result;
 		}
-		public static int GetBufferCount(Effect effect)
-		{
-			for(int i = 0; i < 1000; i++)
-			{
-				var cb = effect.GetConstantBufferByIndex(i);
-				if (!cb.IsValid) return i;
-			}
-			return 1000;
-		}
-		public static int GetVariableCount(Effect effect)
-		{
-			for (int i = 0; i < 1000; i++)
-			{
-				var cb = effect.GetVariableByIndex(i);
-				if (!cb.IsValid) return i;
-			}
-			return 1000;
-		}
 		public static List<EffectVariable> GetEffectVariables(Effect effect)
 		{
 			var desc = effect.Description;
@@ -208,15 +175,28 @@ namespace SlimShader.Tests
 			}
 			return result;
 		}
+		public static List<EffectTechnique> Gettechniques(Effect effect)
+		{
+			var desc = effect.Description;
+			var result = new List<EffectTechnique>();
+			for (int i = 0; i < desc.TechniqueCount; i++)
+			{
+				var variable = effect.GetTechniqueByIndex(i);
+				result.Add(variable);
+			}
+			return result;
+		}
 		public static void CompareEffect(BytecodeContainer container, byte[] effectBytecode, string testName)
 		{
-			if (BadTests.Contains(testName))
+
+			var chunk = container.Chunks.OfType<Fx10.FX10Chunk>().First();
+			if (chunk.Header.Techniques == 0)
 			{
 				return;
 			}
-			var chunk = container.Chunks.OfType<Fx10.FX10Chunk>().First();
-			if(chunk.Header.Techniques == 0)
+			if (chunk.Header.Version.MinorVersion == 1)
 			{
+				Assert.Warn("Version fx_4_1 is not supported by SharpDX");
 				return;
 			}
 			if (chunk.IsChildEffect)
@@ -234,11 +214,6 @@ namespace SlimShader.Tests
 			Assert.AreEqual(desc.GlobalVariableCount, header.GlobalVariables + header.ObjectCount);
 			Assert.AreEqual(desc.SharedGlobalVariableCount, header.SharedGlobalVariables);
 			Assert.AreEqual(desc.TechniqueCount, header.Techniques);
-			var reflectionConstantBufferCount = GetBufferCount(effectReflection);
-			Assert.AreEqual(reflectionConstantBufferCount, header.ConstantBuffers + header.SharedConstantBuffers);
-			var reflectionVariableCount = GetVariableCount(effectReflection);
-
-			Assert.AreEqual(reflectionVariableCount, header.ObjectCount + header.SharedObjectCount + header.GlobalVariables + header.SharedGlobalVariables);
 			var variables = chunk.AllVariables.ToList();
 			var reflectionVariables = GetEffectVariables(effectReflection);
 			var reflectionNames = reflectionVariables
@@ -249,11 +224,77 @@ namespace SlimShader.Tests
 				CompareVariable(reflectionVariables[i], variables[i]);
 			}
 			var buffers = chunk.AllBuffers.ToList();
+			var reflectionBuffers = effectReflection.GetConstantBuffers();
 			for (int i = 0; i < desc.ConstantBufferCount + desc.SharedConstantBufferCount; i++)
 			{
-				var cb = effectReflection.GetConstantBufferByIndex(i);
-				CompareConstantBuffer(cb, buffers[i]);
+				CompareConstantBuffer(reflectionBuffers[i], buffers[i]);
 			}
+			var techniques = effectReflection.GetTechniques();
+			for (int i = 0; i < desc.TechniqueCount; i++)
+			{
+				CompareTechniques(techniques[i], chunk.Techniques[i]);
+			}
+		}
+
+		private static void CompareTechniques(EffectTechnique reflectionTechnique, Fx10.EffectTechnique technique)
+		{
+			EffectTechniqueDescription desc = reflectionTechnique.Description;
+			Assert.AreEqual(desc.Name, technique.Name);
+			Assert.AreEqual(desc.AnnotationCount, technique.Annotations.Count);
+			Assert.AreEqual(desc.PassCount, technique.Passes.Count);
+			var passes = reflectionTechnique.GetPasses();
+			for(int i = 0; i < desc.PassCount; i++)
+			{
+				ComparePass(passes[i], technique.Passes[i]);
+			}
+			var annotations = reflectionTechnique.GetAnnotations();
+			for (int i = 0; i < desc.AnnotationCount; i++)
+			{
+				CompareVariable(annotations[i], technique.Annotations[i]);
+			}
+		}
+
+		private static void ComparePass(EffectPass reflectionPass, Fx10.EffectPass pass)
+		{
+			EffectPassDescription desc = reflectionPass.Description;
+			Assert.AreEqual(desc.Name, pass.Name);
+			var annotations = reflectionPass.GetAnnotations();
+			for(int i = 0; i < desc.AnnotationCount; i++)
+			{
+				CompareVariable(annotations[i], pass.Annotations[i]);
+			}
+			var pixelShader = pass.Shaders.FirstOrDefault(
+				s => s.ShaderType == Fx10.EffectShaderType.PixelShader);
+			if(pixelShader != null)
+			{
+				EffectPassShaderDescription shaderDesc = reflectionPass.PixelShaderDescription;
+				CompareShader(shaderDesc, pixelShader);
+			}
+			var vertexShader = pass.Shaders.FirstOrDefault(
+				s => s.ShaderType == Fx10.EffectShaderType.VertexShader);
+			if (vertexShader != null)
+			{
+				EffectPassShaderDescription shaderDesc = reflectionPass.VertexShaderDescription;
+				CompareShader(shaderDesc, vertexShader);
+			}
+			var geometryShader = pass.Shaders.FirstOrDefault(
+				s => s.ShaderType == Fx10.EffectShaderType.GeometryShader);
+			if (geometryShader != null)
+			{
+				EffectPassShaderDescription shaderDesc = reflectionPass.GeometryShaderDescription;
+				CompareShader(shaderDesc, geometryShader);
+			}
+		}
+		private static void CompareShader(EffectPassShaderDescription shaderPassDesc, Fx10.EffectShader shader)
+		{
+			var shaderVar = shaderPassDesc.Variable;
+			EffectVariableDescription desc = shaderVar.Description;
+			Assert.AreEqual(desc.Name, shader.Name);
+			Assert.AreEqual(desc.Semantic ?? "", "");
+			Assert.AreEqual((uint)desc.Flags, 0);
+			Assert.AreEqual(desc.ExplicitBindPoint, 0);
+			Assert.AreEqual(desc.BufferOffset, 0);
+			Assert.AreEqual(desc.AnnotationCount,0);
 		}
 	}
 }

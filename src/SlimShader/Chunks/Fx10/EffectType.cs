@@ -24,7 +24,8 @@ namespace SlimShader.Chunks.Fx10
 		public uint GuessStride { get; private set; }
 		public uint PackedType { get; private set; }
 		public uint MemberCount { get; private set; }
-		public ShaderVariableType VariableType { get; private set; }
+		public EffectVariableType EffectVariableType { get; private set; }
+		public ShaderVariableType VariableType => EffectVariableType.ToShaderVariableType();
 		public ShaderVariableClass VariableClass { get; private set; }
 		public uint Rows { get; private set; }
 		public uint Columns { get; private set; }
@@ -67,16 +68,16 @@ namespace SlimShader.Chunks.Fx10
 				switch (scalarType)
 				{
 					case 1:
-						result.VariableType = ShaderVariableType.Float;
+						result.EffectVariableType = EffectVariableType.Float;
 						break;
 					case 2:
-						result.VariableType = ShaderVariableType.Int;
+						result.EffectVariableType = EffectVariableType.Int;
 						break;
 					case 3:
-						result.VariableType = ShaderVariableType.UInt;
+						result.EffectVariableType = EffectVariableType.UInt;
 						break;
 					case 4:
-						result.VariableType = ShaderVariableType.Bool;
+						result.EffectVariableType = EffectVariableType.Bool;
 						break;
 				}
 				result.Rows = type.DecodeValue(8, 10);
@@ -84,72 +85,11 @@ namespace SlimShader.Chunks.Fx10
 			} else if (result.Unknown2 == 2)
 			{
 				result.VariableClass = ShaderVariableClass.Object;
-				switch (type)
-				{
-					case 1:
-						result.VariableType = ShaderVariableType.String;
-						break;
-					case 2:
-						result.VariableType = ShaderVariableType.Blend;
-						break;
-					case 3:
-						result.VariableType = ShaderVariableType.DepthStencil;
-						break;
-					case 4:
-						result.VariableType = ShaderVariableType.Rasterizer;
-						break;
-					case 5:
-						result.VariableType = ShaderVariableType.PixelShader;
-						break;
-					case 6:
-						result.VariableType = ShaderVariableType.VertexShader;
-						break;
-					case 7:
-						result.VariableType = ShaderVariableType.GeometryShader;
-						break;
-					case 8:
-						result.VariableType = ShaderVariableType.GeometryShader;
-						break;
-					case 10:
-						result.VariableType = ShaderVariableType.Texture1D;
-						break;
-					case 11:
-						result.VariableType = ShaderVariableType.Texture1DArray;
-						break;
-					case 12:
-						result.VariableType = ShaderVariableType.Texture2D;
-						break;
-					case 13:
-						result.VariableType = ShaderVariableType.Texture2DArray;
-						break;
-					case 14:
-						result.VariableType = ShaderVariableType.Texture2DMultiSampled;
-						break;
-					case 15:
-						result.VariableType = ShaderVariableType.Texture2DMultiSampledArray;
-						break;
-					case 16:
-						result.VariableType = ShaderVariableType.Texture3D;
-						break;
-					case 17:
-						result.VariableType = ShaderVariableType.TextureCube;
-						break;
-					case 21:
-						result.VariableType = ShaderVariableType.Sampler;
-						break;
-					case 22:
-						result.VariableType = ShaderVariableType.Buffer;
-						break;
-					case 23:
-						result.VariableType = ShaderVariableType.TextureCubeArray;
-						break;
-					default:
-						throw new Exception($"Unknown effect variable type {type} for {result.TypeName}");
-				}
+				result.EffectVariableType = (EffectVariableType)type;
 			}
 			else if (result.Unknown2 == 3)
 			{
-				result.VariableType = ShaderVariableType.Void;
+				result.EffectVariableType = EffectVariableType.Void;
 				result.VariableClass = ShaderVariableClass.Struct;
 				result.MemberCount = result.PackedType;
 				for(int i = 0; i < result.MemberCount; i++)
@@ -164,14 +104,14 @@ namespace SlimShader.Chunks.Fx10
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectType");
 			sb.AppendLine($"    TypeNameOffset: {TypeName} ({TypeNameOffset.ToString("X4")})");
-			sb.AppendLine($"    EffectType.Unknown2: {Unknown2}");
-			sb.AppendLine($"    EffectType.ElementCount: {ElementCount}");
-			sb.AppendLine($"    EffectType.GuessPackedSize: {GuessPackedSize}");
-			sb.AppendLine($"    EffectType.GuessUnpackedSize: {GuessUnpackedSize}");
-			sb.AppendLine($"    EffectType.GuessStride: {GuessStride}");
-			sb.AppendLine($"    EffectType.Type: {VariableClass}, {VariableType}");
-			sb.AppendLine($"    EffectType.Type: {TypeName,-16}{PackedType, 4}\t({Convert.ToString(PackedType, 2),15})");
-			sb.AppendLine($"    EffectType.MemberCount {MemberCount}");
+			sb.AppendLine($"    Type: {Unknown2}");
+			sb.AppendLine($"    ElementCount: {ElementCount}");
+			sb.AppendLine($"    GuessPackedSize: {GuessPackedSize}");
+			sb.AppendLine($"    GuessUnpackedSize: {GuessUnpackedSize}");
+			sb.AppendLine($"    GuessStride: {GuessStride}");
+			sb.AppendLine($"    VariableTypeAndClass: {VariableClass}, {VariableType}");
+			sb.AppendLine($"    DebugType: {TypeName,-16}{PackedType, 4}\t({Convert.ToString(PackedType, 2),15})");
+			sb.AppendLine($"    MemberCount {MemberCount}");
 			foreach(var member in Members)
 			{
 				sb.Append(member.ToString());

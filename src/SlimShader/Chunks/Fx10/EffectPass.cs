@@ -11,7 +11,7 @@ namespace SlimShader.Chunks.Fx10
 	/// </summary>
 	public class EffectPass
 	{
-		public uint GuessNameOffset;
+		public uint NameOffset;
 		public string Name { get; private set; }
 		public uint ShaderCount;
 		public uint AnnotationCount;
@@ -25,7 +25,7 @@ namespace SlimShader.Chunks.Fx10
 		public static EffectPass Parse(BytecodeReader reader, BytecodeReader passReader)
 		{
 			var result = new EffectPass();
-			var nameOffset = result.GuessNameOffset = passReader.ReadUInt32();
+			var nameOffset = result.NameOffset = passReader.ReadUInt32();
 			var nameReader = reader.CopyAtOffset((int)nameOffset);
 			result.Name = nameReader.ReadString();
 			result.ShaderCount = passReader.ReadUInt32();
@@ -44,7 +44,7 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectPass");
-			sb.AppendLine($"  Name {Name} ({GuessNameOffset.ToString("X4")})");
+			sb.AppendLine($"  Name {Name} ({NameOffset.ToString("X4")})");
 			sb.AppendLine($"  ShaderCount {ShaderCount}");
 			sb.AppendLine($"  AnnotationCount {AnnotationCount}");
 			foreach (var annotation in Annotations)

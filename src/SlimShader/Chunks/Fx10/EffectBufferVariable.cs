@@ -55,11 +55,11 @@ namespace SlimShader.Chunks.Fx10
 			}
 			result.BufferOffset = variableReader.ReadUInt32();
 			result.DefaultValueOffset = variableReader.ReadUInt32();
-			//Debug.Assert(result.Unknown0 == 0, $"EffectBufferVariable.Unknown0 {result.Unknown0}");
 			if (!isShared)
 			{
 				result.Unknown1 = variableReader.ReadUInt32();
-				Debug.Assert(result.Unknown1 == 0, $"EffectBufferVariable.Unknown1 {result.Unknown1}");
+				//TODO: Unknown1
+				//Debug.Assert(result.Unknown1 == 0, $"EffectBufferVariable.Unknown1 {result.Unknown1}");
 			}
 			result.AnnotationCount = variableReader.ReadUInt32();
 			for(int i = 0; i < result.AnnotationCount; i++)
@@ -76,7 +76,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    TypeOffset: {TypeOffset} ({TypeOffset.ToString("X4")})");
 			sb.AppendLine($"    Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
 			sb.AppendLine($"    BufferOffset: {BufferOffset}");
-			sb.AppendLine($"    EffectBufferVariable.Unknown0: {DefaultValueOffset}");
+			sb.AppendLine($"    EffectBufferVariable.DefaultValueOffset: {DefaultValueOffset}");
 			sb.AppendLine($"    EffectBufferVariable.Unknown1: {Unknown1}");
 			sb.AppendLine($"    EffectBufferVariable.AnnotationCount: {AnnotationCount}");
 			sb.Append(Type.ToString());

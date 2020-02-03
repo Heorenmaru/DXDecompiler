@@ -27,22 +27,23 @@ namespace SlimShader.Chunks.Fx10
 		public EffectType Type { get; private set; }
 		public uint SemanticOffset { get; private set; }
 		public uint BufferOffset { get; private set; }
-		public uint SamplerAnnotationCount { get; private set; }
+		public uint StateAnnotationCount { get; private set; }
 		public uint AnnotationCount { get; private set; }
 		public List<EffectAnnotation> Annotations { get; private set; }
-		public List<EffectStateAnnotation> SamplerAnnotations { get; private set; }
+		public List<EffectStateAnnotation> StateAnnotations { get; private set; }
 		public uint GuessShaderChunkOffset { get; private set; }
-
+		public string StreamOutputDecl0 { get; private set; }
 
 		//TODO
 		public uint Flags => 0;
 		public uint ExplicitBindPoint => 0;
 		IList<IEffectVariable> IEffectVariable.Annotations => Annotations.Cast<IEffectVariable>().ToList();
 
+		public uint StreamOutputDecl0Offset;
 		public EffectTexture()
 		{
 			Annotations = new List<EffectAnnotation>();
-			SamplerAnnotations = new List<EffectStateAnnotation>();
+			StateAnnotations = new List<EffectStateAnnotation>();
 		}
 		private static bool HasExtraAnnotations(EffectType type)
 		{
@@ -92,15 +93,24 @@ namespace SlimShader.Chunks.Fx10
 			}
 			if (HasExtraAnnotations(result.Type))
 			{
-				result.SamplerAnnotationCount = variableReader.ReadUInt32();
-				for (int i = 0; i < result.SamplerAnnotationCount; i++)
+				result.StateAnnotationCount = variableReader.ReadUInt32();
+				for (int i = 0; i < result.StateAnnotationCount; i++)
 				{
-					result.SamplerAnnotations.Add(EffectStateAnnotation.Parse(reader, variableReader));
+					result.StateAnnotations.Add(EffectStateAnnotation.Parse(reader, variableReader));
 				}
 			}
 			if (IsShader(result.Type))
 			{
 				result.GuessShaderChunkOffset = variableReader.ReadUInt32();
+			}
+			if (result.Type.EffectVariableType == EffectVariableType.GeometryShaderWithStream)
+			{
+				result.StreamOutputDecl0Offset = variableReader.ReadUInt32();
+				var declReader = reader.CopyAtOffset((int)result.StreamOutputDecl0Offset);
+				result.StreamOutputDecl0 = declReader.ReadString();
+			} else
+			{
+				result.StreamOutputDecl0 = "";
 			}
 			result.AnnotationCount = variableReader.ReadUInt32();
 			for (int i = 0; i < result.AnnotationCount; i++)
@@ -117,12 +127,15 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  TypeOffset: {TypeOffset} ({TypeOffset.ToString("X4")})");
 			sb.AppendLine($"  EffectTexture.Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
 			sb.AppendLine($"  EffectTexture.BufferOffset: {BufferOffset}");
-			sb.AppendLine($"  EffectTexture.SamplerAnnotationCount: {SamplerAnnotationCount}");
 			sb.AppendLine($"  AnnotationCount: {AnnotationCount}");
-			sb.AppendLine($"  SamplerAnotationCount: {SamplerAnnotationCount}");
+			sb.AppendLine($"  StateAnnotationCount: {StateAnnotationCount}");
 			sb.AppendLine($"  GuessShaderChunkOffset: {GuessShaderChunkOffset} ({GuessShaderChunkOffset.ToString("X4")})");
+			if (Type.EffectVariableType == EffectVariableType.GeometryShaderWithStream)
+			{
+				sb.AppendLine($"  StreamOutputDecl0: {StreamOutputDecl0} ({StreamOutputDecl0Offset.ToString("X4")})");
+			}			
 			sb.AppendLine(Type.ToString());
-			foreach (var annotation in SamplerAnnotations)
+			foreach (var annotation in StateAnnotations)
 			{
 				sb.Append(annotation);
 			}

@@ -12,6 +12,9 @@ namespace SlimShader.Chunks.Fx10
 		Blend = 2,
 		VertexShader= 6,
 		PixelShader = 7,
-		GeometryShader = 8
+		GeometryShader = 8,
+		DepthStencilRef = 9,
+		BlendStateBlendFactor = 10,
+		BlendStateSampleMask = 11
 	}
 }
