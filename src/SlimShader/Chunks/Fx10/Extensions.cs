@@ -39,6 +39,8 @@ namespace SlimShader.Chunks.Fx10
 					return ShaderVariableType.GeometryShader;
 				case EffectVariableType.GeometryShaderWithStream:
 					return ShaderVariableType.GeometryShader;
+				case EffectVariableType.Texture:
+					return ShaderVariableType.Texture;
 				case EffectVariableType.Texture1D:
 					return ShaderVariableType.Texture1D;
 				case EffectVariableType.Texture1DArray:
