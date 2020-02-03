@@ -26,7 +26,7 @@ cbuffer TestCbuffer
 }
 
 //
-// 8 local object(s)
+// 12 local object(s)
 //
 Texture2D g_MeshTexture;
 SamplerState MeshTextureSampler
@@ -144,6 +144,12 @@ RasterizerState CullNone
 {
     CullMode = uint(NONE /* 1 */);
 };
+DepthStencilView TestDepthStencilView;
+RenderTargetView TestRenderTargetView;
+VertexShader TestVertexShader5 = 
+    NULL;
+PixelShader TestPixelShader5 = 
+    NULL;
 
 //
 // 1 shared buffer(s)
@@ -241,6 +247,12 @@ technique10 RenderSceneWithTexture1Light10_1
             // Approximately 3 instruction slots used
                     
         };
+        AB_BlendFactor = float4(0, 0, 0, 0);
+        AB_SampleMask = uint(0xffffffff);
+        BlendState = NoBlending;
+        RasterizerState = CullNone;
+        DS_StencilRef = uint(5);
+        DepthStencilState = DisableDepth;
     }
 
 }

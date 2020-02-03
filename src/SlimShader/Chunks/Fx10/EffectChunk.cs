@@ -19,16 +19,16 @@ namespace SlimShader.Chunks.Fx10
 	/// Effect Techniques with 1 pass 0 shaders have a stride of 24 bytes
 	/// Effect Techniques with 1 pass 2 shaders(1 vs, 1 ps) have a stride of 56 bytes
 	/// Effect Pass with 0 shaders have a stride of 12 bytes
+	/// Effect shaders have a stride of 12 bytes
 	/// 
 	/// /// </summary>
-	public class FX11Chunk : BytecodeChunk
+	public class EffectChunk : BytecodeChunk
 	{
 		public byte[] HeaderData;
 		public byte[] BodyData;
 		public byte[] FooterData;
-		public byte[] Data;
 		uint Size;
-		public FX10Header Header;
+		public EffectHeader Header;
 		public IEnumerable<EffectBuffer> AllBuffers
 		{
 			get
@@ -49,7 +49,7 @@ namespace SlimShader.Chunks.Fx10
 			{
 				foreach (var buffer in LocalBuffers)
 				{
-					foreach (var variable in buffer.Variables)
+					foreach(var variable in buffer.Variables)
 					{
 						yield return variable;
 					}
@@ -77,23 +77,30 @@ namespace SlimShader.Chunks.Fx10
 		public List<EffectTexture> LocalVariables { get; private set; }
 		public List<EffectTexture> SharedVariables { get; private set; }
 		public List<EffectTechnique> Techniques { get; private set; }
+		/// <summary>
+		/// Only used in fx_5_0
+		/// </summary>
+		public List<EffectGroup> Groups { get; private set; }
 		string Error = "";
-		public FX11Chunk()
+		public EffectChunk()
 		{
 			LocalBuffers = new List<EffectBuffer>();
 			SharedBuffers = new List<EffectBuffer>();
 			LocalVariables = new List<EffectTexture>();
 			SharedVariables = new List<EffectTexture>();
 			Techniques = new List<EffectTechnique>();
+			Groups = new List<EffectGroup>();
 		}
-		public static FX11Chunk Parse(BytecodeReader reader, uint size)
+		public static EffectChunk Parse(BytecodeReader reader, uint size)
 		{
 			var headerReader = reader.CopyAtCurrentPosition();
-			var result = new FX11Chunk();
+			var result = new EffectChunk();
 			result.Size = size;
-			var header = result.Header = FX10Header.Parse(headerReader);
-			var footerOffset = (int)(result.Header.FooterOffset + 0x4C);
-			var bodyReader = reader.CopyAtOffset((int)0x4C);
+			var header = result.Header = EffectHeader.Parse(headerReader);
+			var bodyOffset = header.Version.MajorVersion < 5 ?
+				0x4C : 0x60;
+			var footerOffset = (int)(result.Header.FooterOffset + bodyOffset);
+			var bodyReader = reader.CopyAtOffset((int)bodyOffset);
 			var footerReader = reader.CopyAtOffset(footerOffset);
 			try
 			{
@@ -113,28 +120,35 @@ namespace SlimShader.Chunks.Fx10
 				{
 					result.SharedVariables.Add(EffectTexture.Parse(bodyReader, footerReader, true));
 				}
-				for (int i = 0; i < header.Techniques; i++)
+				if (header.Version.MajorVersion >= 5)
 				{
-					result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader));
+					for (int i = 0; i < header.GroupCount; i++)
+					{
+						result.Groups.Add(EffectGroup.Parse(bodyReader, footerReader));
+					}
 				}
-			}
-			catch (Exception ex)
+				else
+				{
+					for (int i = 0; i < header.Techniques; i++)
+					{
+						result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader));
+					}
+				}
+			} catch(Exception ex)
 			{
 				result.Error = ex.ToString();
 				//throw;
 			}
 
 			var headerDataReader = reader.CopyAtCurrentPosition();
-			result.HeaderData = headerDataReader.ReadBytes((int)0x4C);
+			result.HeaderData = headerDataReader.ReadBytes((int)bodyOffset);
 
 			var bodyDataReader = reader.CopyAtOffset(0x4C);
-			result.BodyData = bodyDataReader.ReadBytes((int)footerOffset - 0x4C);
+			result.BodyData = bodyDataReader.ReadBytes((int)footerOffset - bodyOffset);
 
 			var footerDataReader = reader.CopyAtOffset(footerOffset);
 			result.FooterData = footerDataReader.ReadBytes((int)(size - footerOffset));
 
-			var dataReader = reader.CopyAtCurrentPosition();
-			result.Data = dataReader.ReadBytes((int)size);
 			return result;
 		}
 		public static string FormatReadable(byte[] data, bool endian = false)
@@ -191,7 +205,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine("Header:");
 			sb.AppendLine(Header.ToString());
 			sb.AppendLine("Foo:");
-			foreach (var buffer in LocalBuffers)
+			foreach(var buffer in LocalBuffers)
 			{
 				sb.AppendLine(buffer.ToString());
 			}
@@ -211,9 +225,10 @@ namespace SlimShader.Chunks.Fx10
 			{
 				sb.AppendLine(technique.ToString());
 			}
-
-			sb.AppendLine("Data:");
-			sb.AppendLine(FormatReadable(Data));
+			foreach (var group in Groups)
+			{
+				sb.AppendLine(group.ToString());
+			}
 
 			sb.AppendLine("FooterData:");
 			sb.AppendLine(FormatReadable(FooterData));

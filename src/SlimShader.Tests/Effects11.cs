@@ -94,7 +94,7 @@ namespace SlimShader.Tests
 				Warn.If(true, "Container is null");
 				return;
 			}
-			var chunk = container.Chunks.OfType<FX10Chunk>().First();
+			var chunk = container.Chunks.OfType<EffectChunk>().First();
 
 			if (chunk.IsChildEffect)
 			{

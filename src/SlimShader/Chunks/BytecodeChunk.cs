@@ -123,7 +123,7 @@ namespace SlimShader.Chunks
 					chunk = LibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				case ChunkType.Fx10:
-					chunk = FX10Chunk.Parse(chunkContentReader, chunkSize);
+					chunk = EffectChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				default :
 					throw new ParseException("Invalid chunk type: " + chunkType);

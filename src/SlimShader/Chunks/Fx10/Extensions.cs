@@ -55,12 +55,47 @@ namespace SlimShader.Chunks.Fx10
 					return ShaderVariableType.Texture3D;
 				case EffectVariableType.TextureCube:
 					return ShaderVariableType.TextureCube;
+				case EffectVariableType.RenderTargetView:
+					return ShaderVariableType.RenderTargetView;
+				case EffectVariableType.DepthStencilView:
+					return ShaderVariableType.DepthStencilView;
 				case EffectVariableType.Sampler:
 					return ShaderVariableType.Sampler;
 				case EffectVariableType.Buffer:
 					return ShaderVariableType.Buffer;
 				case EffectVariableType.TextureCubeArray:
 					return ShaderVariableType.TextureCubeArray;
+				case EffectVariableType.ComputeShader:
+					return ShaderVariableType.ComputeShader;
+				case EffectVariableType.HullShader:
+					return ShaderVariableType.HullShader;
+				case EffectVariableType.DomainShader:
+					return ShaderVariableType.DomainShader;
+				//TODO: Bring RW and ReadWrite notation into alignment
+				case EffectVariableType.RWTexture1D:
+					return ShaderVariableType.ReadWriteTexture1D;
+				case EffectVariableType.RWTexture1DArray:
+					return ShaderVariableType.ReadWriteTexture1DArray;
+				case EffectVariableType.RWTexture2D:
+					return ShaderVariableType.ReadWriteTexture2D;
+				case EffectVariableType.RWTexture2DArray:
+					return ShaderVariableType.ReadWriteTexture2DArray;
+				case EffectVariableType.RWTexture3D:
+					return ShaderVariableType.ReadWriteTexture3D;
+				case EffectVariableType.RWBuffer:
+					return ShaderVariableType.ReadWriteBuffer;
+				case EffectVariableType.ByteAddressBuffer:
+					return ShaderVariableType.ByteAddressBuffer;
+				case EffectVariableType.RWByteAddressBuffer:
+					return ShaderVariableType.ReadWriteByteAddressBuffer;
+				case EffectVariableType.StructuredBuffer:
+					return ShaderVariableType.StructuredBuffer;
+				case EffectVariableType.RWStructuredBuffer:
+					return ShaderVariableType.ReadWriteStructuredBuffer;
+				case EffectVariableType.AppendStructuredBuffer:
+					return ShaderVariableType.AppendStructuredBuffer;
+				case EffectVariableType.ConsumeStructuredBuffer:
+					return ShaderVariableType.ConsumeStructuredBuffer;
 				default:
 					throw new Exception($"Unknown effect variable type {effectType}");
 			}

@@ -105,7 +105,7 @@ namespace SlimShader
 			var magicNumber = BitConverter.ToUInt32(rawBytes, 0);
 			if(magicNumber == 0xFEFF2001)
 			{
-				Chunks.Add(FX11Chunk.Parse(reader, (uint)rawBytes.Length));
+				Chunks.Add(EffectChunk.Parse(reader, (uint)rawBytes.Length));
 				return;
 			}
 			Header = BytecodeContainerHeader.Parse(reader);
@@ -150,22 +150,14 @@ namespace SlimShader
 				WriteLibShader(sb);
 				return sb.ToString();
 			}
-			if (Chunks.OfType<FX10Chunk>().Any())
+			if (Chunks.OfType<EffectChunk>().Any())
 			{
-				foreach (var chunk in Chunks.OfType<FX10Chunk>()) {
+				foreach (var chunk in Chunks.OfType<EffectChunk>()) {
 					sb.AppendLine(chunk.ToString());
 				}
 				foreach(var chunk in Chunks)
 				{
 					sb.AppendLine($"{chunk.ChunkType} {chunk.GetType()}");
-				}
-				return sb.ToString();
-			}
-			if (Chunks.OfType<FX11Chunk>().Any())
-			{
-				foreach (var chunk in Chunks.OfType<FX11Chunk>())
-				{
-					sb.AppendLine(chunk.ToString());
 				}
 				return sb.ToString();
 			}

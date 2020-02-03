@@ -188,7 +188,7 @@ namespace SlimShader.Tests
 				CompareLibrary(container, binaryFileBytes);
 				return;
 			}
-			if (container.Chunks.OfType<FX10Chunk>().Any())
+			if (container.Chunks.OfType<EffectChunk>().Any())
 			{
 				Effects10.CompareEffect(container, binaryFileBytes, Path.GetFileNameWithoutExtension(relPath));
 				return;

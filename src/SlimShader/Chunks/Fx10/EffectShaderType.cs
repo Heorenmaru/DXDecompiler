@@ -15,6 +15,7 @@ namespace SlimShader.Chunks.Fx10
 		GeometryShader = 8,
 		DepthStencilRef = 9,
 		BlendStateBlendFactor = 10,
-		BlendStateSampleMask = 11
+		BlendStateSampleMask = 11,
+		ComputeShader = 58
 	}
 }

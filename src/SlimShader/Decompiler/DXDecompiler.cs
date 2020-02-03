@@ -38,17 +38,10 @@ namespace SlimShader.Decompiler
 				}
 				return sb.ToString();
 			}
-			if (container.Chunks.OfType<FX10Chunk>().Any())
+			if (container.Chunks.OfType<EffectChunk>().Any())
 			{
 				return container.Chunks
-					.OfType<FX10Chunk>()
-					.First()
-					.ToString();
-			}
-			if (container.Chunks.OfType<FX11Chunk>().Any())
-			{
-				return container.Chunks
-					.OfType<FX11Chunk>()
+					.OfType<EffectChunk>()
 					.First()
 					.ToString();
 			}
