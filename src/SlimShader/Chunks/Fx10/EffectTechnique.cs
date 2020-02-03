@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace SlimShader.Chunks.Fx10
 		public string Name { get; private set; }
 		public uint PassCount;
 		public uint AnnotationCount;
+
 		public List<EffectAnnotation> Annotations { get; private set; }
 		public List<EffectPass> Passes { get; private set; }
 		public EffectTechnique()
@@ -31,6 +33,7 @@ namespace SlimShader.Chunks.Fx10
 			result.Name = nameReader.ReadString();
 			result.PassCount = techniqueReader.ReadUInt32();
 			result.AnnotationCount = techniqueReader.ReadUInt32();
+
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
 				result.Annotations.Add(EffectAnnotation.Parse(reader, techniqueReader));

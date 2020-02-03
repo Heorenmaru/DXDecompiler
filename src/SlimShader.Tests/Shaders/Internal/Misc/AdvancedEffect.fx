@@ -109,6 +109,8 @@ RasterizerState CullNone
 {
 	CullMode = NONE;
 };
+DepthStencilView TestDepthStencilView;
+RenderTargetView TestRenderTargetView;
 
 shared Texture2D sharedTexture;            // Color texture for mesh
 struct VS_OUTPUT
@@ -171,7 +173,6 @@ void CSMain(uint3 DTid : SV_DispatchThreadID)
 	BufferOut.Store(DTid.x * 8 + 4, asuint(f0 + f1));
 }
 
-
 technique10 RenderSceneWithTexture1Light10_1
 {
 	pass P0
@@ -205,13 +206,17 @@ technique11 RenderSceneWithTexture1Light11_1
 		SetDepthStencilState(DisableDepth, 5);
 	}
 }
+VertexShader TestVertexShader5 = CompileShader(vs_5_0, RenderSceneVS(1, true, true));
+PixelShader TestPixelShader5 = CompileShader(ps_5_0, RenderScenePS(false));
+ComputeShader TestComputeShader5 = CompileShader(cs_5_0, CSMain());
 technique11 RenderSceneWithTexture1Light11_2
 {
 	pass P0
 	{
-		SetVertexShader(CompileShader(vs_5_0, RenderSceneVS(1, true, true)));
+		SetVertexShader(TestVertexShader5);
 		SetGeometryShader(NULL);
-		SetPixelShader(CompileShader(ps_5_0, RenderScenePS(false)));
+		SetPixelShader(TestPixelShader5);
+		SetComputeShader(TestComputeShader5);
 	}
 }
 fxgroup g0

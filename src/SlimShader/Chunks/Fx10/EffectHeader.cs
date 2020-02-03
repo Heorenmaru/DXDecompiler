@@ -8,10 +8,11 @@ using System.Text;
 
 namespace SlimShader.Chunks.Fx10
 {
-	public class FX10Header
+	public class EffectHeader
 	{
 		/// <summary>
 		/// Based on D3D10_EFFECT_DESC and maybe D3D10_STATE_BLOCK_MASK?
+		/// fx_4_x has a stride of 80 bytes
 		/// </summary>
 		public ShaderVersion Version { get; private set; }
 		/// <summary>
@@ -34,14 +35,22 @@ namespace SlimShader.Chunks.Fx10
 		public uint BlendStateCount;
 		public uint RasterizerStateCount;
 		public uint LocalSamplerCount;
-		public uint unknown11;
-		public uint unknown12;
+		public uint RenderTargetViewCount;
+		public uint DepthStencilViewCount;
 		public uint ShaderCount;
 		public uint UsedShaderCount;
-		public uint unknown15;
-		public static FX10Header Parse(BytecodeReader chunkReader)
+
+		/// <summary>
+		/// Start of fx_5_0 members
+		/// </summary>
+		public uint GroupCount;
+		public uint UAVCount;
+		public uint unknown17;
+		public uint unknown18;
+		public uint unknown19;
+		public static EffectHeader Parse(BytecodeReader chunkReader)
 		{
-			var result = new FX10Header();
+			var result = new EffectHeader();
 			result.Version = ShaderVersion.ParseFX(chunkReader);
 			var bufferCount = result.ConstantBuffers = chunkReader.ReadUInt32();
 			//Global Variable Count
@@ -60,15 +69,18 @@ namespace SlimShader.Chunks.Fx10
 			var BlendStateCount = result.BlendStateCount = chunkReader.ReadUInt32();
 			var RasterizerStateCount = result.RasterizerStateCount = chunkReader.ReadUInt32();
 			var SamplerCount = result.LocalSamplerCount = chunkReader.ReadUInt32();
-			var unknown11 = result.unknown11 = chunkReader.ReadUInt32();
-			Debug.Assert(unknown11 == 0, $"FX10Chunkl.unknown11 is {unknown11}");
-			var unknown12 = result.unknown12 = chunkReader.ReadUInt32();
-			Debug.Assert(unknown12 == 0, $"FX10Chunkl.unknown12 is {unknown12}");
+			result.RenderTargetViewCount = chunkReader.ReadUInt32();
+			result.DepthStencilViewCount = chunkReader.ReadUInt32();
 			var ShaderCount = result.ShaderCount = chunkReader.ReadUInt32();
 			var UsedShaderCount = result.UsedShaderCount = chunkReader.ReadUInt32();
-			var unknown15 = result.unknown15 = chunkReader.ReadUInt32();
-			Debug.Assert(unknown15 == 0 || result.Version.MajorVersion == 5, 
-					$"FX10Chunkl.unknown15 is {unknown15}");
+			if(result.Version.MajorVersion >= 5)
+			{
+				result.GroupCount = chunkReader.ReadUInt32();
+				result.UAVCount = chunkReader.ReadUInt32();
+				result.unknown17 = chunkReader.ReadUInt32();
+				result.unknown18 = chunkReader.ReadUInt32();
+				result.unknown19 = chunkReader.ReadUInt32();
+			}
 			return result;
 
 		}
@@ -90,11 +102,18 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  BlendStateCount: {BlendStateCount}");
 			sb.AppendLine($"  RasterizerStateCount: {RasterizerStateCount}");
 			sb.AppendLine($"  LocalSamplerCount: {LocalSamplerCount}");
-			sb.AppendLine($"  unknown12: {unknown11}");
-			sb.AppendLine($"  unknown11: {unknown12}");
+			sb.AppendLine($"  RenderTargetViewCount: {RenderTargetViewCount}");
+			sb.AppendLine($"  DepthStencilViewCount: {DepthStencilViewCount}");
 			sb.AppendLine($"  ShaderCount: {ShaderCount}");
 			sb.AppendLine($"  UsedShaderCount: {UsedShaderCount}");
-			sb.AppendLine($"  unknown15: {unknown15}");
+			if (Version.MajorVersion >= 5)
+			{
+				sb.AppendLine($"  GroupCount: {GroupCount}");
+				sb.AppendLine($"  UAVCount: {UAVCount}");
+				sb.AppendLine($"  unknown17: {unknown17}");
+				sb.AppendLine($"  unknown18: {unknown18}");
+				sb.AppendLine($"  unknown19: {unknown19}");
+			}
 			return sb.ToString();
 		}
 	}

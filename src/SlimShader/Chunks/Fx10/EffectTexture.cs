@@ -64,6 +64,9 @@ namespace SlimShader.Chunks.Fx10
 				case ShaderVariableType.VertexShader:
 				case ShaderVariableType.PixelShader:
 				case ShaderVariableType.GeometryShader:
+				case ShaderVariableType.ComputeShader:
+				case ShaderVariableType.HullShader:
+				case ShaderVariableType.DomainShader:
 					return true;
 			}
 			return false;
@@ -115,7 +118,7 @@ namespace SlimShader.Chunks.Fx10
 			result.AnnotationCount = variableReader.ReadUInt32();
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
-				result.Annotations.Add(EffectAnnotation.Parse(reader, variableReader));
+				//result.Annotations.Add(EffectAnnotation.Parse(reader, variableReader));
 			}
 			return result;
 		}

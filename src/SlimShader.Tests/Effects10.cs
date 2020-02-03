@@ -189,7 +189,7 @@ namespace SlimShader.Tests
 		public static void CompareEffect(BytecodeContainer container, byte[] effectBytecode, string testName)
 		{
 
-			var chunk = container.Chunks.OfType<Fx10.FX10Chunk>().First();
+			var chunk = container.Chunks.OfType<Fx10.EffectChunk>().First();
 			if (chunk.Header.Techniques == 0)
 			{
 				return;
