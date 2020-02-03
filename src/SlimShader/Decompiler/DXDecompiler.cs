@@ -45,6 +45,13 @@ namespace SlimShader.Decompiler
 					.First()
 					.ToString();
 			}
+			if (container.Chunks.OfType<FX11Chunk>().Any())
+			{
+				return container.Chunks
+					.OfType<FX11Chunk>()
+					.First()
+					.ToString();
+			}
 			var decompiler = new DXDecompiler(container);
 			return decompiler.Decompile();
 		}

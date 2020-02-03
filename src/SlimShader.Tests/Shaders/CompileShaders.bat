@@ -103,6 +103,13 @@ CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_5_0_Child_FX fx
 CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_0_Child_FX fx_4_0 /Gch || GOTO :error
 CALL CompileShader2.bat Internal/Misc BasicEffect.fx BasicEffect_4_1_Child_FX fx_4_1 /Gch || GOTO :error
 
+CALL CompileShader2.bat Internal/Misc AdvancedEffect.fx AdvancedEffect_5_0_FX fx_5_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc AdvancedEffect.fx AdvancedEffect_4_0_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc AdvancedEffect.fx AdvancedEffect_4_1_FX fx_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc AdvancedEffect.fx AdvancedEffect_5_0_Child_FX fx_5_0 /Gch || GOTO :error
+CALL CompileShader2.bat Internal/Misc AdvancedEffect.fx AdvancedEffect_4_0_Child_FX fx_4_0 /Gch || GOTO :error
+CALL CompileShader2.bat Internal/Misc AdvancedEffect.fx AdvancedEffect_4_1_Child_FX fx_4_1 /Gch || GOTO :error
+
 CALL CompileShader2.bat Internal/Misc EffectNoTechnique.fx EffectNoTechnique_5_0_FX fx_5_0 || GOTO :error
 CALL CompileShader2.bat Internal/Misc EffectNoTechnique.fx EffectNoTechnique_4_0_FX fx_4_0 || GOTO :error
 CALL CompileShader2.bat Internal/Misc EffectNoTechnique.fx EffectNoTechnique_4_1_FX fx_4_1 || GOTO :error

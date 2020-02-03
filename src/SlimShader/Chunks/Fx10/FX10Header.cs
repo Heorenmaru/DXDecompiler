@@ -42,7 +42,7 @@ namespace SlimShader.Chunks.Fx10
 		public static FX10Header Parse(BytecodeReader chunkReader)
 		{
 			var result = new FX10Header();
-			result.Version = ShaderVersion.ParseRdef(chunkReader);
+			result.Version = ShaderVersion.ParseFX(chunkReader);
 			var bufferCount = result.ConstantBuffers = chunkReader.ReadUInt32();
 			//Global Variable Count
 			var variableCount = result.GlobalVariables = chunkReader.ReadUInt32();
@@ -67,7 +67,8 @@ namespace SlimShader.Chunks.Fx10
 			var ShaderCount = result.ShaderCount = chunkReader.ReadUInt32();
 			var UsedShaderCount = result.UsedShaderCount = chunkReader.ReadUInt32();
 			var unknown15 = result.unknown15 = chunkReader.ReadUInt32();
-			Debug.Assert(unknown15 == 0, $"FX10Chunkl.unknown15 is {unknown15}");
+			Debug.Assert(unknown15 == 0 || result.Version.MajorVersion == 5, 
+					$"FX10Chunkl.unknown15 is {unknown15}");
 			return result;
 
 		}
