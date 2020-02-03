@@ -23,6 +23,10 @@ namespace DXDecompilerCmd
 			{
 				return ProgramType.DXBC;
 			}
+			if (dxbcHeader == 0xFEFF2001)
+			{
+				return ProgramType.DXBC;
+			}
 			var dx9ShaderType = (SlimShader.DX9Shader.ShaderType)BitConverter.ToUInt16(data, 2);
 			if (dx9ShaderType == SlimShader.DX9Shader.ShaderType.Vertex ||
 				dx9ShaderType == SlimShader.DX9Shader.ShaderType.Pixel)
