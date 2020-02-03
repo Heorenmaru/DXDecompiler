@@ -26,6 +26,7 @@ namespace SlimShader.Chunks.Fx10
 		public byte[] HeaderData;
 		public byte[] BodyData;
 		public byte[] FooterData;
+		public byte[] Data;
 		uint Size;
 		public FX10Header Header;
 		public IEnumerable<EffectBuffer> AllBuffers
@@ -132,6 +133,8 @@ namespace SlimShader.Chunks.Fx10
 			var footerDataReader = reader.CopyAtOffset(footerOffset);
 			result.FooterData = footerDataReader.ReadBytes((int)(size - footerOffset));
 
+			var dataReader = reader.CopyAtCurrentPosition();
+			result.Data = dataReader.ReadBytes((int)size);
 			return result;
 		}
 		public static string FormatReadable(byte[] data, bool endian = false)
@@ -208,6 +211,10 @@ namespace SlimShader.Chunks.Fx10
 			{
 				sb.AppendLine(technique.ToString());
 			}
+
+			sb.AppendLine("Data:");
+			sb.AppendLine(FormatReadable(Data));
+
 			sb.AppendLine("FooterData:");
 			sb.AppendLine(FormatReadable(FooterData));
 
