@@ -18,7 +18,7 @@ namespace SlimShader.Chunks.Fx10
 	/// SamplerComparisonState:
 	/// Based on D3D10_EFFECT_VARIABLE_DESC
 	/// </summary>
-	public class EffectTexture : IEffectVariable
+	public class EffectObjectVariable : IEffectVariable
 	{
 		public uint NameOffset { get; private set; }
 		public string Name { get; private set; }
@@ -34,13 +34,25 @@ namespace SlimShader.Chunks.Fx10
 		public uint GuessShaderChunkOffset { get; private set; }
 		public string StreamOutputDecl0 { get; private set; }
 
+		/// <summary>
+		/// Shader5 Members
+		/// </summary>
+		public uint SODecls0;
+		public uint SODecls1;
+		public uint SODecls2;
+		public uint SODecls3;
+		public uint SODeclsCount;
+		public uint RasterizedStream;
+		public uint InterfaceBindingCount;
+		public uint InterfaceBindingOffset;
+
 		//TODO
 		public uint Flags => 0;
 		public uint ExplicitBindPoint => 0;
 		IList<IEffectVariable> IEffectVariable.Annotations => Annotations.Cast<IEffectVariable>().ToList();
 
 		public uint StreamOutputDecl0Offset;
-		public EffectTexture()
+		public EffectObjectVariable()
 		{
 			Annotations = new List<EffectAnnotation>();
 			StateAnnotations = new List<EffectStateAnnotation>();
@@ -71,9 +83,23 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return false;
 		}
-		public static EffectTexture Parse(BytecodeReader reader, BytecodeReader variableReader, bool isShared = false)
+		private static bool IsShader5(EffectType type)
 		{
-			var result = new EffectTexture();
+			switch (type.ObjectType)
+			{
+				case EffectObjectType.VertexShader5:
+				case EffectObjectType.PixelShader5:
+				case EffectObjectType.GeometryShader5:
+				case EffectObjectType.ComputeShader5:
+				case EffectObjectType.HullShader5:
+				case EffectObjectType.DomainShader5:
+					return true;
+			}
+			return false;
+		}
+		public static EffectObjectVariable Parse(BytecodeReader reader, BytecodeReader variableReader, bool isShared = false)
+		{
+			var result = new EffectObjectVariable();
 			var nameOffset = result.NameOffset = variableReader.ReadUInt32();
 			var nameReader = reader.CopyAtOffset((int)nameOffset);
 			result.Name = nameReader.ReadString();
@@ -102,11 +128,23 @@ namespace SlimShader.Chunks.Fx10
 					result.StateAnnotations.Add(EffectStateAnnotation.Parse(reader, variableReader));
 				}
 			}
-			if (IsShader(result.Type))
+			if (IsShader5(result.Type))
+			{
+				result.GuessShaderChunkOffset = variableReader.ReadUInt32();
+				result.SODecls0 = variableReader.ReadUInt32();
+				result.SODecls1 = variableReader.ReadUInt32();
+				result.SODecls2 = variableReader.ReadUInt32();
+				result.SODecls3 = variableReader.ReadUInt32();
+				result.SODeclsCount = variableReader.ReadUInt32();
+				result.RasterizedStream = variableReader.ReadUInt32();
+				result.InterfaceBindingCount = variableReader.ReadUInt32();
+				result.InterfaceBindingOffset = variableReader.ReadUInt32();
+			}
+			else if (IsShader(result.Type))
 			{
 				result.GuessShaderChunkOffset = variableReader.ReadUInt32();
 			}
-			if (result.Type.EffectVariableType == EffectVariableType.GeometryShaderWithStream)
+			if (result.Type.ObjectType == EffectObjectType.GeometryShaderWithStream)
 			{
 				result.StreamOutputDecl0Offset = variableReader.ReadUInt32();
 				var declReader = reader.CopyAtOffset((int)result.StreamOutputDecl0Offset);
@@ -125,17 +163,34 @@ namespace SlimShader.Chunks.Fx10
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			sb.AppendLine($"EffectTexture");
+			sb.AppendLine($"EffectObjectVariable");
 			sb.AppendLine($"  Name: '{Name}' ({NameOffset.ToString("X4")})");
 			sb.AppendLine($"  TypeOffset: {TypeOffset} ({TypeOffset.ToString("X4")})");
-			sb.AppendLine($"  EffectTexture.Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
-			sb.AppendLine($"  EffectTexture.BufferOffset: {BufferOffset}");
+			sb.AppendLine($"  EffectObject.Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
+			sb.AppendLine($"  EffectObject.BufferOffset: {BufferOffset}");
 			sb.AppendLine($"  AnnotationCount: {AnnotationCount}");
-			sb.AppendLine($"  StateAnnotationCount: {StateAnnotationCount}");
-			sb.AppendLine($"  GuessShaderChunkOffset: {GuessShaderChunkOffset} ({GuessShaderChunkOffset.ToString("X4")})");
-			if (Type.EffectVariableType == EffectVariableType.GeometryShaderWithStream)
+			if (HasExtraAnnotations(Type))
 			{
-				sb.AppendLine($"  StreamOutputDecl0: {StreamOutputDecl0} ({StreamOutputDecl0Offset.ToString("X4")})");
+				sb.AppendLine($"  StateAnnotationCount: {StateAnnotationCount}");
+			}
+			if (IsShader(Type))
+			{
+				sb.AppendLine($"  GuessShaderChunkOffset: {GuessShaderChunkOffset} ({GuessShaderChunkOffset.ToString("X4")})");
+			}
+			if (IsShader5(Type))
+			{
+				sb.AppendLine($"  EffectObject.SODecls0: {SODecls0} ({SODecls0.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.SODecls1: {SODecls1} ({SODecls1.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.SODecls2: {SODecls2} ({SODecls2.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.SODecls3: {SODecls3} ({SODecls3.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.SODeclsCount: {SODeclsCount} ({SODeclsCount.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.RasterizedStream: {RasterizedStream} ({RasterizedStream.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.InterfaceBindingCount: {InterfaceBindingCount} ({InterfaceBindingCount.ToString("X4")})");
+				sb.AppendLine($"  EffectObject.InterfaceBindingOffset: {InterfaceBindingOffset} ({InterfaceBindingOffset.ToString("X4")})");
+			}
+			if (Type.ObjectType == EffectObjectType.GeometryShaderWithStream)
+			{
+				sb.AppendLine($"  EffectObject.StreamOutputDecl0: {StreamOutputDecl0} ({StreamOutputDecl0Offset.ToString("X4")})");
 			}			
 			sb.AppendLine(Type.ToString());
 			foreach (var annotation in StateAnnotations)

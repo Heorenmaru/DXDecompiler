@@ -74,8 +74,9 @@ namespace SlimShader.Chunks.Fx10
 		public bool IsChildEffect => SharedBuffers.Count > 0 || SharedVariables.Count > 0;
 		public List<EffectBuffer> LocalBuffers { get; private set; }
 		public List<EffectBuffer> SharedBuffers { get; private set; }
-		public List<EffectTexture> LocalVariables { get; private set; }
-		public List<EffectTexture> SharedVariables { get; private set; }
+		public List<EffectObjectVariable> LocalVariables { get; private set; }
+		public List<EffectObjectVariable> SharedVariables { get; private set; }
+		public List<EffectInterfaceVariable> InterfaceVariables { get; private set; }
 		public List<EffectTechnique> Techniques { get; private set; }
 		/// <summary>
 		/// Only used in fx_5_0
@@ -86,8 +87,9 @@ namespace SlimShader.Chunks.Fx10
 		{
 			LocalBuffers = new List<EffectBuffer>();
 			SharedBuffers = new List<EffectBuffer>();
-			LocalVariables = new List<EffectTexture>();
-			SharedVariables = new List<EffectTexture>();
+			LocalVariables = new List<EffectObjectVariable>();
+			SharedVariables = new List<EffectObjectVariable>();
+			InterfaceVariables = new List<EffectInterfaceVariable>();
 			Techniques = new List<EffectTechnique>();
 			Groups = new List<EffectGroup>();
 		}
@@ -110,7 +112,7 @@ namespace SlimShader.Chunks.Fx10
 				}
 				for (int i = 0; i < header.ObjectCount; i++)
 				{
-					result.LocalVariables.Add(EffectTexture.Parse(bodyReader, footerReader, false));
+					result.LocalVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, false));
 				}
 				for (int i = 0; i < header.SharedConstantBuffers; i++)
 				{
@@ -118,10 +120,18 @@ namespace SlimShader.Chunks.Fx10
 				}
 				for (int i = 0; i < header.SharedObjectCount; i++)
 				{
-					result.SharedVariables.Add(EffectTexture.Parse(bodyReader, footerReader, true));
+					result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
+				}
+				for (int i = 0; i < header.SharedObjectCount; i++)
+				{
+					result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
 				}
 				if (header.Version.MajorVersion >= 5)
 				{
+					for (int i = 0; i < header.InterfaceVariableCount; i++)
+					{
+						result.InterfaceVariables.Add(EffectInterfaceVariable.Parse(bodyReader, footerReader));
+					}
 					for (int i = 0; i < header.GroupCount; i++)
 					{
 						result.Groups.Add(EffectGroup.Parse(bodyReader, footerReader));
@@ -143,7 +153,7 @@ namespace SlimShader.Chunks.Fx10
 			var headerDataReader = reader.CopyAtCurrentPosition();
 			result.HeaderData = headerDataReader.ReadBytes((int)bodyOffset);
 
-			var bodyDataReader = reader.CopyAtOffset(0x4C);
+			var bodyDataReader = reader.CopyAtOffset(bodyOffset);
 			result.BodyData = bodyDataReader.ReadBytes((int)footerOffset - bodyOffset);
 
 			var footerDataReader = reader.CopyAtOffset(footerOffset);
@@ -209,17 +219,21 @@ namespace SlimShader.Chunks.Fx10
 			{
 				sb.AppendLine(buffer.ToString());
 			}
-			foreach (var buffer in LocalVariables)
+			foreach (var variable in LocalVariables)
 			{
-				sb.AppendLine(buffer.ToString());
+				sb.AppendLine(variable.ToString());
 			}
-			foreach (var buffer in SharedBuffers)
+			foreach (var variable in SharedBuffers)
 			{
-				sb.AppendLine(buffer.ToString());
+				sb.AppendLine(variable.ToString());
 			}
-			foreach (var buffer in SharedVariables)
+			foreach (var variable in SharedVariables)
 			{
-				sb.AppendLine(buffer.ToString());
+				sb.AppendLine(variable.ToString());
+			}
+			foreach (var variable in InterfaceVariables)
+			{
+				sb.AppendLine(variable.ToString());
 			}
 			foreach (var technique in Techniques)
 			{

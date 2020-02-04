@@ -77,43 +77,145 @@
     <Compile Include="AssertTraceListener.cs" />
     <Compile Include="DX10Util\Extension.cs" />
     <Compile Include="DX9Tests.cs" />
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect_4_0_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect_4_0_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect_4_0_FX.asm">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect_4_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect_4_1_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect_4_1_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect_4_1_FX.asm">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect_4_1_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect_5_0_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect_5_0_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect_5_0_FX.asm">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect_5_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect.fx">
+    <Content Include="Shaders\Internal\Effects\BasicEffect.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect_4_0_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\BasicEffect_4_0_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect_4_0_FX.asm">
+    <Content Include="Shaders\Internal\Effects\BasicEffect_4_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect_4_1_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\BasicEffect_4_1_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect_4_1_FX.asm">
+    <Content Include="Shaders\Internal\Effects\BasicEffect_4_1_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect_5_0_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\BasicEffect_5_0_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\BasicEffect_5_0_FX.asm">
+    <Content Include="Shaders\Internal\Effects\BasicEffect_5_0_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\EffectInterfaces.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\EffectInterfaces_5_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\StreamOutEffect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\StreamOutEffect_5_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial11.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial11_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial12.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial12_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial13.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial13_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial14.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial14_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_LightPSH.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_MaterialPSH.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_PSBuffers.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_VS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\FixedFuncEMUFX11\FixedFuncEMU.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\FixedFuncEMUFX11\FixedFuncEMU_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\InstancingFX11\Instancing.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\InstancingFX11\Instancing_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_PS.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_VS.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_VS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\OIT_CreatePrefixSum_Pass0_CS.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\OIT_CreatePrefixSum_Pass1_CS.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\OIT_CS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\OIT_FillDeepBuffer_PS.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\OIT_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\OIT_SortAndRender_CS.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Sdk\Direct3D11\OIT11\SceneVS.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="sharpdx_direct3d11_1_effects_x64.dll">
@@ -221,7 +323,7 @@
     <Content Include="Shaders\Internal\DynamicIndexing.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique.fx">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Effects10.cs" />
@@ -2299,7 +2401,7 @@
     <Content Include="Shaders\Internal\Level9_Test_VS_9_3.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\AdvancedEffect.fx">
+    <Content Include="Shaders\Internal\Effects\AdvancedEffect.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Misc\DebugTest.asm">
@@ -2314,31 +2416,31 @@
     <Content Include="Shaders\Internal\Misc\EarlyDepthStencil.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique_4_0_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique_4_0_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique_4_0_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique_4_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique_4_1_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique_4_1_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique_4_1_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique_4_1_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique_5_0_Child_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique_5_0_Child_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectNoTechnique_5_0_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectNoTechnique_5_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectsVersions.fx">
+    <Content Include="Shaders\Internal\Effects\EffectsVersions.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectsVersions_4_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectsVersions_4_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Internal\Misc\EffectsVersions_5_FX.asm">
+    <Content Include="Shaders\Internal\Effects\EffectsVersions_5_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Misc\LibraryTest.hlsl">
@@ -3267,6 +3369,12 @@
     <None Include="Shaders\Internal\DynamicIndexing.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Shaders\Internal\Effects\EffectInterfaces_5_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Internal\Effects\StreamOutEffect_5_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\Internal\HLSLSample_PS_5_1.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -3333,40 +3441,40 @@
     <None Include="Shaders\Internal\Level9_Test_VS_9_3.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\AdvancedEffect_4_0_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\AdvancedEffect_4_0_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\AdvancedEffect_4_0_FX.o">
+    <None Include="Shaders\Internal\Effects\AdvancedEffect_4_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\AdvancedEffect_4_1_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\AdvancedEffect_4_1_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\AdvancedEffect_4_1_FX.o">
+    <None Include="Shaders\Internal\Effects\AdvancedEffect_4_1_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\AdvancedEffect_5_0_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\AdvancedEffect_5_0_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\AdvancedEffect_5_0_FX.o">
+    <None Include="Shaders\Internal\Effects\AdvancedEffect_5_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\BasicEffect_4_0_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\BasicEffect_4_0_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\BasicEffect_4_0_FX.o">
+    <None Include="Shaders\Internal\Effects\BasicEffect_4_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\BasicEffect_4_1_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\BasicEffect_4_1_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\BasicEffect_4_1_FX.o">
+    <None Include="Shaders\Internal\Effects\BasicEffect_4_1_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\BasicEffect_5_0_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\BasicEffect_5_0_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\BasicEffect_5_0_FX.o">
+    <None Include="Shaders\Internal\Effects\BasicEffect_5_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Internal\Misc\DebugTest.o">
@@ -3375,28 +3483,28 @@
     <None Include="Shaders\Internal\Misc\EarlyDepthStencil.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectNoTechnique_4_0_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectNoTechnique_4_0_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectNoTechnique_4_0_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectNoTechnique_4_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectNoTechnique_4_1_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectNoTechnique_4_1_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectNoTechnique_4_1_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectNoTechnique_4_1_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectNoTechnique_5_0_Child_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectNoTechnique_5_0_Child_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectNoTechnique_5_0_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectNoTechnique_5_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectsVersions_4_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectsVersions_4_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\Internal\Misc\EffectsVersions_5_FX.o">
+    <None Include="Shaders\Internal\Effects\EffectsVersions_5_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Internal\Misc\LibraryTest2_4_0.o">
@@ -3682,6 +3790,45 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Sdk\Direct3D11\BasicHLSLFX11\BasicFX11_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial11_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial12_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial13_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial14_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\FixedFuncEMUFX11\FixedFuncEMU_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\InstancingFX11\Instancing_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_PS.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_VS.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\OIT11\OIT_CreatePrefixSum_Pass0_CS.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\OIT11\OIT_CreatePrefixSum_Pass1_CS.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\OIT11\OIT_FillDeepBuffer_PS.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Sdk\Direct3D11\OIT11\OIT_SortAndRender_CS.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Sdk\Direct3D11\SimpleSample11\SimpleSample_PS.o">
