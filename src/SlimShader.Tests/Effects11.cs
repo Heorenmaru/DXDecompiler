@@ -36,7 +36,7 @@ namespace SlimShader.Tests
 				Assert.AreEqual(variableDesc.Name, v1.Name);
 				Assert.AreEqual(0, v1.Unknown1);
 			}
-			if (variable is EffectTexture v2)
+			if (variable is EffectObjectVariable v2)
 			{
 				Assert.AreEqual(variableDesc.Name, v2.Name);
 			}

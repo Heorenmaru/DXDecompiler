@@ -138,7 +138,7 @@ namespace SlimShader.Tests
 								.AsSampler()
 								.GetSampler()
 								.Description;
-				var stateAnnotations = (variable as Fx10.EffectTexture).StateAnnotations;
+				var stateAnnotations = (variable as Fx10.EffectObjectVariable).StateAnnotations;
 			}
 			if (typeDesc.Type == ShaderVariableType.PixelShader ||
 				typeDesc.Type == ShaderVariableType.VertexShader ||

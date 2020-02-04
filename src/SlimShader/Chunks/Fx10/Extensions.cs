@@ -8,98 +8,104 @@ namespace SlimShader.Chunks.Fx10
 {
 	public static class Extensions
 	{
-		public static ShaderVariableType ToShaderVariableType(this EffectVariableType effectType)
+		public static ShaderVariableType ToShaderVariableType(this EffectObjectType effectType)
 		{
 			switch (effectType)
 			{
-				case EffectVariableType.Void:
+				case EffectObjectType.Void:
 					return ShaderVariableType.Void;
-				case EffectVariableType.Float:
+				case EffectObjectType.Float:
 					return ShaderVariableType.Float;
-				case EffectVariableType.UInt:
+				case EffectObjectType.UInt:
 					return ShaderVariableType.UInt;
-				case EffectVariableType.Int:
+				case EffectObjectType.Int:
 					return ShaderVariableType.Int;
-				case EffectVariableType.Bool:
+				case EffectObjectType.Bool:
 					return ShaderVariableType.Bool;
 
-				case EffectVariableType.String:
+				case EffectObjectType.String:
 					return ShaderVariableType.String;
-				case EffectVariableType.Blend:
+				case EffectObjectType.Blend:
 					return ShaderVariableType.Blend;
-				case EffectVariableType.DepthStencil:
+				case EffectObjectType.DepthStencil:
 					return ShaderVariableType.DepthStencil;
-				case EffectVariableType.Rasterizer:
+				case EffectObjectType.Rasterizer:
 					return ShaderVariableType.Rasterizer;
-				case EffectVariableType.PixelShader:
+				case EffectObjectType.PixelShader:
 					return ShaderVariableType.PixelShader;
-				case EffectVariableType.VertexShader:
+				case EffectObjectType.VertexShader:
 					return ShaderVariableType.VertexShader;
-				case EffectVariableType.GeometryShader:
+				case EffectObjectType.GeometryShader:
 					return ShaderVariableType.GeometryShader;
-				case EffectVariableType.GeometryShaderWithStream:
+				case EffectObjectType.GeometryShaderWithStream:
 					return ShaderVariableType.GeometryShader;
-				case EffectVariableType.Texture:
+				case EffectObjectType.Texture:
 					return ShaderVariableType.Texture;
-				case EffectVariableType.Texture1D:
+				case EffectObjectType.Texture1D:
 					return ShaderVariableType.Texture1D;
-				case EffectVariableType.Texture1DArray:
+				case EffectObjectType.Texture1DArray:
 					return ShaderVariableType.Texture1DArray;
-				case EffectVariableType.Texture2D:
+				case EffectObjectType.Texture2D:
 					return ShaderVariableType.Texture2D;
-				case EffectVariableType.Texture2DArray:
+				case EffectObjectType.Texture2DArray:
 					return ShaderVariableType.Texture2DArray;
-				case EffectVariableType.Texture2DMultiSampled:
+				case EffectObjectType.Texture2DMultiSampled:
 					return ShaderVariableType.Texture2DMultiSampled;
-				case EffectVariableType.Texture2DMultiSampledArray:
+				case EffectObjectType.Texture2DMultiSampledArray:
 					return ShaderVariableType.Texture2DMultiSampledArray;
-				case EffectVariableType.Texture3D:
+				case EffectObjectType.Texture3D:
 					return ShaderVariableType.Texture3D;
-				case EffectVariableType.TextureCube:
+				case EffectObjectType.TextureCube:
 					return ShaderVariableType.TextureCube;
-				case EffectVariableType.RenderTargetView:
+				case EffectObjectType.RenderTargetView:
 					return ShaderVariableType.RenderTargetView;
-				case EffectVariableType.DepthStencilView:
+				case EffectObjectType.DepthStencilView:
 					return ShaderVariableType.DepthStencilView;
-				case EffectVariableType.Sampler:
+				case EffectObjectType.Sampler:
 					return ShaderVariableType.Sampler;
-				case EffectVariableType.Buffer:
+				case EffectObjectType.Buffer:
 					return ShaderVariableType.Buffer;
-				case EffectVariableType.TextureCubeArray:
+				case EffectObjectType.TextureCubeArray:
 					return ShaderVariableType.TextureCubeArray;
-				case EffectVariableType.ComputeShader:
+				case EffectObjectType.PixelShader5:
+					return ShaderVariableType.PixelShader;
+				case EffectObjectType.VertexShader5:
+					return ShaderVariableType.VertexShader;
+				case EffectObjectType.GeometryShader5:
+					return ShaderVariableType.GeometryShader;
+				case EffectObjectType.ComputeShader5:
 					return ShaderVariableType.ComputeShader;
-				case EffectVariableType.HullShader:
+				case EffectObjectType.HullShader5:
 					return ShaderVariableType.HullShader;
-				case EffectVariableType.DomainShader:
+				case EffectObjectType.DomainShader5:
 					return ShaderVariableType.DomainShader;
 				//TODO: Bring RW and ReadWrite notation into alignment
-				case EffectVariableType.RWTexture1D:
+				case EffectObjectType.RWTexture1D:
 					return ShaderVariableType.ReadWriteTexture1D;
-				case EffectVariableType.RWTexture1DArray:
+				case EffectObjectType.RWTexture1DArray:
 					return ShaderVariableType.ReadWriteTexture1DArray;
-				case EffectVariableType.RWTexture2D:
+				case EffectObjectType.RWTexture2D:
 					return ShaderVariableType.ReadWriteTexture2D;
-				case EffectVariableType.RWTexture2DArray:
+				case EffectObjectType.RWTexture2DArray:
 					return ShaderVariableType.ReadWriteTexture2DArray;
-				case EffectVariableType.RWTexture3D:
+				case EffectObjectType.RWTexture3D:
 					return ShaderVariableType.ReadWriteTexture3D;
-				case EffectVariableType.RWBuffer:
+				case EffectObjectType.RWBuffer:
 					return ShaderVariableType.ReadWriteBuffer;
-				case EffectVariableType.ByteAddressBuffer:
+				case EffectObjectType.ByteAddressBuffer:
 					return ShaderVariableType.ByteAddressBuffer;
-				case EffectVariableType.RWByteAddressBuffer:
+				case EffectObjectType.RWByteAddressBuffer:
 					return ShaderVariableType.ReadWriteByteAddressBuffer;
-				case EffectVariableType.StructuredBuffer:
+				case EffectObjectType.StructuredBuffer:
 					return ShaderVariableType.StructuredBuffer;
-				case EffectVariableType.RWStructuredBuffer:
+				case EffectObjectType.RWStructuredBuffer:
 					return ShaderVariableType.ReadWriteStructuredBuffer;
-				case EffectVariableType.AppendStructuredBuffer:
+				case EffectObjectType.AppendStructuredBuffer:
 					return ShaderVariableType.AppendStructuredBuffer;
-				case EffectVariableType.ConsumeStructuredBuffer:
+				case EffectObjectType.ConsumeStructuredBuffer:
 					return ShaderVariableType.ConsumeStructuredBuffer;
 				default:
-					throw new Exception($"Unknown effect variable type {effectType}");
+					return ShaderVariableType.Void;
 			}
 		}
 	}

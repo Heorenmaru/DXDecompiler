@@ -17,19 +17,35 @@ namespace SlimShader.Chunks.Fx10
 	{
 		public uint TypeNameOffset;
 		public string TypeName { get; private set; }
-		public uint Unknown2;
+		public EffectVariableType EffectVariableType { get; private set; }
 		public uint ElementCount { get; private set; }
 		public uint GuessPackedSize { get; private set; }
 		public uint GuessUnpackedSize { get; private set; }
 		public uint GuessStride { get; private set; }
 		public uint PackedType { get; private set; }
 		public uint MemberCount { get; private set; }
-		public EffectVariableType EffectVariableType { get; private set; }
-		public ShaderVariableType VariableType => EffectVariableType.ToShaderVariableType();
+		public EffectObjectType ObjectType { get; private set; }
 		public ShaderVariableClass VariableClass { get; private set; }
 		public uint Rows { get; private set; }
 		public uint Columns { get; private set; }
 		public List<EffectMember> Members { get; private set; }
+		public ShaderVariableType VariableType
+		{
+			get {
+				//TODO: remove numeric and interface value from ObjectType
+				switch (EffectVariableType){
+					case EffectVariableType.Numeric:
+					case EffectVariableType.Object:
+						return ObjectType.ToShaderVariableType();
+					case EffectVariableType.Struct:
+						return ShaderVariableType.Void;
+					case EffectVariableType.Interface:
+						return ShaderVariableType.InterfacePointer;
+					default:
+						throw new Exception($"Unexpected EffectVariableType {EffectVariableType}");
+				}
+			}
+		}
 		public EffectType()
 		{
 			Members = new List<EffectMember>();
@@ -41,24 +57,24 @@ namespace SlimShader.Chunks.Fx10
 			var nameReader = reader.CopyAtOffset((int)typeNameOffset);
 			result.TypeName = nameReader.ReadString();
 			//I suspect this is object type, 1 for numeric, 2 for object, 3 for struct
-			result.Unknown2 = typeReader.ReadUInt32();
+			result.EffectVariableType = (EffectVariableType)typeReader.ReadUInt32();
 			result.ElementCount = typeReader.ReadUInt32();
 			result.GuessUnpackedSize = typeReader.ReadUInt32();
 			result.GuessStride = typeReader.ReadUInt32();
 			result.GuessPackedSize = typeReader.ReadUInt32();
-			var type = result.PackedType = typeReader.ReadUInt32();
-			if (result.Unknown2 == 1) //numeric
+			if (result.EffectVariableType == EffectVariableType.Numeric)
 			{
-				var variableClass = type.DecodeValue(0, 1);
+				var type = result.PackedType = typeReader.ReadUInt32();
+				var variableClass = (EffectNumericLayout)type.DecodeValue(0, 1);
 				switch (variableClass)
 				{
-					case 1:
+					case EffectNumericLayout.Scalar:
 						result.VariableClass = ShaderVariableClass.Scalar;
 						break;
-					case 2:
+					case EffectNumericLayout.Vector:
 						result.VariableClass = ShaderVariableClass.Vector;
 						break;
-					case 3:
+					case EffectNumericLayout.Matrix:
 						result.VariableClass = type.DecodeValue(14, 14) == 1 ?
 							ShaderVariableClass.MatrixColumns :
 							ShaderVariableClass.MatrixRows;
@@ -68,34 +84,41 @@ namespace SlimShader.Chunks.Fx10
 				switch (scalarType)
 				{
 					case 1:
-						result.EffectVariableType = EffectVariableType.Float;
+						result.ObjectType = EffectObjectType.Float;
 						break;
 					case 2:
-						result.EffectVariableType = EffectVariableType.Int;
+						result.ObjectType = EffectObjectType.Int;
 						break;
 					case 3:
-						result.EffectVariableType = EffectVariableType.UInt;
+						result.ObjectType = EffectObjectType.UInt;
 						break;
 					case 4:
-						result.EffectVariableType = EffectVariableType.Bool;
+						result.ObjectType = EffectObjectType.Bool;
 						break;
 				}
 				result.Rows = type.DecodeValue(8, 10);
 				result.Columns = type.DecodeValue(11, 13);
-			} else if (result.Unknown2 == 2)
-			{
-				result.VariableClass = ShaderVariableClass.Object;
-				result.EffectVariableType = (EffectVariableType)type;
 			}
-			else if (result.Unknown2 == 3)
+			else if (result.EffectVariableType == EffectVariableType.Object)
 			{
-				result.EffectVariableType = EffectVariableType.Void;
+				var type = result.PackedType = typeReader.ReadUInt32();
+				result.VariableClass = ShaderVariableClass.Object;
+				result.ObjectType = (EffectObjectType)type;
+			}
+			else if (result.EffectVariableType == EffectVariableType.Struct)
+			{
+				result.ObjectType = EffectObjectType.Void;
 				result.VariableClass = ShaderVariableClass.Struct;
-				result.MemberCount = result.PackedType;
-				for(int i = 0; i < result.MemberCount; i++)
+				result.MemberCount = typeReader.ReadUInt32();
+				for (int i = 0; i < result.MemberCount; i++)
 				{
 					result.Members.Add(EffectMember.Parse(reader, typeReader));
 				}
+			}
+			else if (result.EffectVariableType == EffectVariableType.Interface)
+			{
+				result.VariableClass = ShaderVariableClass.InterfaceClass;
+				result.ObjectType = EffectObjectType.Interface;
 			}
 			return result;
 		}
@@ -104,7 +127,7 @@ namespace SlimShader.Chunks.Fx10
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectType");
 			sb.AppendLine($"    TypeNameOffset: {TypeName} ({TypeNameOffset.ToString("X4")})");
-			sb.AppendLine($"    Type: {Unknown2}");
+			sb.AppendLine($"    Type: {EffectVariableType}");
 			sb.AppendLine($"    ElementCount: {ElementCount}");
 			sb.AppendLine($"    GuessPackedSize: {GuessPackedSize}");
 			sb.AppendLine($"    GuessUnpackedSize: {GuessUnpackedSize}");

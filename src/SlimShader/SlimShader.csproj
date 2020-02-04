@@ -51,6 +51,7 @@
     <Compile Include="Chunks\Fx10\EffectBuffer.cs" />
     <Compile Include="Chunks\Fx10\EffectBufferVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectGroup.cs" />
+    <Compile Include="Chunks\Fx10\EffectInterfaceVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectMember.cs" />
     <Compile Include="Chunks\Fx10\EffectPass.cs" />
     <Compile Include="Chunks\Fx10\EffectShader.cs" />
@@ -58,13 +59,15 @@
     <Compile Include="Chunks\Fx10\EffectStateAnnotation.cs" />
     <Compile Include="Chunks\Fx10\EffectStateAnnotationType.cs" />
     <Compile Include="Chunks\Fx10\EffectTechnique.cs" />
+    <Compile Include="Chunks\Fx10\EffectObjectType.cs" />
     <Compile Include="Chunks\Fx10\EffectVariableType.cs" />
     <Compile Include="Chunks\Fx10\Extensions.cs" />
     <Compile Include="Chunks\Fx10\EffectChunk.cs" />
     <Compile Include="Chunks\Fx10\EffectHeader.cs" />
-    <Compile Include="Chunks\Fx10\EffectTexture.cs" />
+    <Compile Include="Chunks\Fx10\EffectObjectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectType.cs" />
     <Compile Include="Chunks\Fx10\IEffectVariable.cs" />
+    <Compile Include="Chunks\Fx10\NumericLayout.cs" />
     <Compile Include="Chunks\Fx10\VariableFlags.cs" />
     <Compile Include="Chunks\Libf\FunctionInfo.cs" />
     <Compile Include="Chunks\Libf\InterpolationMode.cs" />
