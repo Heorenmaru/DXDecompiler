@@ -35,7 +35,7 @@ namespace SlimShader.Chunks.Fx10
 			result.ValueOffset = annotationReader.ReadUInt32();
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine("  Annotation");
@@ -44,6 +44,10 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    Annotation.ValueOffset {ValueOffset} ({ValueOffset.ToString("X4")})");
 			sb.Append(Type.ToString());
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return Name;
 		}
 	}
 }

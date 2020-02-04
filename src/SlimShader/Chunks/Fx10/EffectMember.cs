@@ -52,7 +52,7 @@ namespace SlimShader.Chunks.Fx10
 			result.Type = EffectType.Parse(reader, typeReader);
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectStructMember");
@@ -60,8 +60,12 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    Semantic: {Semantic} ({SemanticNameOffset.ToString("X4")})");
 			sb.AppendLine($"    EffectStructMember.BufferOffset: {BufferOffset} ({BufferOffset.ToString("X4")})");
 			sb.AppendLine($"    EffectStructMember.TypeOffset: {TypeOffset} ({TypeOffset.ToString("X4")})");
-			sb.Append(Type.ToString());
+			sb.Append(Type.Dump());
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return Dump();
 		}
 	}
 }

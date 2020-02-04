@@ -68,7 +68,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectBufferVariable");
@@ -79,12 +79,23 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    EffectBufferVariable.DefaultValueOffset: {DefaultValueOffset}");
 			sb.AppendLine($"    EffectBufferVariable.Unknown1: {Unknown1}");
 			sb.AppendLine($"    EffectBufferVariable.AnnotationCount: {AnnotationCount}");
-			sb.Append(Type.ToString());
-			foreach(var annotation in Annotations)
+			sb.Append(Type.Dump());
+			foreach (var annotation in Annotations)
 			{
-				sb.Append(annotation);
+				sb.Append(annotation.Dump());
 			}
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			string elements = "";
+			if(Type.ElementCount > 0)
+			{
+				elements = string.Format("[{0}]", Type.ElementCount);
+			}
+			string name = string.Format("{0,-7} {1}{2};", Type.TypeName, Name, elements);
+			return string.Format("    {0,-35} // Offset: {1, 4}, size: {2, 4}",
+				name, BufferOffset, Type.GuessUnpackedSize);
 		}
 	}
 }

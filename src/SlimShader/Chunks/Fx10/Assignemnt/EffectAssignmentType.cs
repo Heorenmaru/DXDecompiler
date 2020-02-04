@@ -5,8 +5,9 @@ using System.Text;
 
 namespace SlimShader.Chunks.Fx10
 {
-	public enum EffectStateAnnotationType
+	public enum EffectAssignmentType
 	{
+
 		/// <summary>
 		/// Rasterizer State
 		/// Based on D3D10_RASTERIZER_DESC for list of types

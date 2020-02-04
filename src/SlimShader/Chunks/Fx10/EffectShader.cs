@@ -37,16 +37,20 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectShader");
 			sb.AppendLine($"  ShaderType {ShaderType} ({(uint)ShaderType})");
 			sb.AppendLine($"  EffectShader.Unknown1 {Unknown1} ({Unknown1.ToString("X4")})");
-			sb.AppendLine($"  EffectShader.GuessType {GuessType} ({GuessType.ToString("X4")})");
+			sb.AppendLine($"  EffectShader.GuessType {GuessType} ({(EffectCompilerAssignmentType)GuessType})");
 			sb.AppendLine($"  EffectShader.GuessShaderOffset {GuessShaderOffset} ({GuessShaderOffset.ToString("X4")})");
 			sb.AppendLine($"  Name {Name}");
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return Dump();
 		}
 	}
 }

@@ -27,13 +27,17 @@ namespace SlimShader.Chunks.Fx10
 		public EffectType Type { get; private set; }
 		public uint SemanticOffset { get; private set; }
 		public uint BufferOffset { get; private set; }
-		public uint StateAnnotationCount { get; private set; }
+		public uint AssignmentCount { get; private set; }
 		public uint AnnotationCount { get; private set; }
 		public List<EffectAnnotation> Annotations { get; private set; }
-		public List<EffectStateAnnotation> StateAnnotations { get; private set; }
+		public List<EffectAssignment> Assignments { get; private set; }
 		public uint GuessShaderChunkOffset { get; private set; }
 		public string StreamOutputDecl0 { get; private set; }
-
+		/// <summary>
+		/// String Members
+		/// </summary>
+		public string StringValue { get; private set; }
+		uint StringValueOffset;
 		/// <summary>
 		/// Shader5 Members
 		/// </summary>
@@ -55,9 +59,9 @@ namespace SlimShader.Chunks.Fx10
 		public EffectObjectVariable()
 		{
 			Annotations = new List<EffectAnnotation>();
-			StateAnnotations = new List<EffectStateAnnotation>();
+			Assignments = new List<EffectAssignment>();
 		}
-		private static bool HasExtraAnnotations(EffectType type)
+		private static bool IfHasAssignments(EffectType type)
 		{
 			switch (type.VariableType)
 			{
@@ -111,21 +115,24 @@ namespace SlimShader.Chunks.Fx10
 			{
 				var semanticReader = reader.CopyAtOffset((int)semanticOffset);
 				result.Semantic = semanticReader.ReadString();
-			} else
+			}
+			else
 			{
 				result.Semantic = "";
 			}
 			result.BufferOffset = variableReader.ReadUInt32();
-			if (isShared)
+			if (result.Type.ObjectType == EffectObjectType.String)
 			{
-				return result;
+				result.StringValueOffset = variableReader.ReadUInt32();
+				var stringValueReader = reader.CopyAtOffset((int)result.StringValueOffset);
+				result.StringValue = stringValueReader.ReadString();
 			}
-			if (HasExtraAnnotations(result.Type))
+			if (IfHasAssignments(result.Type))
 			{
-				result.StateAnnotationCount = variableReader.ReadUInt32();
-				for (int i = 0; i < result.StateAnnotationCount; i++)
+				result.AssignmentCount = variableReader.ReadUInt32();
+				for (int i = 0; i < result.AssignmentCount; i++)
 				{
-					result.StateAnnotations.Add(EffectStateAnnotation.Parse(reader, variableReader));
+					result.Assignments.Add(EffectAssignment.Parse(reader, variableReader));
 				}
 			}
 			if (IsShader5(result.Type))
@@ -149,18 +156,23 @@ namespace SlimShader.Chunks.Fx10
 				result.StreamOutputDecl0Offset = variableReader.ReadUInt32();
 				var declReader = reader.CopyAtOffset((int)result.StreamOutputDecl0Offset);
 				result.StreamOutputDecl0 = declReader.ReadString();
-			} else
+			}
+			else
 			{
 				result.StreamOutputDecl0 = "";
+			}
+			if (isShared)
+			{
+				return result;
 			}
 			result.AnnotationCount = variableReader.ReadUInt32();
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
-				//result.Annotations.Add(EffectAnnotation.Parse(reader, variableReader));
+				result.Annotations.Add(EffectAnnotation.Parse(reader, variableReader));
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectObjectVariable");
@@ -169,9 +181,9 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  EffectObject.Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
 			sb.AppendLine($"  EffectObject.BufferOffset: {BufferOffset}");
 			sb.AppendLine($"  AnnotationCount: {AnnotationCount}");
-			if (HasExtraAnnotations(Type))
+			if (IfHasAssignments(Type))
 			{
-				sb.AppendLine($"  StateAnnotationCount: {StateAnnotationCount}");
+				sb.AppendLine($"  StateAnnotationCount: {AssignmentCount}");
 			}
 			if (IsShader(Type))
 			{
@@ -191,16 +203,43 @@ namespace SlimShader.Chunks.Fx10
 			if (Type.ObjectType == EffectObjectType.GeometryShaderWithStream)
 			{
 				sb.AppendLine($"  EffectObject.StreamOutputDecl0: {StreamOutputDecl0} ({StreamOutputDecl0Offset.ToString("X4")})");
-			}			
+			}
 			sb.AppendLine(Type.ToString());
-			foreach (var annotation in StateAnnotations)
+			foreach (var annotation in Assignments)
 			{
-				sb.Append(annotation);
+				sb.Append(annotation.Dump());
 			}
 			foreach (var annotation in Annotations)
 			{
-				sb.Append(annotation);
+				sb.Append(annotation.Dump());
 			}
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append(string.Format("{0} {1}", Type.TypeName, Name));
+			if (Annotations.Count > 0)
+			{
+				sb.AppendLine();
+				sb.AppendLine("<");
+				foreach (var annotation in Annotations)
+				{
+					sb.Append($"    {annotation}");
+				}
+				sb.AppendLine(">");
+			}
+			if (Assignments.Count > 0)
+			{
+				sb.AppendLine();
+				sb.AppendLine("{");
+				foreach(var assignment in Assignments)
+				{
+					sb.AppendLine($"    {assignment}");
+				}
+				sb.AppendLine("}");
+			}
+			sb.AppendLine(";");
 			return sb.ToString();
 		}
 	}

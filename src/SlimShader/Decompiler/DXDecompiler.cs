@@ -43,7 +43,7 @@ namespace SlimShader.Decompiler
 				return container.Chunks
 					.OfType<EffectChunk>()
 					.First()
-					.ToString();
+					.Dump();
 			}
 			var decompiler = new DXDecompiler(container);
 			return decompiler.Decompile();

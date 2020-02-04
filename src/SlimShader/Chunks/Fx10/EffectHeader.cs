@@ -79,7 +79,7 @@ namespace SlimShader.Chunks.Fx10
 			return result;
 
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"  probablyVersion: {Version}");
