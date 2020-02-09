@@ -56,7 +56,7 @@ namespace SlimShader.Chunks.Fx10
 	
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectInterfaceVariable");
@@ -69,9 +69,13 @@ namespace SlimShader.Chunks.Fx10
 			sb.Append(Type.ToString());
 			foreach (var annotation in Annotations)
 			{
-				sb.Append(annotation);
+				sb.Append(annotation.Dump());
 			}
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return Dump();
 		}
 	}
 }

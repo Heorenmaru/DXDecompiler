@@ -15,11 +15,11 @@ namespace SlimShader.Chunks.Fx10
 		public string Name { get; private set; }
 		public uint ShaderCount;
 		public uint AnnotationCount;
-		public List<EffectShader> Shaders { get; private set; }
+		public List<EffectAssignment> Assignments { get; private set; }
 		public List<EffectAnnotation> Annotations { get; private set; }
 		public EffectPass()
 		{
-			Shaders = new List<EffectShader>();
+			Assignments = new List<EffectAssignment>();
 			Annotations = new List<EffectAnnotation>();
 		}
 		public static EffectPass Parse(BytecodeReader reader, BytecodeReader passReader)
@@ -36,11 +36,11 @@ namespace SlimShader.Chunks.Fx10
 			}
 			for (int i = 0; i < result.ShaderCount; i++)
 			{
-				result.Shaders.Add(EffectShader.Parse(reader, passReader));
+				result.Assignments.Add(EffectAssignment.Parse(reader, passReader));
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectPass");
@@ -49,12 +49,24 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  AnnotationCount {AnnotationCount}");
 			foreach (var annotation in Annotations)
 			{
-				sb.Append(annotation.ToString());
+				sb.Append(annotation.Dump());
 			}
-			foreach (var shader in Shaders)
+			foreach (var assignment in Assignments)
 			{
-				sb.Append(shader.ToString());
+				sb.Append(assignment.Dump());
 			}
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine(string.Format("    pass {0}", Name));
+			sb.AppendLine("    {");
+			foreach(var shader in Assignments)
+			{
+				sb.AppendLine(shader.ToString());
+			}
+			sb.AppendLine("    }");
 			return sb.ToString();
 		}
 	}

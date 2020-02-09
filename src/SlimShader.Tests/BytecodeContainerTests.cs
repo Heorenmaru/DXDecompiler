@@ -68,12 +68,14 @@ namespace SlimShader.Tests
 			// Act.
 			var bytecode = File.ReadAllBytes(file + ".o");
 			var container = BytecodeContainer.Parse(bytecode);
-			var decompiledAsmText = string.Join(Environment.NewLine, container.ToString()
-				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
-				.Select(x => x.Trim()));
+			var decompiledAsmText = container.ToString();
 
 			File.WriteAllText($"{file}.d.asm", decompiledAsmText);
 			File.WriteAllText($"{file}.x", FileUtil.FormatReadable(bytecode));
+
+			decompiledAsmText = string.Join(Environment.NewLine, decompiledAsmText
+				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+				.Select(x => x.Trim()));
 
 			decompiledAsmText = TestUtils.NormalizeAssembly(decompiledAsmText);
 			asmFileText = TestUtils.NormalizeAssembly(asmFileText);

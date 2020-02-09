@@ -45,7 +45,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectBuffer");
@@ -55,10 +55,23 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  VariableCount: {VariableCount}");
 			sb.AppendLine($"  RegisterNumber: {RegisterNumber}");
 			sb.AppendLine($"  EffectBuffer.Unknown0: {Unknown0}");
-			foreach(var variable in Variables)
+			foreach (var variable in Variables)
+			{
+				sb.AppendLine(variable.Dump());
+			}
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			var bufferType = BufferType == ConstantBufferType.ConstantBuffer ? "cbuffer" : "tbuffer";
+			sb.AppendLine(string.Format("{0} {1}", bufferType, Name));
+			sb.AppendLine("{");
+			foreach (var variable in Variables)
 			{
 				sb.AppendLine(variable.ToString());
 			}
+			sb.AppendLine("}");
 			return sb.ToString();
 		}
 	}

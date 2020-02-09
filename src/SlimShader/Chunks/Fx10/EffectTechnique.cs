@@ -44,7 +44,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectTechnique");
@@ -53,12 +53,24 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  AnnotationCount {AnnotationCount}");
 			foreach (var annotation in Annotations)
 			{
-				sb.Append(annotation.ToString());
+				sb.Append(annotation.Dump());
 			}
 			foreach (var pass in Passes)
 			{
+				sb.Append(pass.Dump());
+			}
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine(string.Format("technique11 {0}", Name));
+			sb.AppendLine("{");
+			foreach(var pass in Passes)
+			{
 				sb.Append(pass.ToString());
 			}
+			sb.AppendLine("}");
 			return sb.ToString();
 		}
 	}

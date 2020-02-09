@@ -49,7 +49,7 @@ namespace SlimShader.Chunks.Fx10
 			{
 				foreach (var buffer in LocalBuffers)
 				{
-					foreach(var variable in buffer.Variables)
+					foreach (var variable in buffer.Variables)
 					{
 						yield return variable;
 					}
@@ -144,7 +144,8 @@ namespace SlimShader.Chunks.Fx10
 						result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader));
 					}
 				}
-			} catch(Exception ex)
+			}
+			catch (Exception ex)
 			{
 				result.Error = ex.ToString();
 				//throw;
@@ -207,7 +208,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return sb.ToString();
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 
@@ -215,33 +216,33 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine("Header:");
 			sb.AppendLine(Header.ToString());
 			sb.AppendLine("Foo:");
-			foreach(var buffer in LocalBuffers)
+			foreach (var buffer in LocalBuffers)
 			{
-				sb.AppendLine(buffer.ToString());
+				sb.AppendLine(buffer.Dump());
 			}
 			foreach (var variable in LocalVariables)
 			{
-				sb.AppendLine(variable.ToString());
+				sb.AppendLine(variable.Dump());
 			}
 			foreach (var variable in SharedBuffers)
 			{
-				sb.AppendLine(variable.ToString());
+				sb.AppendLine(variable.Dump());
 			}
 			foreach (var variable in SharedVariables)
 			{
-				sb.AppendLine(variable.ToString());
+				sb.AppendLine(variable.Dump());
 			}
 			foreach (var variable in InterfaceVariables)
 			{
-				sb.AppendLine(variable.ToString());
+				sb.AppendLine(variable.Dump());
 			}
 			foreach (var technique in Techniques)
 			{
-				sb.AppendLine(technique.ToString());
+				sb.AppendLine(technique.Dump());
 			}
 			foreach (var group in Groups)
 			{
-				sb.AppendLine(group.ToString());
+				sb.AppendLine(group.Dump());
 			}
 
 			sb.AppendLine("FooterData:");
@@ -256,6 +257,76 @@ namespace SlimShader.Chunks.Fx10
 			if (!string.IsNullOrEmpty(Error))
 			{
 				sb.AppendLine(Error);
+			}
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine("//");
+			sb.AppendLine(string.Format("// FX Version: {0}", Header.Version));
+			if (Header.Version.MajorVersion == 4)
+			{
+				sb.AppendLine(string.Format("// Child effect (requires effect pool): {0}", IsChildEffect));
+			}
+			sb.AppendLine("//");
+			if(LocalBuffers.Count > 0)
+			{
+				sb.AppendLine(string.Format("// {0} local buffer(s)", LocalBuffers.Count));
+				sb.AppendLine("//");
+				foreach(var buffer in LocalBuffers)
+				{
+					sb.AppendLine(buffer.ToString());
+				}
+			}
+			if (LocalVariables.Count > 0)
+			{
+				sb.AppendLine("//");
+				sb.AppendLine(string.Format("// {0} local object(s)", LocalVariables.Count));
+				sb.AppendLine("//");
+				foreach (var variable in LocalVariables)
+				{
+					sb.AppendLine(variable.ToString());
+				}
+			}
+			if (SharedBuffers.Count > 0)
+			{
+				sb.AppendLine(string.Format("// {0} shared buffer(s)", SharedBuffers.Count));
+				sb.AppendLine("//");
+				foreach (var buffer in SharedBuffers)
+				{
+					sb.AppendLine(buffer.ToString());
+				}
+			}
+			if (SharedVariables.Count > 0)
+			{
+				sb.AppendLine("//");
+				sb.AppendLine(string.Format("// {0} shared object(s)", SharedVariables.Count));
+				sb.AppendLine("//");
+				foreach (var variable in SharedVariables)
+				{
+					sb.AppendLine(variable.ToString());
+				}
+			}
+			if (InterfaceVariables.Count > 0)
+			{
+				sb.AppendLine("//");
+				sb.AppendLine(string.Format("// {0} interface variable(s)", InterfaceVariables.Count));
+				sb.AppendLine("//");
+				foreach (var variable in InterfaceVariables)
+				{
+					sb.AppendLine(variable.ToString());
+				}
+			}
+			if (Techniques.Count > 0)
+			{
+				sb.AppendLine("//");
+				sb.AppendLine(string.Format("// {0} technique(s)", Techniques.Count));
+				sb.AppendLine("//");
+				foreach (var technique in Techniques)
+				{
+					sb.AppendLine(technique.ToString());
+				}
 			}
 			return sb.ToString();
 		}

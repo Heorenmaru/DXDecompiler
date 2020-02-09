@@ -155,7 +155,7 @@ namespace SlimShader
 				foreach (var chunk in Chunks.OfType<EffectChunk>()) {
 					sb.AppendLine(chunk.ToString());
 				}
-				foreach(var chunk in Chunks)
+				foreach(var chunk in Chunks.Where(c => !(c is EffectChunk)))
 				{
 					sb.AppendLine($"{chunk.ChunkType} {chunk.GetType()}");
 				}

@@ -122,7 +122,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return result;
 		}
-		public override string ToString()
+		public string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectType");
@@ -140,6 +140,10 @@ namespace SlimShader.Chunks.Fx10
 				sb.Append(member.ToString());
 			}
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return Dump();
 		}
 	}
 }

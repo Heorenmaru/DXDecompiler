@@ -138,7 +138,7 @@ namespace SlimShader.Tests
 								.AsSampler()
 								.GetSampler()
 								.Description;
-				var stateAnnotations = (variable as Fx10.EffectObjectVariable).StateAnnotations;
+				var stateAnnotations = (variable as Fx10.EffectObjectVariable).Assignments;
 			}
 			if (typeDesc.Type == ShaderVariableType.PixelShader ||
 				typeDesc.Type == ShaderVariableType.VertexShader ||
@@ -263,7 +263,7 @@ namespace SlimShader.Tests
 			{
 				CompareVariable(annotations[i], pass.Annotations[i]);
 			}
-			var pixelShader = pass.Shaders.FirstOrDefault(
+			/*var pixelShader = pass.Shaders.FirstOrDefault(
 				s => s.ShaderType == Fx10.EffectShaderType.PixelShader);
 			if(pixelShader != null)
 			{
@@ -283,7 +283,7 @@ namespace SlimShader.Tests
 			{
 				EffectPassShaderDescription shaderDesc = reflectionPass.GeometryShaderDescription;
 				CompareShader(shaderDesc, geometryShader);
-			}
+			}*/
 		}
 		private static void CompareShader(EffectPassShaderDescription shaderPassDesc, Fx10.EffectShader shader)
 		{
