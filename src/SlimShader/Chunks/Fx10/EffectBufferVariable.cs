@@ -19,6 +19,7 @@ namespace SlimShader.Chunks.Fx10
 		public string Semantic { get; private set; }
 		public uint BufferOffset { get; private set; }
 		public uint Unknown1 { get; private set; }
+		public List<Number> DefaultValue { get; private set; }
 		public List<EffectAnnotation> Annotations { get; private set; }
 
 		//TODO
@@ -54,7 +55,21 @@ namespace SlimShader.Chunks.Fx10
 				result.Semantic = "";
 			}
 			result.BufferOffset = variableReader.ReadUInt32();
-			result.DefaultValueOffset = variableReader.ReadUInt32();
+			var defaultValueOffset = result.DefaultValueOffset = variableReader.ReadUInt32();
+
+			List<Number> defaultValue = null;
+			var size = result.Type.GuessPackedSize;
+			if (defaultValueOffset != 0)
+			{
+				defaultValue = new List<Number>();
+				var defaultValueReader = reader.CopyAtOffset((int)defaultValueOffset);
+				if (size % 4 != 0)
+					throw new ParseException("Can only deal with 4-byte default values at the moment.");
+				for (int i = 0; i < size; i += 4)
+					defaultValue.Add(new Number(defaultValueReader.ReadBytes(4)));
+			}
+			result.DefaultValue = defaultValue;
+
 			if (!isShared)
 			{
 				result.Unknown1 = variableReader.ReadUInt32();
@@ -93,7 +108,9 @@ namespace SlimShader.Chunks.Fx10
 			{
 				elements = string.Format("[{0}]", Type.ElementCount);
 			}
-			string name = string.Format("{0,-7} {1}{2};", Type.TypeName, Name, elements);
+			string defaultValue = DefaultValue == null ? ""
+				: $" = {{ {string.Join(", ", DefaultValue)} }}";
+			string name = string.Format("{0,-7} {1}{2}{3};", Type.TypeName, Name, elements, defaultValue);
 			return string.Format("    {0,-35} // Offset: {1, 4}, size: {2, 4}",
 				name, BufferOffset, Type.GuessUnpackedSize);
 		}
