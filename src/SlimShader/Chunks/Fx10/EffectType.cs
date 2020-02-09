@@ -19,9 +19,9 @@ namespace SlimShader.Chunks.Fx10
 		public string TypeName { get; private set; }
 		public EffectVariableType EffectVariableType { get; private set; }
 		public uint ElementCount { get; private set; }
-		public uint GuessPackedSize { get; private set; }
-		public uint GuessUnpackedSize { get; private set; }
-		public uint GuessStride { get; private set; }
+		public uint PackedSize { get; private set; }
+		public uint UnpackedSize { get; private set; }
+		public uint Stride { get; private set; }
 		public uint PackedType { get; private set; }
 		public uint MemberCount { get; private set; }
 		public EffectObjectType ObjectType { get; private set; }
@@ -42,7 +42,8 @@ namespace SlimShader.Chunks.Fx10
 					case EffectVariableType.Interface:
 						return ShaderVariableType.InterfacePointer;
 					default:
-						throw new Exception($"Unexpected EffectVariableType {EffectVariableType}");
+						return 0;
+						//throw new Exception($"Unexpected EffectVariableType {EffectVariableType}");
 				}
 			}
 		}
@@ -59,9 +60,9 @@ namespace SlimShader.Chunks.Fx10
 			//I suspect this is object type, 1 for numeric, 2 for object, 3 for struct
 			result.EffectVariableType = (EffectVariableType)typeReader.ReadUInt32();
 			result.ElementCount = typeReader.ReadUInt32();
-			result.GuessUnpackedSize = typeReader.ReadUInt32();
-			result.GuessStride = typeReader.ReadUInt32();
-			result.GuessPackedSize = typeReader.ReadUInt32();
+			result.UnpackedSize = typeReader.ReadUInt32();
+			result.Stride = typeReader.ReadUInt32();
+			result.PackedSize = typeReader.ReadUInt32();
 			if (result.EffectVariableType == EffectVariableType.Numeric)
 			{
 				var type = result.PackedType = typeReader.ReadUInt32();
@@ -129,9 +130,9 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    TypeNameOffset: {TypeName} ({TypeNameOffset.ToString("X4")})");
 			sb.AppendLine($"    Type: {EffectVariableType}");
 			sb.AppendLine($"    ElementCount: {ElementCount}");
-			sb.AppendLine($"    GuessPackedSize: {GuessPackedSize}");
-			sb.AppendLine($"    GuessUnpackedSize: {GuessUnpackedSize}");
-			sb.AppendLine($"    GuessStride: {GuessStride}");
+			sb.AppendLine($"    PackedSize: {PackedSize}");
+			sb.AppendLine($"    UnpackedSize: {UnpackedSize}");
+			sb.AppendLine($"    Stride: {Stride}");
 			sb.AppendLine($"    VariableTypeAndClass: {VariableClass}, {VariableType}");
 			sb.AppendLine($"    DebugType: {TypeName,-16}{PackedType, 4}\t({Convert.ToString(PackedType, 2),15})");
 			sb.AppendLine($"    MemberCount {MemberCount}");

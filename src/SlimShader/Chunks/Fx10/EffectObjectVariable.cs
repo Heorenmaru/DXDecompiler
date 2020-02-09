@@ -30,37 +30,27 @@ namespace SlimShader.Chunks.Fx10
 		public uint AssignmentCount { get; private set; }
 		public uint AnnotationCount { get; private set; }
 		public List<EffectAnnotation> Annotations { get; private set; }
-		public List<EffectAssignment> Assignments { get; private set; }
-		public uint GuessShaderChunkOffset { get; private set; }
-		public string StreamOutputDecl0 { get; private set; }
-		/// <summary>
-		/// String Members
-		/// </summary>
-		public string StringValue { get; private set; }
-		uint StringValueOffset;
-		/// <summary>
-		/// Shader5 Members
-		/// </summary>
-		public uint SODecls0;
-		public uint SODecls1;
-		public uint SODecls2;
-		public uint SODecls3;
-		public uint SODeclsCount;
-		public uint RasterizedStream;
-		public uint InterfaceBindingCount;
-		public uint InterfaceBindingOffset;
+		public List<List<EffectAssignment>> Assignments { get; private set; }
+		public List<string> Strings { get; private set; }
+		public List<EffectShaderData5> ShaderData5 { get; private set; }
+		public List<EffectShaderData> ShaderData { get; private set; }
+		public List<EffectGSSOInitializer> GSSOInitializers { get; private set; }
 
 		//TODO
 		public uint Flags => 0;
 		public uint ExplicitBindPoint => 0;
 		IList<IEffectVariable> IEffectVariable.Annotations => Annotations.Cast<IEffectVariable>().ToList();
 
-		public uint StreamOutputDecl0Offset;
+		private uint ElementCount => Type.ElementCount == 0 ? 1 : Type.ElementCount;
 		public EffectObjectVariable()
 		{
 			Annotations = new List<EffectAnnotation>();
-			Assignments = new List<EffectAssignment>();
-		}
+			Assignments = new List<List<EffectAssignment>>();
+			Strings = new List<string>();
+			ShaderData5 = new List<EffectShaderData5>();
+			ShaderData = new List<EffectShaderData>();
+			GSSOInitializers = new List<EffectGSSOInitializer>();
+	}
 		private static bool IfHasAssignments(EffectType type)
 		{
 			switch (type.VariableType)
@@ -121,45 +111,49 @@ namespace SlimShader.Chunks.Fx10
 				result.Semantic = "";
 			}
 			result.BufferOffset = variableReader.ReadUInt32();
+			// Initializer data
 			if (result.Type.ObjectType == EffectObjectType.String)
 			{
-				result.StringValueOffset = variableReader.ReadUInt32();
-				var stringValueReader = reader.CopyAtOffset((int)result.StringValueOffset);
-				result.StringValue = stringValueReader.ReadString();
+				for (int i = 0; i < result.ElementCount; i++)
+				{
+					var stringValueOffset = variableReader.ReadUInt32();
+					var stringValueReader = reader.CopyAtOffset((int)stringValueOffset);
+					result.Strings.Add(stringValueReader.ReadString());
+				}
 			}
 			if (IfHasAssignments(result.Type))
 			{
-				result.AssignmentCount = variableReader.ReadUInt32();
-				for (int i = 0; i < result.AssignmentCount; i++)
+				for (int i = 0; i < result.ElementCount; i++)
 				{
-					result.Assignments.Add(EffectAssignment.Parse(reader, variableReader));
+					var assignmentCount = variableReader.ReadUInt32();
+					var assignments = new List<EffectAssignment>();
+					result.Assignments.Add(assignments);
+					for (int j = 0; j < assignmentCount; j++)
+					{
+						assignments.Add(EffectAssignment.Parse(reader, variableReader));
+					}
 				}
-			}
-			if (IsShader5(result.Type))
-			{
-				result.GuessShaderChunkOffset = variableReader.ReadUInt32();
-				result.SODecls0 = variableReader.ReadUInt32();
-				result.SODecls1 = variableReader.ReadUInt32();
-				result.SODecls2 = variableReader.ReadUInt32();
-				result.SODecls3 = variableReader.ReadUInt32();
-				result.SODeclsCount = variableReader.ReadUInt32();
-				result.RasterizedStream = variableReader.ReadUInt32();
-				result.InterfaceBindingCount = variableReader.ReadUInt32();
-				result.InterfaceBindingOffset = variableReader.ReadUInt32();
-			}
-			else if (IsShader(result.Type))
-			{
-				result.GuessShaderChunkOffset = variableReader.ReadUInt32();
 			}
 			if (result.Type.ObjectType == EffectObjectType.GeometryShaderWithStream)
 			{
-				result.StreamOutputDecl0Offset = variableReader.ReadUInt32();
-				var declReader = reader.CopyAtOffset((int)result.StreamOutputDecl0Offset);
-				result.StreamOutputDecl0 = declReader.ReadString();
+				for (int i = 0; i < result.ElementCount; i++)
+				{
+					result.GSSOInitializers.Add(EffectGSSOInitializer.Parse(reader, variableReader));
+				}
 			}
-			else
+			else if (IsShader5(result.Type))
 			{
-				result.StreamOutputDecl0 = "";
+				for (int i = 0; i < result.ElementCount; i++)
+				{
+					result.ShaderData5.Add(EffectShaderData5.Parse(reader, variableReader));
+				}
+			}
+			else if (IsShader(result.Type))
+			{
+				for (int i = 0; i < result.ElementCount; i++)
+				{
+					result.ShaderData.Add(EffectShaderData.Parse(reader, variableReader));
+				}
 			}
 			if (isShared)
 			{
@@ -181,33 +175,42 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  EffectObject.Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
 			sb.AppendLine($"  EffectObject.BufferOffset: {BufferOffset}");
 			sb.AppendLine($"  AnnotationCount: {AnnotationCount}");
-			if (IfHasAssignments(Type))
+			if (Type.VariableType == ShaderVariableType.String)
 			{
-				sb.AppendLine($"  StateAnnotationCount: {AssignmentCount}");
+				foreach (var data in Strings)
+				{
+					sb.AppendLine($"  StringData: {data}");
+				}
 			}
 			if (IsShader(Type))
 			{
-				sb.AppendLine($"  GuessShaderChunkOffset: {GuessShaderChunkOffset} ({GuessShaderChunkOffset.ToString("X4")})");
+				foreach (var data in ShaderData)
+				{
+					sb.Append(data.Dump());
+				}
 			}
 			if (IsShader5(Type))
 			{
-				sb.AppendLine($"  EffectObject.SODecls0: {SODecls0} ({SODecls0.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.SODecls1: {SODecls1} ({SODecls1.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.SODecls2: {SODecls2} ({SODecls2.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.SODecls3: {SODecls3} ({SODecls3.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.SODeclsCount: {SODeclsCount} ({SODeclsCount.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.RasterizedStream: {RasterizedStream} ({RasterizedStream.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.InterfaceBindingCount: {InterfaceBindingCount} ({InterfaceBindingCount.ToString("X4")})");
-				sb.AppendLine($"  EffectObject.InterfaceBindingOffset: {InterfaceBindingOffset} ({InterfaceBindingOffset.ToString("X4")})");
+				foreach(var data in ShaderData5)
+				{
+					sb.Append(data.Dump());
+				}
 			}
 			if (Type.ObjectType == EffectObjectType.GeometryShaderWithStream)
 			{
-				sb.AppendLine($"  EffectObject.StreamOutputDecl0: {StreamOutputDecl0} ({StreamOutputDecl0Offset.ToString("X4")})");
+				foreach (var data in GSSOInitializers)
+				{
+					sb.Append(data.Dump());
+				}
 			}
 			sb.AppendLine(Type.ToString());
-			foreach (var annotation in Assignments)
+			foreach (var assignments1 in Assignments)
 			{
-				sb.Append(annotation.Dump());
+				sb.AppendLine($"  AssignmentCount: {assignments1.Count}");
+				foreach (var assignments2 in assignments1) 
+				{ 
+					sb.Append(assignments2.Dump());
+				}
 			}
 			foreach (var annotation in Annotations)
 			{
@@ -219,25 +222,29 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.Append(string.Format("{0} {1}", Type.TypeName, Name));
+
 			if (Annotations.Count > 0)
 			{
 				sb.AppendLine();
 				sb.AppendLine("<");
 				foreach (var annotation in Annotations)
 				{
-					sb.Append($"    {annotation}");
+					sb.AppendLine($"    {annotation}");
 				}
-				sb.AppendLine(">");
+				sb.Append(">");
 			}
 			if (Assignments.Count > 0)
 			{
 				sb.AppendLine();
-				sb.AppendLine("{");
-				foreach(var assignment in Assignments)
+				foreach (var assignment in Assignments)
 				{
-					sb.AppendLine($"    {assignment}");
+					sb.AppendLine("{");
+					foreach (var subAssignment in assignment)
+					{
+						sb.AppendLine($"    {subAssignment}");
+					}
+					sb.Append("}");
 				}
-				sb.AppendLine("}");
 			}
 			sb.AppendLine(";");
 			return sb.ToString();
