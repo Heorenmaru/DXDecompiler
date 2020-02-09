@@ -19,7 +19,16 @@ namespace SlimShader.Chunks.Fx10.Assignemnt
 		{
 			var sb = new StringBuilder();
 			sb.Append(base.Dump());
-			sb.AppendLine($"    Value: {Value}: {ValueOffset.ToString("X4")}");
+			sb.AppendLine($"    EffectVariableAssignment.Value: {Value}: {ValueOffset.ToString("X4")}");
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.Append(MemberType.ToString());
+			sb.Append(" = '");
+			sb.Append(Value);
+			sb.Append(";'");
 			return sb.ToString();
 		}
 	}

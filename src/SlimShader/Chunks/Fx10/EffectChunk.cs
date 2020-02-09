@@ -328,6 +328,16 @@ namespace SlimShader.Chunks.Fx10
 					sb.AppendLine(technique.ToString());
 				}
 			}
+			if (Groups.Count > 0)
+			{
+				sb.AppendLine("//");
+				sb.AppendLine(string.Format("// {0} group(s)", Groups.Count));
+				sb.AppendLine("//");
+				foreach (var group in Groups)
+				{
+					sb.AppendLine(group.ToString());
+				}
+			}
 			return sb.ToString();
 		}
 	}

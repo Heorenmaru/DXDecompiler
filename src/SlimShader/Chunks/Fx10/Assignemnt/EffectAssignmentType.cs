@@ -7,7 +7,15 @@ namespace SlimShader.Chunks.Fx10
 {
 	public enum EffectAssignmentType
 	{
-
+		RasterizerState = 0,
+		DepthStencilState = 1,
+		BlenderState = 2,
+		VertexShader = 6,
+		PixelShader = 7,
+		GeometryShader = 8,
+		DS_StencilRef = 9,
+		AB_BlendFactor = 10,
+		AB_SampleMask = 11,
 		/// <summary>
 		/// Rasterizer State
 		/// Based on D3D10_RASTERIZER_DESC for list of types
@@ -44,7 +52,7 @@ namespace SlimShader.Chunks.Fx10
 		/// Blend State
 		/// Based on D3D10_BLEND_DESC for list of types
 		/// </summary>
-		AlphaToCoverableEnable = 36,
+		AlphaToCoverageEnable = 36,
 		BlendEnable = 37,
 		SrcBlend = 38,
 		DestBlend = 39,
@@ -68,5 +76,11 @@ namespace SlimShader.Chunks.Fx10
 		MinLOD = 53,
 		MaxLOD = 54,
 		Texture = 55,
+		/// <summary>
+		/// FX5 Shaders
+		/// </summary>
+		HullShader = 56,
+		DomainShader = 57,
+		ComputeShader = 58,
 	}
 }

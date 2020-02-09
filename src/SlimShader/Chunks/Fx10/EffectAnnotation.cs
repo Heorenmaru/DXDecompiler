@@ -10,6 +10,8 @@ namespace SlimShader.Chunks.Fx10
 	{
 		public string Name { get; private set; }
 		public EffectType Type { get; private set; }
+		public List<Number> DefaultNumericValue { get; private set; }
+		public List<string> DefaultStringValue { get; private set; }
 
 		public string Semantic => "";
 		public uint Flags => 2; //Annotation Flag. TODO: Fix Type
@@ -21,6 +23,12 @@ namespace SlimShader.Chunks.Fx10
 		public uint NameOffset;
 		public uint TypeOffset;
 		public uint ValueOffset;
+		private uint ElementCount => Type.ElementCount == 0 ? 1 : Type.ElementCount;
+		public EffectAnnotation()
+		{
+			DefaultNumericValue = new List<Number>();
+			DefaultStringValue = new List<string>();
+		}
 		public static EffectAnnotation Parse(BytecodeReader reader, BytecodeReader annotationReader)
 		{
 			var result = new EffectAnnotation();
@@ -32,7 +40,21 @@ namespace SlimShader.Chunks.Fx10
 			result.Type = EffectType.Parse(reader, typeReader);
 			//Note: Points to 27 and "foo" in Texture2D tex<int bla=27;string blu="foo";>;
 			/// Value format and stride depends on Type
-			result.ValueOffset = annotationReader.ReadUInt32();
+			var valueOffset = result.ValueOffset = annotationReader.ReadUInt32();
+			var defaultValueReader = reader.CopyAtOffset((int)valueOffset);
+			if(result.Type.EffectVariableType == EffectVariableType.Numeric)
+			{
+				for(int i = 0; i < result.Type.PackedSize; i++)
+				{
+					result.DefaultNumericValue.Add(Number.Parse(defaultValueReader));
+				}
+			} else
+			{
+				for (int i = 0; i < result.ElementCount; i++)
+				{
+					result.DefaultStringValue.Add(defaultValueReader.ReadString());
+				}
+			}
 			return result;
 		}
 		public string Dump()
@@ -47,7 +69,15 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public override string ToString()
 		{
-			return Name;
+			string defaultValue = "";
+			if (Type.EffectVariableType == EffectVariableType.Numeric)
+			{
+				defaultValue = string.Join(", ", DefaultNumericValue);
+			} else {
+				defaultValue = string.Join(", ", DefaultStringValue.Select(v => $"\"{v}\"" ));
+			}
+			return string.Format("{0} {1} = {2};",
+				Type.TypeName, Name, defaultValue);
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using SlimShader.Chunks.Shex;
 using SlimShader.Util;
 
 namespace SlimShader.Chunks.Fx10
@@ -18,14 +19,13 @@ namespace SlimShader.Chunks.Fx10
 		public uint SemanticOffset { get; private set; }
 		public string Semantic { get; private set; }
 		public uint BufferOffset { get; private set; }
-		public uint Unknown1 { get; private set; }
+		public uint ExplicitBindPoint { get; private set; }
 		public List<Number> DefaultValue { get; private set; }
 		public List<EffectAnnotation> Annotations { get; private set; }
 
 		//TODO
 		public uint Flags => 0;
 		uint IEffectVariable.AnnotationCount => AnnotationCount;
-		public uint ExplicitBindPoint => 0;
 		IList<IEffectVariable> IEffectVariable.Annotations => Annotations.Cast<IEffectVariable>().ToList();
 
 		uint AnnotationCount;
@@ -58,7 +58,7 @@ namespace SlimShader.Chunks.Fx10
 			var defaultValueOffset = result.DefaultValueOffset = variableReader.ReadUInt32();
 
 			List<Number> defaultValue = null;
-			var size = result.Type.GuessPackedSize;
+			var size = result.Type.PackedSize;
 			if (defaultValueOffset != 0)
 			{
 				defaultValue = new List<Number>();
@@ -72,7 +72,7 @@ namespace SlimShader.Chunks.Fx10
 
 			if (!isShared)
 			{
-				result.Unknown1 = variableReader.ReadUInt32();
+				result.ExplicitBindPoint = variableReader.ReadUInt32();
 				//TODO: Unknown1
 				//Debug.Assert(result.Unknown1 == 0, $"EffectBufferVariable.Unknown1 {result.Unknown1}");
 			}
@@ -92,7 +92,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
 			sb.AppendLine($"    BufferOffset: {BufferOffset}");
 			sb.AppendLine($"    EffectBufferVariable.DefaultValueOffset: {DefaultValueOffset}");
-			sb.AppendLine($"    EffectBufferVariable.Unknown1: {Unknown1}");
+			sb.AppendLine($"    EffectBufferVariable.Unknown1: {ExplicitBindPoint}");
 			sb.AppendLine($"    EffectBufferVariable.AnnotationCount: {AnnotationCount}");
 			sb.Append(Type.Dump());
 			foreach (var annotation in Annotations)
@@ -108,11 +108,38 @@ namespace SlimShader.Chunks.Fx10
 			{
 				elements = string.Format("[{0}]", Type.ElementCount);
 			}
-			string defaultValue = DefaultValue == null ? ""
-				: $" = {{ {string.Join(", ", DefaultValue)} }}";
+			string defaultValue = "";
+			if (DefaultValue != null)
+			{
+				var numberType = NumberType.Float;
+				switch (Type.VariableType)
+				{
+					case Rdef.ShaderVariableType.Int:
+						numberType = NumberType.Int;
+						break;
+					case Rdef.ShaderVariableType.UInt:
+						numberType = NumberType.UInt;
+						break;
+					case Rdef.ShaderVariableType.Bool:
+						numberType = NumberType.Bool;
+						break;
+				}
+				if(Type.VariableClass == Rdef.ShaderVariableClass.Scalar)
+				{
+					defaultValue = $" = {DefaultValue[0].ToString(numberType)}";
+				}
+				else if(DefaultValue.Distinct().Count() == 1)
+				{
+					defaultValue = $" = {{ {DefaultValue[0].ToString(numberType)} }}";
+				} else
+				{
+					var values = DefaultValue.Select(v => v.ToString(numberType));
+					defaultValue = $" = {{ {string.Join(", ", values)} }}";
+				}
+			}
 			string name = string.Format("{0,-7} {1}{2}{3};", Type.TypeName, Name, elements, defaultValue);
-			return string.Format("    {0,-35} // Offset: {1, 4}, size: {2, 4}",
-				name, BufferOffset, Type.GuessUnpackedSize);
+			return string.Format("    {0,-36}// Offset: {1, 4}, size: {2, 4}",
+				name, BufferOffset, Type.UnpackedSize);
 		}
 	}
 }

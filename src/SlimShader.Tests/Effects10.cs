@@ -55,9 +55,9 @@ namespace SlimShader.Tests
 			Assert.AreEqual(typeDesc.Members, type.MemberCount);
 			Assert.AreEqual(typeDesc.Rows, type.Rows);
 			Assert.AreEqual(typeDesc.Columns, type.Columns);
-			Assert.AreEqual(typeDesc.PackedSize, type.GuessPackedSize);
-			Assert.AreEqual(typeDesc.UnpackedSize, type.GuessUnpackedSize);
-			Assert.AreEqual(typeDesc.Stride, type.GuessStride);
+			Assert.AreEqual(typeDesc.PackedSize, type.PackedSize);
+			Assert.AreEqual(typeDesc.UnpackedSize, type.UnpackedSize);
+			Assert.AreEqual(typeDesc.Stride, type.Stride);
 			EffectVariableDescription variableDesc = reflectionVariable.Description;
 			Assert.AreEqual(variableDesc.Name, variable.Name);
 			Assert.AreEqual(variableDesc.Semantic ?? "", variable.Semantic);

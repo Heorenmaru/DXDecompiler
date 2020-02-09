@@ -63,7 +63,26 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public override string ToString()
 		{
-			return Dump();
+			var sb = new StringBuilder();
+			sb.Append("fxgroup");
+			if (!string.IsNullOrEmpty(Name))
+			{
+				sb.Append(" ");
+				sb.Append(Name);
+			}
+			sb.AppendLine();
+			sb.AppendLine("{");
+			sb.AppendLine("    //");
+			sb.AppendLine(string.Format("    // {0} technique(s)",
+				Techniques.Count));
+			sb.AppendLine("    //");
+			foreach(var technique in Techniques)
+			{
+				sb.Append(technique);
+			}
+			sb.Append("}");
+			return sb.ToString();
+
 		}
 	}
 }

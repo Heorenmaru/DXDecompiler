@@ -59,8 +59,12 @@
     <Compile Include="Chunks\Fx10\Assignemnt\EffectInlineShadeAssignment.cs" />
     <Compile Include="Chunks\Fx10\EffectInterfaceVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectMember.cs" />
+    <Compile Include="Chunks\Fx10\EffectGSSOInitializer.cs" />
     <Compile Include="Chunks\Fx10\EffectPass.cs" />
+    <Compile Include="Chunks\Fx10\EffectScalarType.cs" />
     <Compile Include="Chunks\Fx10\EffectShader.cs" />
+    <Compile Include="Chunks\Fx10\EffectShaderData.cs" />
+    <Compile Include="Chunks\Fx10\EffectShaderData5.cs" />
     <Compile Include="Chunks\Fx10\EffectShaderType.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectAssignmentType.cs" />
