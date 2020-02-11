@@ -68,6 +68,7 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendLine(string.Format("{0}    {1}", indentString, shader.ToString()));
 			}
 			sb.AppendLine(string.Format("{0}}}", indentString));
+			sb.AppendLine();
 			return sb.ToString();
 		}
 		public override string ToString()

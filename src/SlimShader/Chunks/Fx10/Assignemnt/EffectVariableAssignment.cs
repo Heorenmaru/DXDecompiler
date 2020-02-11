@@ -26,9 +26,9 @@ namespace SlimShader.Chunks.Fx10.Assignemnt
 		{
 			var sb = new StringBuilder();
 			sb.Append(MemberType.ToString());
-			sb.Append(" = '");
+			sb.Append(" = ");
 			sb.Append(Value);
-			sb.Append(";'");
+			sb.Append(";");
 			return sb.ToString();
 		}
 	}

@@ -47,7 +47,11 @@
     <Compile Include="Chunks\Aon9\Unknown1Mapping.cs" />
     <Compile Include="Chunks\Aon9\ConstantBufferMapping.cs" />
     <Compile Include="Chunks\Aon9\SamplerMapping.cs" />
+    <Compile Include="Chunks\Common\Blend.cs" />
+    <Compile Include="Chunks\Common\BlendOp.cs" />
+    <Compile Include="Chunks\Common\CullMode.cs" />
     <Compile Include="Chunks\Common\DepthWriteMask.cs" />
+    <Compile Include="Chunks\Common\FillMode.cs" />
     <Compile Include="Chunks\Common\StencilOp.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\AssignmentType.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectExpressionAssignment.cs" />

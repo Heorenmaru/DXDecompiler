@@ -221,7 +221,12 @@ namespace SlimShader.Chunks.Fx10
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			sb.Append(string.Format("{0} {1}", Type.TypeName, Name));
+			string arrayFormat = "";
+			if(Type.ElementCount > 1)
+			{
+				arrayFormat = string.Format("[{0}]", Type.ElementCount);
+			}
+			sb.Append(string.Format("{0} {1}{2}", Type.TypeName, Name, arrayFormat));
 
 			if (Annotations.Count > 0)
 			{
@@ -256,7 +261,31 @@ namespace SlimShader.Chunks.Fx10
 				}
 				sb.Append("}");
 			}
-			sb.AppendLine(";");
+			if (Type.ObjectType == EffectObjectType.GeometryShaderWithStream)
+			{
+				sb.AppendLine(" =");
+				foreach (var data in GSSOInitializers)
+				{
+					sb.AppendLine(data.ToString());
+				}
+			}
+			else if (IsShader5(Type))
+			{
+				sb.AppendLine(" =");
+				foreach (var data in ShaderData5)
+				{
+					sb.AppendLine(data.ToString());
+				}
+			}
+			else if (IsShader(Type))
+			{
+				sb.AppendLine(" =");
+				foreach (var data in ShaderData)
+				{
+					sb.AppendLine(data.ToString());
+				}
+			}
+			sb.Append(";");
 			return sb.ToString();
 		}
 	}

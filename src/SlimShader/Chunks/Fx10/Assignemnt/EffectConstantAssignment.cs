@@ -46,7 +46,7 @@ namespace SlimShader.Chunks.Fx10
 			var type = MemberType.GetAssignmentType();
 			if(type == null)
 			{
-				return Values[0].UInt.ToString();
+				return value.UInt.ToString();
 			}
 			if (type.IsEnum)
 			{
@@ -60,11 +60,42 @@ namespace SlimShader.Chunks.Fx10
 			{
 				return value.UInt.ToString();
 			}
+			if (type == typeof(bool))
+			{
+				return value.ToString(Shex.NumberType.Bool);
+			}
 			return value.UInt.ToString();
 		}
 		public string FormatValue()
 		{
-			return string.Join(", ", Values.Select(v => FormatValue(v)));
+			var type = MemberType.GetAssignmentType();
+			string value = string.Join(", ", Values.Select(v => FormatValue(v)));
+			string typeName = "unknown";
+			if (type == null)
+			{
+				typeName = "null";
+			}
+			else if (type.IsEnum)
+			{
+				typeName = "uint";
+			}
+			else if (type == typeof(float))
+			{
+				typeName = "float";
+			}
+			else if (type == typeof(byte))
+			{
+				typeName = "byte";
+			}
+			else if (type == typeof(bool))
+			{
+				typeName = "bool";
+			}
+			if(Values.Count > 1)
+			{
+				typeName += Values.Count;
+			}
+			return string.Format("{0}({1})", typeName, value);
 		}
 		public override string ToString()
 		{

@@ -75,7 +75,12 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public override string ToString()
 		{
-			return Dump();
+			string arrayFormat = "";
+			if (Type.ElementCount > 1)
+			{
+				arrayFormat = string.Format("[{0}]", Type.ElementCount);
+			}
+			return string.Format("{0} {1}{2};", Type.TypeName, Name, arrayFormat);
 		}
 	}
 }

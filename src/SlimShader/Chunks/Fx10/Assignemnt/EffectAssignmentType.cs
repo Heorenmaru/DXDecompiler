@@ -23,15 +23,25 @@ namespace SlimShader.Chunks.Fx10
 		/// Rasterizer State
 		/// Based on D3D10_RASTERIZER_DESC for list of types
 		/// </summary>
+		[AssignmentType(typeof(FillMode))]
 		FillMode = 12,
+		[AssignmentType(typeof(CullMode))]
 		CullMode = 13,
+		[AssignmentType(typeof(bool))]
 		FrontCounterClockwise = 14,
+		[AssignmentType(typeof(int))]
 		DepthBias = 15,
+		[AssignmentType(typeof(float))]
 		DepthBiasClamp = 16,
+		[AssignmentType(typeof(float))]
 		SlopeScaledDepthBias = 17,
+		[AssignmentType(typeof(bool))]
 		DepthClipEnable = 18,
+		[AssignmentType(typeof(bool))]
 		ScissorEnable = 19,
-		MultiSampleEnable = 20,
+		[AssignmentType(typeof(bool))]
+		MultisampleEnable = 20,
+		[AssignmentType(typeof(bool))]
 		AntialiasedLineEnable = 21,
 		/// <summary>
 		/// Depth Stencil State
@@ -69,14 +79,23 @@ namespace SlimShader.Chunks.Fx10
 		/// Blend State
 		/// Based on D3D10_BLEND_DESC for list of types
 		/// </summary>
+		[AssignmentType(typeof(bool))]
 		AlphaToCoverageEnable = 36,
+		[AssignmentType(typeof(bool))]
 		BlendEnable = 37,
+		[AssignmentType(typeof(Blend))]
 		SrcBlend = 38,
+		[AssignmentType(typeof(Blend))]
 		DestBlend = 39,
+		[AssignmentType(typeof(BlendOp))]
 		BlendOp = 40,
+		[AssignmentType(typeof(Blend))]
 		SrcBlendAlpha = 41,
+		[AssignmentType(typeof(Blend))]
 		DestBlendAlpha = 42,
-		BlendOpAlpha= 43,
+		[AssignmentType(typeof(BlendOp))]
+		BlendOpAlpha = 43,
+		[AssignmentType(typeof(byte))]
 		RenderTargetWriteMask = 44,
 		/// <summary>
 		/// SamplerState
