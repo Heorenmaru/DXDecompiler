@@ -45,5 +45,9 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  EffectInlineShader5Assignment.InterfaceBindingOffset: {InterfaceBindingOffset} ({InterfaceBindingOffset.ToString("X4")})");
 			return sb.ToString();
 		}
+		public override string ToString()
+		{
+			return "EffectInlineShader5Assignment";
+		}
 	}
 }

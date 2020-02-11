@@ -8,12 +8,15 @@ namespace SlimShader.Chunks.Fx10
 {
 	public class EffectShaderData5
 	{
+		public BytecodeContainer Shader { get; private set; }
+
+		public uint[] SODeclsOffset { get; private set; }
+		public uint SODeclsCount { get; private set; }
+		public uint RasterizedStream { get; private set; }
+		public uint InterfaceBindingCount { get; private set; }
+		public uint InterfaceBindingOffset { get; private set; }
+
 		uint ShaderOffset;
-		uint[] SODeclsOffset;
-		uint SODeclsCount;
-		uint RasterizedStream;
-		uint InterfaceBindingCount;
-		uint InterfaceBindingOffset;
 		public EffectShaderData5()
 		{
 			SODeclsOffset = new uint[4];
@@ -21,7 +24,7 @@ namespace SlimShader.Chunks.Fx10
 		public static EffectShaderData5 Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new EffectShaderData5();
-			result.ShaderOffset = variableReader.ReadUInt32();
+			var shaderOffset = result.ShaderOffset = variableReader.ReadUInt32();
 			result.SODeclsOffset[0] = variableReader.ReadUInt32();
 			result.SODeclsOffset[1] = variableReader.ReadUInt32();
 			result.SODeclsOffset[2] = variableReader.ReadUInt32();
@@ -30,6 +33,9 @@ namespace SlimShader.Chunks.Fx10
 			result.RasterizedStream = variableReader.ReadUInt32();
 			result.InterfaceBindingCount = variableReader.ReadUInt32();
 			result.InterfaceBindingOffset = variableReader.ReadUInt32();
+			var shaderReader = reader.CopyAtOffset((int)shaderOffset);
+			var shaderSize = shaderReader.ReadUInt32();
+			result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes((int)shaderSize));
 			return result;
 		}
 		public string Dump()
@@ -43,6 +49,14 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  EffectObject.RasterizedStream: {RasterizedStream} ({RasterizedStream.ToString("X4")})");
 			sb.AppendLine($"  EffectObject.InterfaceBindingCount: {InterfaceBindingCount} ({InterfaceBindingCount.ToString("X4")})");
 			sb.AppendLine($"  EffectObject.InterfaceBindingOffset: {InterfaceBindingOffset} ({InterfaceBindingOffset.ToString("X4")})");
+			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine("asm5 {");
+			sb.AppendLine(Shader.ToString());
+			sb.Append("}");
 			return sb.ToString();
 		}
 	}

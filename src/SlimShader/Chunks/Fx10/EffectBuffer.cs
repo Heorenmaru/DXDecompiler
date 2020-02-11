@@ -64,8 +64,15 @@ namespace SlimShader.Chunks.Fx10
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			var bufferType = BufferType == ConstantBufferType.ConstantBuffer ? "cbuffer" : "tbuffer";
-			sb.AppendLine(string.Format("{0} {1}", bufferType, Name));
+			var bufferType = BufferType.GetDescription();
+			var registerPrefix = BufferType == ConstantBufferType.ConstantBuffer ? "b" : "t";
+			sb.Append(string.Format("{0} {1}", 
+				bufferType, Name));
+			if(RegisterNumber != uint.MaxValue)
+			{
+				sb.Append(string.Format(" : register({0}{1})", registerPrefix, RegisterNumber));
+			}
+			sb.AppendLine();
 			sb.AppendLine("{");
 			foreach (var variable in Variables)
 			{

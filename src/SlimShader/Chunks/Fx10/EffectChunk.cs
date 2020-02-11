@@ -307,12 +307,13 @@ namespace SlimShader.Chunks.Fx10
 			if (InterfaceVariables.Count > 0)
 			{
 				sb.AppendLine("//");
-				sb.AppendLine(string.Format("// {0} interface variable(s)", InterfaceVariables.Count));
+				sb.AppendLine(string.Format("// {0} local interface(s)", InterfaceVariables.Count));
 				sb.AppendLine("//");
 				foreach (var variable in InterfaceVariables)
 				{
 					sb.AppendLine(variable.ToString());
 				}
+				sb.AppendLine();
 			}
 			if (Techniques.Count > 0)
 			{
@@ -327,7 +328,7 @@ namespace SlimShader.Chunks.Fx10
 			if (Groups.Count > 0)
 			{
 				sb.AppendLine("//");
-				sb.AppendLine(string.Format("// {0} group(s)", Groups.Count));
+				sb.AppendLine(string.Format("// {0} groups(s)", Groups.Count));
 				sb.AppendLine("//");
 				foreach (var group in Groups)
 				{

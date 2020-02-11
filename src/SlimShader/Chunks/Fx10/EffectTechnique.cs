@@ -75,6 +75,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			sb.Append(indentString);
 			sb.AppendLine("}");
+			sb.AppendLine();
 			return sb.ToString();
 		}
 		public override string ToString()

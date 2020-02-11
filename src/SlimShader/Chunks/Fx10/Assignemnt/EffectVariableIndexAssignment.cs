@@ -41,7 +41,6 @@ namespace SlimShader.Chunks.Fx10
 			sb.Append("[");
 			sb.Append(VariableName);
 			sb.Append("];");
-			sb.Append($" // {GetType().Name}");
 			return sb.ToString();
 		}
 	}
