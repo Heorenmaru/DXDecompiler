@@ -92,8 +92,12 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    Semantic: {Semantic} ({SemanticOffset.ToString("X4")})");
 			sb.AppendLine($"    BufferOffset: {BufferOffset}");
 			sb.AppendLine($"    EffectBufferVariable.DefaultValueOffset: {DefaultValueOffset}");
-			sb.AppendLine($"    EffectBufferVariable.Unknown1: {ExplicitBindPoint}");
+			sb.AppendLine($"    EffectBufferVariable.ExplicitBindPoint: {ExplicitBindPoint}");
 			sb.AppendLine($"    EffectBufferVariable.AnnotationCount: {AnnotationCount}");
+			if(DefaultValue != null)
+			{
+				sb.AppendLine($"    EffectBufferVariable.DefaultValue: {string.Join(", ", DefaultValue)}");
+			}
 			sb.Append(Type.Dump());
 			foreach (var annotation in Annotations)
 			{

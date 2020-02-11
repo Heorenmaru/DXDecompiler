@@ -34,8 +34,23 @@ namespace SlimShader.Chunks.Fx10
 				case EffectCompilerAssignmentType.Variable:
 					result = EffectVariableAssignment.Parse(reader, typeSpecificReader);
 					break;
+				case EffectCompilerAssignmentType.ConstantIndex:
+					result = EffectConstantIndexAssignment.Parse(reader, typeSpecificReader);
+					break;
+				case EffectCompilerAssignmentType.VariableIndex:
+					result = EffectVariableIndexAssignment.Parse(reader, typeSpecificReader);
+					break;
+				case EffectCompilerAssignmentType.ExpressionIndex:
+					result = EffectExpressionIndexAssignment.Parse(reader, typeSpecificReader);
+					break;
+				case EffectCompilerAssignmentType.Expression:
+					result = EffectExpressionAssignment.Parse(reader, typeSpecificReader);
+					break;
 				case EffectCompilerAssignmentType.InlineShader:
 					result = EffectInlineShaderAssignment.Parse(reader, typeSpecificReader);
+					break;
+				case EffectCompilerAssignmentType.InlineShader5:
+					result = EffectInlineShader5Assignment.Parse(reader, typeSpecificReader);
 					break;
 				default:
 					throw new ParseException($"Unsupported EffectCompilerAssignmentType {assignmentType}");

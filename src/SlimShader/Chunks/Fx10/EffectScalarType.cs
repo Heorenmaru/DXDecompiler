@@ -10,7 +10,7 @@ namespace SlimShader.Chunks.Fx10
 		Invalid,
 		Float,
 		Int,
-		Uint,
+		UInt,
 		Bool
 	}
 }

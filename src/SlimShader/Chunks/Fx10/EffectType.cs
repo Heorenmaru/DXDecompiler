@@ -11,11 +11,10 @@ namespace SlimShader.Chunks.Fx10
 	/// <summary>
 	/// Describes a effect variable type
 	/// Note, has a stride of 28 bytes
-	/// Based on D3D10_EFFECT_TYPE_DESC
+	/// Based on D3D10_EFFECT_TYPE_DESC and SType
 	/// </summary>
 	public class EffectType
 	{
-		public uint TypeNameOffset;
 		public string TypeName { get; private set; }
 		public EffectVariableType EffectVariableType { get; private set; }
 		public uint ElementCount { get; private set; }
@@ -25,10 +24,16 @@ namespace SlimShader.Chunks.Fx10
 		public uint PackedType { get; private set; }
 		public uint MemberCount { get; private set; }
 		public EffectObjectType ObjectType { get; private set; }
+		public EffectNumericType NumericType { get; private set; }
 		public ShaderVariableClass VariableClass { get; private set; }
-		public uint Rows { get; private set; }
-		public uint Columns { get; private set; }
 		public List<EffectMember> Members { get; private set; }
+
+		public uint TypeNameOffset;
+
+		public uint Rows => EffectVariableType == EffectVariableType.Numeric ?
+				NumericType.Rows : 0;
+		public uint Columns => EffectVariableType == EffectVariableType.Numeric ?
+			NumericType.Columns : 0;
 		public ShaderVariableType VariableType
 		{
 			get {
@@ -66,8 +71,8 @@ namespace SlimShader.Chunks.Fx10
 			if (result.EffectVariableType == EffectVariableType.Numeric)
 			{
 				var type = result.PackedType = typeReader.ReadUInt32();
-				var variableClass = (EffectNumericLayout)type.DecodeValue(0, 1);
-				switch (variableClass)
+				var numericType = result.NumericType = EffectNumericType.Parse(type);
+				switch (numericType.NumericLayout)
 				{
 					case EffectNumericLayout.Scalar:
 						result.VariableClass = ShaderVariableClass.Scalar;
@@ -81,24 +86,21 @@ namespace SlimShader.Chunks.Fx10
 							ShaderVariableClass.MatrixRows;
 						break;
 				}
-				var scalarType = type.DecodeValue(3, 5);
-				switch (scalarType)
+				switch (numericType.ScalarType)
 				{
-					case 1:
+					case EffectScalarType.Float:
 						result.ObjectType = EffectObjectType.Float;
 						break;
-					case 2:
+					case EffectScalarType.Int:
 						result.ObjectType = EffectObjectType.Int;
 						break;
-					case 3:
+					case EffectScalarType.UInt:
 						result.ObjectType = EffectObjectType.UInt;
 						break;
-					case 4:
+					case EffectScalarType.Bool:
 						result.ObjectType = EffectObjectType.Bool;
 						break;
 				}
-				result.Rows = type.DecodeValue(8, 10);
-				result.Columns = type.DecodeValue(11, 13);
 			}
 			else if (result.EffectVariableType == EffectVariableType.Object)
 			{
@@ -135,6 +137,10 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    Stride: {Stride}");
 			sb.AppendLine($"    VariableTypeAndClass: {VariableClass}, {VariableType}");
 			sb.AppendLine($"    DebugType: {TypeName,-16}{PackedType, 4}\t({Convert.ToString(PackedType, 2),15})");
+			if(EffectVariableType == EffectVariableType.Numeric)
+			{
+				sb.AppendLine($"    NumericType: {NumericType.Dump()}");
+			}
 			sb.AppendLine($"    MemberCount {MemberCount}");
 			foreach(var member in Members)
 			{

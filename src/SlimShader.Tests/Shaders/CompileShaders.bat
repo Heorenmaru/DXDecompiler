@@ -96,6 +96,12 @@ CALL CompileShader2.bat Internal/Effects EffectNoTechnique.fx EffectNoTechnique_
 CALL CompileShader2.bat Internal/Effects EffectNoTechnique.fx EffectNoTechnique_4_0_Child_FX fx_4_0 /Gch || GOTO :error
 CALL CompileShader2.bat Internal/Effects EffectNoTechnique.fx EffectNoTechnique_4_1_Child_FX fx_4_1 /Gch || GOTO :error
 
+CALL CompileShader2.bat Internal/Effects EffectPacking.fx EffectPacking_4_0_FX fx_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Effects EffectPacking.fx EffectPacking_5_0_FX fx_5_0 || GOTO :error
+
+CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_4_0_FX fx_4_0 /Gdp || GOTO :error
+CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_5_0_FX fx_5_0 /Gdp || GOTO :error
+
 CALL CompileShader2.bat Internal/Effects EffectInterfaces.fx EffectInterfaces_5_FX fx_5_0 || GOTO :error
 
 CALL CompileShader2.bat Internal/Effects StreamOutEffect.fx StreamOutEffect_5_FX fx_5_0 || GOTO :error

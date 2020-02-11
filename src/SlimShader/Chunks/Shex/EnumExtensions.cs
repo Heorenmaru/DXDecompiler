@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Fx10;
+using SlimShader.Chunks.Fx10.Assignemnt;
 
 namespace SlimShader.Chunks.Shex
 {
