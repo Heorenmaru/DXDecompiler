@@ -116,10 +116,23 @@
     <Content Include="Shaders\Internal\Effects\BasicEffect_5_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Shaders\Internal\Effects\EffectExpressions.fx" />
+    <Content Include="Shaders\Internal\Effects\EffectExpressions_4_0_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\EffectExpressions_5_0_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Internal\Effects\EffectInterfaces.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Effects\EffectInterfaces_5_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\EffectPacking_4_0_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\EffectPacking_5_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Effects\StreamOutEffect.fx">
@@ -328,6 +341,9 @@
     </Content>
     <Compile Include="Effects10.cs" />
     <Compile Include="Effects11.cs" />
+    <Content Include="Shaders\Internal\Effects\EffectPacking.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Compile Include="TestEffectCreation.cs" />
     <Compile Include="TestLibraryShader.cs" />
     <Compile Include="Util.cs" />
@@ -3369,7 +3385,19 @@
     <None Include="Shaders\Internal\DynamicIndexing.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Shaders\Internal\Effects\EffectExpressions_4_0_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Internal\Effects\EffectExpressions_5_0_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\Internal\Effects\EffectInterfaces_5_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Internal\Effects\EffectPacking_4_0_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Internal\Effects\EffectPacking_5_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Internal\Effects\StreamOutEffect_5_FX.o">

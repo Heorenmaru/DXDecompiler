@@ -111,6 +111,10 @@ namespace SlimShader.Chunks.Fx10
 				result.Semantic = "";
 			}
 			result.BufferOffset = variableReader.ReadUInt32();
+			if (isShared)
+			{
+				return result;
+			}
 			// Initializer data
 			if (result.Type.ObjectType == EffectObjectType.String)
 			{
@@ -154,10 +158,6 @@ namespace SlimShader.Chunks.Fx10
 				{
 					result.ShaderData.Add(EffectShaderData.Parse(reader, variableReader));
 				}
-			}
-			if (isShared)
-			{
-				return result;
 			}
 			result.AnnotationCount = variableReader.ReadUInt32();
 			for (int i = 0; i < result.AnnotationCount; i++)
@@ -233,18 +233,28 @@ namespace SlimShader.Chunks.Fx10
 				}
 				sb.Append(">");
 			}
-			if (Assignments.Count > 0)
+			if (Assignments.Count == 1)
 			{
 				sb.AppendLine();
+				sb.AppendLine("{");
+				foreach (var subAssignment in Assignments[0])
+				{
+					sb.AppendLine($"    {subAssignment}");
+				}
+				sb.Append("}");
+			} else if(Assignments.Count > 1) {
+				sb.AppendLine();
+				sb.AppendLine("{");
 				foreach (var assignment in Assignments)
 				{
-					sb.AppendLine("{");
+					sb.AppendLine("    {");
 					foreach (var subAssignment in assignment)
 					{
-						sb.AppendLine($"    {subAssignment}");
+						sb.AppendLine($"        {subAssignment}");
 					}
-					sb.Append("}");
+					sb.AppendLine("    },");
 				}
+				sb.Append("}");
 			}
 			sb.AppendLine(";");
 			return sb.ToString();

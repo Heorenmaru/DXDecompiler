@@ -173,6 +173,44 @@ void CSMain(uint3 DTid : SV_DispatchThreadID)
 	BufferOut.Store(DTid.x * 8 + 4, asuint(f0 + f1));
 }
 
+uint blendIndex;
+BlendState BlendArray[3]
+{
+	{
+		BlendOp = Add;
+	},
+	{
+		BlendOp = Subtract;
+	},
+	{
+		BlendOp = Rev_Subtract;
+	}
+};
+RasterizerState RasterizerArray[3]
+{
+	{
+		DepthBiasClamp = 1;
+	},
+	{
+		DepthBiasClamp = 2;
+	},
+	{
+		DepthBiasClamp = 3;
+	}
+};
+DepthStencilState DepthStencilArray[3]
+{
+	{
+		DepthFunc = 1;
+	},
+	{
+		DepthFunc = 2;
+	},
+	{
+		DepthFunc = 3;
+	}
+};
+
 technique10 RenderSceneWithTexture1Light10_1
 {
 	pass P0
@@ -191,6 +229,8 @@ technique10 RenderSceneWithTexture1Light10_2
 	{
 		SetVertexShader(CompileShader(vs_4_0, RenderSceneVS(2, true, true)));
 		SetPixelShader(CompileShader(ps_4_0, RenderScenePS(false)));
+		SetBlendState(BlendArray[blendIndex], float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(RasterizerArray[1]);
 	}
 }
 
@@ -217,6 +257,8 @@ technique11 RenderSceneWithTexture1Light11_2
 		SetGeometryShader(NULL);
 		SetPixelShader(TestPixelShader5);
 		SetComputeShader(TestComputeShader5);
+		SetBlendState(BlendArray[blendIndex], float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
+		SetRasterizerState(RasterizerArray[1]);
 	}
 }
 fxgroup g0

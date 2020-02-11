@@ -78,7 +78,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine("    //");
 			foreach(var technique in Techniques)
 			{
-				sb.Append(technique);
+				sb.Append(technique.ToString(1));
 			}
 			sb.Append("}");
 			return sb.ToString();

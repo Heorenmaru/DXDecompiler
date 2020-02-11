@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Fx10.Assignemnt;
+using SlimShader.Chunks.Rdef;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,16 @@ namespace SlimShader.Chunks.Fx10
 {
 	public static class Extensions
 	{
+		public static Type GetAssignmentType(this EffectAssignmentType type)
+		{
+			return type.GetAttributeValue<AssignmentTypeAttribute, Type>((a, v) =>
+			{
+				if (!a.Any())
+					return null;
+				return a.First().Type;
+			});
+		}
+
 		public static ShaderVariableType ToShaderVariableType(this EffectObjectType effectType)
 		{
 			switch (effectType)

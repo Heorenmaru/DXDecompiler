@@ -10,6 +10,7 @@ cbuffer $Globals
     float4x4 g_mWorld;                  // Offset:   32, size:   64
     float4x4 g_mWorldViewProjection;    // Offset:   96, size:   64
     float4  defaultValue = { 1, 2, 3, 4 };// Offset:  160, size:   16
+    uint    blendIndex;                 // Offset:  176, size:    4
 }
 
 tbuffer TestTBuffer
@@ -30,7 +31,7 @@ cbuffer TestShared
 }
 
 //
-// 17 local object(s)
+// 20 local object(s)
 //
 Texture2D g_MeshTexture;
 SamplerState MeshTextureSampler
@@ -154,6 +155,63 @@ Texture2D sharedTexture;
 ByteAddressBuffer Buffer0;
 ByteAddressBuffer Buffer1;
 RWByteAddressBuffer BufferOut;
+BlendState BlendArray[3]
+{
+    {
+        BlendOp[0] = uint(ADD /* 1 */);
+        BlendOp[1] = uint(ADD /* 1 */);
+        BlendOp[2] = uint(ADD /* 1 */);
+        BlendOp[3] = uint(ADD /* 1 */);
+        BlendOp[4] = uint(ADD /* 1 */);
+        BlendOp[5] = uint(ADD /* 1 */);
+        BlendOp[6] = uint(ADD /* 1 */);
+        BlendOp[7] = uint(ADD /* 1 */);
+    },
+    {
+        BlendOp[0] = uint(SUBTRACT /* 2 */);
+        BlendOp[1] = uint(SUBTRACT /* 2 */);
+        BlendOp[2] = uint(SUBTRACT /* 2 */);
+        BlendOp[3] = uint(SUBTRACT /* 2 */);
+        BlendOp[4] = uint(SUBTRACT /* 2 */);
+        BlendOp[5] = uint(SUBTRACT /* 2 */);
+        BlendOp[6] = uint(SUBTRACT /* 2 */);
+        BlendOp[7] = uint(SUBTRACT /* 2 */);
+    },
+    {
+        BlendOp[0] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[1] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[2] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[3] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[4] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[5] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[6] = uint(REV_SUBTRACT /* 3 */);
+        BlendOp[7] = uint(REV_SUBTRACT /* 3 */);
+    }
+};
+RasterizerState RasterizerArray[3]
+{
+    {
+        DepthBiasClamp = float(1);
+    },
+    {
+        DepthBiasClamp = float(2);
+    },
+    {
+        DepthBiasClamp = float(3);
+    }
+};
+DepthStencilState DepthStencilArray[3]
+{
+    {
+        DepthFunc = uint(NEVER /* 1 */);
+    },
+    {
+        DepthFunc = uint(LESS /* 2 */);
+    },
+    {
+        DepthFunc = uint(EQUAL /* 3 */);
+    }
+};
 VertexShader TestVertexShader5 = 
     asm {
         //
@@ -430,6 +488,10 @@ fxgroup
                 // Approximately 2 instruction slots used
                             
             };
+            AB_BlendFactor = float4(0, 0, 0, 0);
+            AB_SampleMask = uint(0xffffffff);
+            BlendState = BlendArray[blendIndex];
+            RasterizerState = RasterizerArray[1];
         }
 
     }
@@ -535,6 +597,10 @@ fxgroup
             GeometryShader = NULL;
             PixelShader = TestPixelShader5;
             ComputeShader = TestComputeShader5;
+            AB_BlendFactor = float4(0, 0, 0, 0);
+            AB_SampleMask = uint(0xffffffff);
+            BlendState = BlendArray[blendIndex];
+            RasterizerState = RasterizerArray[1];
         }
 
     }

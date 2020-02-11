@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.RTS0;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,31 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return sb.ToString();
 		}
+		public string FormatValue(Number value)
+		{
+			var type = MemberType.GetAssignmentType();
+			if(type == null)
+			{
+				return Values[0].UInt.ToString();
+			}
+			if (type.IsEnum)
+			{
+				return Enum.GetName(type, value.UInt);
+			}
+			if (type == typeof(float))
+			{
+				return value.ToString();
+			}
+			if (type == typeof(byte))
+			{
+				return value.UInt.ToString();
+			}
+			return value.UInt.ToString();
+		}
+		public string FormatValue()
+		{
+			return string.Join(", ", Values.Select(v => FormatValue(v)));
+		}
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
@@ -48,13 +74,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.Append(MemberIndex);
 			sb.Append("]");
 			sb.Append(" = ");
-			for (int i = 0; i < Values.Count; i++) {
-				sb.Append(Values[i].ToString());
-				if(i < Values.Count - 1)
-				{
-					sb.Append(", ");
-				}
-			}
+			sb.Append(FormatValue());
 			sb.Append(";");
 			return sb.ToString();
 		}

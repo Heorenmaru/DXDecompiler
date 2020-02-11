@@ -61,17 +61,25 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return sb.ToString();
 		}
-		public override string ToString()
+		public string ToString(int indent)
 		{
 			var sb = new StringBuilder();
+			var indentString = new string(' ', indent * 4);
+			sb.Append(indentString);
 			sb.AppendLine(string.Format("technique11 {0}", Name));
+			sb.Append(indentString);
 			sb.AppendLine("{");
 			foreach(var pass in Passes)
 			{
-				sb.Append(pass.ToString());
+				sb.Append(pass.ToString(indent + 1));
 			}
+			sb.Append(indentString);
 			sb.AppendLine("}");
 			return sb.ToString();
+		}
+		public override string ToString()
+		{
+			return ToString(0);
 		}
 	}
 }

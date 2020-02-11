@@ -122,10 +122,6 @@ namespace SlimShader.Chunks.Fx10
 				{
 					result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
 				}
-				for (int i = 0; i < header.SharedObjectCount; i++)
-				{
-					result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
-				}
 				if (header.Version.MajorVersion >= 5)
 				{
 					for (int i = 0; i < header.InterfaceVariableCount; i++)

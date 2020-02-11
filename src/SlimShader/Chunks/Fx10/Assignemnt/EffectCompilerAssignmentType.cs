@@ -10,7 +10,7 @@ namespace SlimShader.Chunks.Fx10
 		Invalid,
 		Constant,
 		Variable,
-		CosntantIndex,
+		ConstantIndex,
 		VariableIndex,
 		ExpressionIndex,
 		Expression,
