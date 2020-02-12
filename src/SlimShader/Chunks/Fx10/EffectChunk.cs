@@ -263,7 +263,8 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine(string.Format("// FX Version: {0}", Header.Version));
 			if (Header.Version.MajorVersion == 4)
 			{
-				sb.AppendLine(string.Format("// Child effect (requires effect pool): {0}", IsChildEffect));
+				sb.AppendLine(string.Format("// Child effect (requires effect pool): {0}", 
+						IsChildEffect.ToString().ToLowerInvariant()));
 			}
 			sb.AppendLine("//");
 			if(LocalBuffers.Count > 0)
