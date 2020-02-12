@@ -141,7 +141,27 @@ namespace SlimShader.Chunks.Fx10
 					defaultValue = $" = {{ {string.Join(", ", values)} }}";
 				}
 			}
-			string name = string.Format("{0,-7} {1}{2}{3};", Type.TypeName, Name, elements, defaultValue);
+			string packOffset = "";
+			if (ExplicitBindPoint == 4)
+			{
+				var componentOffset = BufferOffset % 16 / 4;
+				string componentPacking = "";
+				switch (componentOffset)
+				{
+					case 1:
+						componentPacking = ".y";
+						break;
+					case 2:
+						componentPacking = ".z";
+						break;
+					case 3:
+						componentPacking = ".w";
+						break;
+				}
+				packOffset = string.Format(" : packoffset(c{0}{1})", BufferOffset / 16, componentPacking);
+			}
+			string name = string.Format("{0,-7} {1}{2}{3}{4};", 
+					Type.TypeName, Name, elements, defaultValue, packOffset);
 			return string.Format("    {0,-36}// Offset: {1, 4}, size: {2, 4}",
 				name, BufferOffset, Type.UnpackedSize);
 		}
