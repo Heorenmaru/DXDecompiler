@@ -1,5 +1,6 @@
 ﻿using SlimShader.Chunks.Fx10.Assignemnt;
 using SlimShader.Chunks.Rdef;
+using SlimShader.Chunks.Shex;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,6 +118,39 @@ namespace SlimShader.Chunks.Fx10
 					return ShaderVariableType.ConsumeStructuredBuffer;
 				default:
 					return ShaderVariableType.Void;
+			}
+		}
+		public static bool IsArrayAssignemnt(this EffectAssignmentType assignmentType)
+		{
+			switch (assignmentType)
+			{
+				case EffectAssignmentType.BlendEnable:
+				case EffectAssignmentType.SrcBlend:
+				case EffectAssignmentType.DestBlend:
+				case EffectAssignmentType.BlendOp:
+				case EffectAssignmentType.SrcBlendAlpha:
+				case EffectAssignmentType.DestBlendAlpha:
+				case EffectAssignmentType.BlendOpAlpha:
+				case EffectAssignmentType.RenderTargetWriteMask:
+					return true;
+				default:
+					return false;
+			}
+		}
+		public static NumberType ToNumberType(this EffectScalarType scalarType)
+		{
+			switch (scalarType)
+			{
+				case EffectScalarType.Bool:
+					return NumberType.Bool;
+				case EffectScalarType.Float:
+					return NumberType.Float;
+				case EffectScalarType.Int:
+					return NumberType.Int;
+				case EffectScalarType.UInt:
+					return NumberType.UInt;
+				default:
+					return NumberType.Unknown;
 			}
 		}
 	}

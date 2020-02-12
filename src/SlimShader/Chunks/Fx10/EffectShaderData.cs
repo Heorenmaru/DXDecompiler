@@ -9,8 +9,6 @@ namespace SlimShader.Chunks.Fx10
 	public class EffectShaderData
 	{
 		public BytecodeContainer Shader { get; private set; }
-		uint Val1;
-		uint Val2;
 		uint ShaderOffset;
 		public static EffectShaderData Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{

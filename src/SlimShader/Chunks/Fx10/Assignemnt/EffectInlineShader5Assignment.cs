@@ -32,7 +32,7 @@ namespace SlimShader.Chunks.Fx10
 			result.InterfaceBindingOffset = variableReader.ReadUInt32();
 			return result;
 		}
-		public string Dump()
+		public override string Dump()
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"  EffectInlineShader5Assignment.SODecls0: {SODeclsOffset[0]} ({SODeclsOffset[0].ToString("X4")})");

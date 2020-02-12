@@ -13,7 +13,7 @@ namespace SlimShader.Chunks.Fx10
 	/// </summary>
 	public class EffectTechnique
 	{
-		public uint GuessNameOffset;
+		public uint NameOffset;
 		public string Name { get; private set; }
 		public uint PassCount;
 		public uint AnnotationCount;
@@ -28,7 +28,7 @@ namespace SlimShader.Chunks.Fx10
 		public static EffectTechnique Parse(BytecodeReader reader, BytecodeReader techniqueReader)
 		{
 			var result = new EffectTechnique();
-			var nameOffset = result.GuessNameOffset = techniqueReader.ReadUInt32();
+			var nameOffset = result.NameOffset = techniqueReader.ReadUInt32();
 			var nameReader = reader.CopyAtOffset((int)nameOffset);
 			result.Name = nameReader.ReadString();
 			result.PassCount = techniqueReader.ReadUInt32();
@@ -48,7 +48,7 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"EffectTechnique");
-			sb.AppendLine($"  Name {Name} ({GuessNameOffset.ToString("X4")})");
+			sb.AppendLine($"  Name {Name} ({NameOffset.ToString("X4")})");
 			sb.AppendLine($"  PassCount {PassCount}");
 			sb.AppendLine($"  AnnotationCount {AnnotationCount}");
 			foreach (var annotation in Annotations)
