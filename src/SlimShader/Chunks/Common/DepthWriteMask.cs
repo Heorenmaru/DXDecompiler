@@ -5,7 +5,9 @@
 	/// </summary>
 	public enum DepthWriteMask
 	{
+		[Description("ZERO")]
 		Zero = 0,
+		[Description("ALL")]
 		All = 1
 	}
 }

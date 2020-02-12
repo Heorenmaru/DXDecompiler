@@ -41,16 +41,23 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return sb.ToString();
 		}
-		public string FormatValue(Number value)
+		public string FormatValue(Number value, EffectScalarType scalarType)
 		{
 			var type = MemberType.GetAssignmentType();
 			if(type == null)
 			{
 				return value.UInt.ToString();
 			}
-			if (type.IsEnum)
+			var numberType = scalarType.ToNumberType();
+			if (type.IsEnum && scalarType == EffectScalarType.Int)
 			{
-				return Enum.GetName(type, value.UInt);
+				var enumValue = (Enum)Enum.ToObject(type, value.UInt);
+				var description = EnumExtensions.GetDescription(enumValue);
+				return string.Format("{0} /* {1} */", description, value.UInt);
+			}
+			else if(type.IsEnum)
+			{
+				return value.ToString(numberType);
 			}
 			if (type == typeof(float))
 			{
@@ -58,22 +65,51 @@ namespace SlimShader.Chunks.Fx10
 			}
 			if (type == typeof(byte))
 			{
-				return value.UInt.ToString();
+				if (numberType == Shex.NumberType.UInt)
+				{
+					return string.Format("0x{0:x2}", value.Byte0);
+				}
+				else
+				{
+					return value.ToString(numberType);
+				}
 			}
 			if (type == typeof(bool))
 			{
-				return value.ToString(Shex.NumberType.Bool);
+				if (scalarType == EffectScalarType.Int)
+				{
+					return string.Format("{0} /* {1} */",
+						value.ToString(Shex.NumberType.Bool), value.UInt);
+				}
+				else
+				{
+					return value.ToString(numberType);
+				}
 			}
-			return value.UInt.ToString();
+			if (type == typeof(uint))
+			{
+				if (scalarType == EffectScalarType.UInt)
+				{
+					if (value.UInt > 10000)
+						return "0x" + value.UInt.ToString("x8");
+					return value.UInt.ToString();
+				}
+				else
+				{
+					return value.ToString(numberType);
+				}
+			}
+			return value.ToString(numberType);
 		}
 		public string FormatValue()
 		{
 			var type = MemberType.GetAssignmentType();
-			string value = string.Join(", ", Values.Select(v => FormatValue(v)));
+			var formatedValues = Values.Zip(Types, (x, y) => FormatValue(x, y));
+			string value = string.Join(", ", formatedValues);
 			string typeName = "unknown";
 			if (type == null)
 			{
-				typeName = "null";
+				return "NULL";
 			}
 			else if (type.IsEnum)
 			{
@@ -91,7 +127,15 @@ namespace SlimShader.Chunks.Fx10
 			{
 				typeName = "bool";
 			}
-			if(Values.Count > 1)
+			else if (type == typeof(uint))
+			{
+				typeName = "uint";
+			}
+			else if (type == typeof(int))
+			{
+				typeName = "uint";
+			}
+			if (Values.Count > 1)
 			{
 				typeName += Values.Count;
 			}
@@ -100,10 +144,7 @@ namespace SlimShader.Chunks.Fx10
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
-			sb.Append(MemberType.ToString());
-			sb.Append("[");
-			sb.Append(MemberIndex);
-			sb.Append("]");
+			sb.Append(string.Format("{0, -8}", MemberName));
 			sb.Append(" = ");
 			sb.Append(FormatValue());
 			sb.Append(";");

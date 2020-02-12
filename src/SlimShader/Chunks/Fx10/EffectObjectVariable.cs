@@ -266,7 +266,7 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendLine(" =");
 				foreach (var data in GSSOInitializers)
 				{
-					sb.AppendLine(data.ToString());
+					sb.Append(data.ToString());
 				}
 			}
 			else if (IsShader5(Type))
@@ -274,7 +274,7 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendLine(" =");
 				foreach (var data in ShaderData5)
 				{
-					sb.AppendLine(data.ToString());
+					sb.Append(data.ToString());
 				}
 			}
 			else if (IsShader(Type))
@@ -282,7 +282,7 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendLine(" =");
 				foreach (var data in ShaderData)
 				{
-					sb.AppendLine(data.ToString());
+					sb.Append(data.ToString());
 				}
 			}
 			sb.Append(";");

@@ -285,16 +285,5 @@ namespace SlimShader.Tests
 				CompareShader(shaderDesc, geometryShader);
 			}*/
 		}
-		private static void CompareShader(EffectPassShaderDescription shaderPassDesc, Fx10.EffectShader shader)
-		{
-			var shaderVar = shaderPassDesc.Variable;
-			EffectVariableDescription desc = shaderVar.Description;
-			Assert.AreEqual(desc.Name, shader.Name);
-			Assert.AreEqual(desc.Semantic ?? "", "");
-			Assert.AreEqual((uint)desc.Flags, 0);
-			Assert.AreEqual(desc.ExplicitBindPoint, 0);
-			Assert.AreEqual(desc.BufferOffset, 0);
-			Assert.AreEqual(desc.AnnotationCount,0);
-		}
 	}
 }

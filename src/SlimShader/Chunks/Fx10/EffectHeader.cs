@@ -35,7 +35,6 @@ namespace SlimShader.Chunks.Fx10
 		public uint DepthStencilViewCount;
 		public uint ShaderCount;
 		public uint InlineShaderCount;
-
 		/// <summary>
 		/// Start of fx_5_0 members
 		/// </summary>
@@ -48,26 +47,24 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var result = new EffectHeader();
 			result.Version = ShaderVersion.ParseFX(chunkReader);
-			var bufferCount = result.ConstantBuffers = chunkReader.ReadUInt32();
-			//Global Variable Count
-			var variableCount = result.GlobalVariables = chunkReader.ReadUInt32();
-			var localObjectCount = result.ObjectCount = chunkReader.ReadUInt32();
-			var SharedConstantBuffers = result.SharedConstantBuffers = chunkReader.ReadUInt32();
-			var SharedVariableCount = result.SharedGlobalVariables = chunkReader.ReadUInt32();
-			var SharedObjectCount = result.SharedObjectCount = chunkReader.ReadUInt32();
-			var techniqueCount = result.Techniques = chunkReader.ReadUInt32();
-			//probably a size or offset
-			var unknown4 = result.FooterOffset = chunkReader.ReadUInt32();
-			var unknown5 = result.StringCount = chunkReader.ReadUInt32();
-			var TextureCount = result.LocalTextureCount = chunkReader.ReadUInt32();
-			var DepthStencilStateCount = result.DepthStencilStateCount = chunkReader.ReadUInt32();
-			var BlendStateCount = result.BlendStateCount = chunkReader.ReadUInt32();
-			var RasterizerStateCount = result.RasterizerStateCount = chunkReader.ReadUInt32();
-			var SamplerCount = result.LocalSamplerCount = chunkReader.ReadUInt32();
+			result.ConstantBuffers = chunkReader.ReadUInt32();
+			result.GlobalVariables = chunkReader.ReadUInt32();
+			result.ObjectCount = chunkReader.ReadUInt32();
+			result.SharedConstantBuffers = chunkReader.ReadUInt32();
+			result.SharedGlobalVariables = chunkReader.ReadUInt32();
+			result.SharedObjectCount = chunkReader.ReadUInt32();
+			result.Techniques = chunkReader.ReadUInt32();
+			result.FooterOffset = chunkReader.ReadUInt32();
+			result.StringCount = chunkReader.ReadUInt32();
+			result.LocalTextureCount = chunkReader.ReadUInt32();
+			result.DepthStencilStateCount = chunkReader.ReadUInt32();
+			result.BlendStateCount = chunkReader.ReadUInt32();
+			result.RasterizerStateCount = chunkReader.ReadUInt32();
+			result.LocalSamplerCount = chunkReader.ReadUInt32();
 			result.RenderTargetViewCount = chunkReader.ReadUInt32();
 			result.DepthStencilViewCount = chunkReader.ReadUInt32();
-			var ShaderCount = result.ShaderCount = chunkReader.ReadUInt32();
-			var UsedShaderCount = result.InlineShaderCount = chunkReader.ReadUInt32();
+			result.ShaderCount = chunkReader.ReadUInt32();
+			result.InlineShaderCount = chunkReader.ReadUInt32();
 			if(result.Version.MajorVersion >= 5)
 			{
 				result.GroupCount = chunkReader.ReadUInt32();

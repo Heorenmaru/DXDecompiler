@@ -12,12 +12,15 @@ namespace SlimShader.Chunks.Fx10
 	{
 		RasterizerState = 0,
 		DepthStencilState = 1,
-		BlenderState = 2,
+		BlendState = 2,
 		VertexShader = 6,
 		PixelShader = 7,
 		GeometryShader = 8,
+		[AssignmentType(typeof(uint))]
 		DS_StencilRef = 9,
+		[AssignmentType(typeof(float))]
 		AB_BlendFactor = 10,
+		[AssignmentType(typeof(uint))]
 		AB_SampleMask = 11,
 		/// <summary>
 		/// Rasterizer State
@@ -65,7 +68,7 @@ namespace SlimShader.Chunks.Fx10
 		FrontFaceStencilDepthFail = 29,
 		[AssignmentType(typeof(StencilOp))]
 		FrontFaceStencilPass = 30,
-		[AssignmentType(typeof(StencilOp))]
+		[AssignmentType(typeof(ComparisonFunc))]
 		FrontFaceStencilFunc = 31,
 		[AssignmentType(typeof(StencilOp))]
 		BackFaceStencilFail = 32,
@@ -73,7 +76,7 @@ namespace SlimShader.Chunks.Fx10
 		BackFaceStencilDepthFail = 33,
 		[AssignmentType(typeof(StencilOp))]
 		BackFaceStencilPass = 34,
-		[AssignmentType(typeof(StencilOp))]
+		[AssignmentType(typeof(ComparisonFunc))]
 		BackFaceStencilFunc = 35,
 		/// <summary>
 		/// Blend State
@@ -101,6 +104,7 @@ namespace SlimShader.Chunks.Fx10
 		/// SamplerState
 		/// Based on D3D10_SAMPLER_DESC for list of types
 		/// </summary>
+		[AssignmentType(typeof(Filter))]
 		Filter = 45,
 		[AssignmentType(typeof(TextureAddressMode))]
 		AddressU = 46,

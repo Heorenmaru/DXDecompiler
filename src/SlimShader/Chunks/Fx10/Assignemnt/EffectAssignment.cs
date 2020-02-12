@@ -14,7 +14,16 @@ namespace SlimShader.Chunks.Fx10
 		public uint MemberIndex;
 		public EffectCompilerAssignmentType AssignmentType;
 		public uint ValueOffset;
-
+		public string MemberName {
+			get
+			{
+				if (MemberType.IsArrayAssignemnt())
+				{
+					return string.Format("{0}[{1}]", MemberType, MemberIndex);
+				}
+				return MemberType.ToString();
+			}
+		}
 		public static EffectAssignment Parse(BytecodeReader reader, BytecodeReader annotationReader)
 		{
 			//MemberType type, such as AddressV or Filter
