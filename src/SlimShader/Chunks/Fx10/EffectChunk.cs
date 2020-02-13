@@ -104,49 +104,40 @@ namespace SlimShader.Chunks.Fx10
 			var footerOffset = (int)(result.Header.FooterOffset + bodyOffset);
 			var bodyReader = reader.CopyAtOffset((int)bodyOffset);
 			var footerReader = reader.CopyAtOffset(footerOffset);
-			try
+			for (int i = 0; i < header.ConstantBuffers; i++)
 			{
-				for (int i = 0; i < header.ConstantBuffers; i++)
+				result.LocalBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, false));
+			}
+			for (int i = 0; i < header.ObjectCount; i++)
+			{
+				result.LocalVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, false));
+			}
+			for (int i = 0; i < header.SharedConstantBuffers; i++)
+			{
+				result.SharedBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, true));
+			}
+			for (int i = 0; i < header.SharedObjectCount; i++)
+			{
+				result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
+			}
+			if (header.Version.MajorVersion >= 5)
+			{
+				for (int i = 0; i < header.InterfaceVariableCount; i++)
 				{
-					result.LocalBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, false));
+					result.InterfaceVariables.Add(EffectInterfaceVariable.Parse(bodyReader, footerReader));
 				}
-				for (int i = 0; i < header.ObjectCount; i++)
+				for (int i = 0; i < header.GroupCount; i++)
 				{
-					result.LocalVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, false));
-				}
-				for (int i = 0; i < header.SharedConstantBuffers; i++)
-				{
-					result.SharedBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, true));
-				}
-				for (int i = 0; i < header.SharedObjectCount; i++)
-				{
-					result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
-				}
-				if (header.Version.MajorVersion >= 5)
-				{
-					for (int i = 0; i < header.InterfaceVariableCount; i++)
-					{
-						result.InterfaceVariables.Add(EffectInterfaceVariable.Parse(bodyReader, footerReader));
-					}
-					for (int i = 0; i < header.GroupCount; i++)
-					{
-						result.Groups.Add(EffectGroup.Parse(bodyReader, footerReader));
-					}
-				}
-				else
-				{
-					for (int i = 0; i < header.Techniques; i++)
-					{
-						result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader));
-					}
+					result.Groups.Add(EffectGroup.Parse(bodyReader, footerReader));
 				}
 			}
-			catch (Exception ex)
+			else
 			{
-				result.Error = ex.ToString();
-				//throw;
+				for (int i = 0; i < header.Techniques; i++)
+				{
+					result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader));
+				}
 			}
-
 			var headerDataReader = reader.CopyAtCurrentPosition();
 			result.HeaderData = headerDataReader.ReadBytes((int)bodyOffset);
 
