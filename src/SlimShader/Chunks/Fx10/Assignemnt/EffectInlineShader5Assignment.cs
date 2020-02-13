@@ -8,6 +8,7 @@ namespace SlimShader.Chunks.Fx10
 {
 	public class EffectInlineShader5Assignment : EffectAssignment
 	{
+		public BytecodeContainer Shader { get; private set; }
 		uint ShaderOffset;
 		uint[] SODeclsOffset;
 		uint SODeclsCount;
@@ -21,7 +22,7 @@ namespace SlimShader.Chunks.Fx10
 		public static EffectInlineShader5Assignment Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new EffectInlineShader5Assignment();
-			result.ShaderOffset = variableReader.ReadUInt32();
+			var shaderOffset = result.ShaderOffset = variableReader.ReadUInt32();
 			result.SODeclsOffset[0] = variableReader.ReadUInt32();
 			result.SODeclsOffset[1] = variableReader.ReadUInt32();
 			result.SODeclsOffset[2] = variableReader.ReadUInt32();
@@ -30,6 +31,13 @@ namespace SlimShader.Chunks.Fx10
 			result.RasterizedStream = variableReader.ReadUInt32();
 			result.InterfaceBindingCount = variableReader.ReadUInt32();
 			result.InterfaceBindingOffset = variableReader.ReadUInt32();
+
+			var shaderReader = reader.CopyAtOffset((int)shaderOffset);
+			var shaderSize = shaderReader.ReadUInt32();
+			if (shaderSize != 0)
+			{
+				result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes((int)shaderSize));
+			}
 			return result;
 		}
 		public override string Dump()
@@ -47,7 +55,15 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public override string ToString()
 		{
-			return "EffectInlineShader5Assignment";
+			if (Shader == null)
+			{
+				return string.Format("{0} = NULL;", MemberType);
+			}
+			var sb = new StringBuilder();
+			sb.AppendLine(string.Format("{0} = asm {{", MemberType));
+			sb.AppendLine(Shader.ToString());
+			sb.Append("};");
+			return sb.ToString();
 		}
 	}
 }

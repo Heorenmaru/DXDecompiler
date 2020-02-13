@@ -35,7 +35,10 @@ namespace SlimShader.Chunks.Fx10
 			result.InterfaceBindingOffset = variableReader.ReadUInt32();
 			var shaderReader = reader.CopyAtOffset((int)shaderOffset);
 			var shaderSize = shaderReader.ReadUInt32();
-			result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes((int)shaderSize));
+			if (shaderSize != 0)
+			{
+				result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes((int)shaderSize));
+			}
 			return result;
 		}
 		public string Dump()
@@ -53,6 +56,7 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public override string ToString()
 		{
+			if (Shader == null) return "NULL";
 			var sb = new StringBuilder();
 			sb.AppendLine("asm5 {");
 			sb.AppendLine(Shader.ToString());
