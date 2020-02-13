@@ -210,8 +210,8 @@ namespace SlimShader.Chunks.Fx10
 
 			sb.AppendLine($"Size: {Size}");
 			sb.AppendLine("Header:");
-			sb.AppendLine(Header.ToString());
-			sb.AppendLine("Foo:");
+			sb.AppendLine(Header.Dump());
+			sb.AppendLine("LocalBuffers:");
 			foreach (var buffer in LocalBuffers)
 			{
 				sb.AppendLine(buffer.Dump());

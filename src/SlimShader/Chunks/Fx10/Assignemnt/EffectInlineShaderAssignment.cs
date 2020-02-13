@@ -19,7 +19,10 @@ namespace SlimShader.Chunks.Fx10
 			var SODeclOffset = result.SODeclOffset = assignmentReader.ReadUInt32();
 			var shaderReader = reader.CopyAtOffset((int)shaderOffset);
 			var shaderSize = shaderReader.ReadUInt32();
-			result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes((int)shaderSize));
+			if (shaderSize != 0)
+			{
+				result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes((int)shaderSize));
+			}
 			var SODeclReader = reader.CopyAtOffset((int)SODeclOffset);
 			result.SODecl = SODeclReader.ReadString();
 			return result;
@@ -34,6 +37,10 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public override string ToString()
 		{
+			if(Shader == null)
+			{
+				return string.Format("{0} = NULL;", MemberType);
+			}
 			var sb = new StringBuilder();
 			sb.AppendLine(string.Format("{0} = asm {{", MemberType));
 			sb.AppendLine(Shader.ToString());

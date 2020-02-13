@@ -44,7 +44,7 @@ namespace SlimShader.Chunks.Fx10
 			var defaultValueReader = reader.CopyAtOffset((int)valueOffset);
 			if(result.Type.EffectVariableType == EffectVariableType.Numeric)
 			{
-				for(int i = 0; i < result.Type.PackedSize; i++)
+				for(int i = 0; i < result.Type.PackedSize / 4; i++)
 				{
 					result.DefaultNumericValue.Add(Number.Parse(defaultValueReader));
 				}
@@ -64,6 +64,7 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"    Annotation {Name} ({NameOffset.ToString("X4")})");
 			sb.AppendLine($"    Annotation.TypeOffset {TypeOffset} ({TypeOffset.ToString("X4")})");
 			sb.AppendLine($"    Annotation.ValueOffset {ValueOffset} ({ValueOffset.ToString("X4")})");
+			sb.AppendLine($"    Annotation.Value {string.Join(", ", DefaultNumericValue)}");
 			sb.Append(Type.ToString());
 			return sb.ToString();
 		}
