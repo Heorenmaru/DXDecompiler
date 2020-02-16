@@ -276,6 +276,7 @@ namespace SlimShader.Chunks.Fx10
 				{
 					sb.AppendLine(variable.ToString());
 				}
+				sb.AppendLine();
 			}
 			if (SharedBuffers.Count > 0)
 			{
