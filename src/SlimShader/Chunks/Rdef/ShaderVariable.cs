@@ -142,7 +142,8 @@ namespace SlimShader.Chunks.Rdef
 		{
 			var sb = new StringBuilder();
 
-			sb.AppendFormat("{0} Size: {1,5}", Member, Size);
+			var size = Size == 0 ? "N/A" : Size.ToString();
+			sb.AppendFormat("{0} Size: {1,5}", Member, size);
 
 			if (!Flags.HasFlag(ShaderVariableFlags.Used))
 				sb.Append(" [unused]");

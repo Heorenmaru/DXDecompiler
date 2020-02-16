@@ -79,7 +79,7 @@ namespace SlimShader.Chunks.Fx10
 				if (scalarType == EffectScalarType.Int)
 				{
 					return string.Format("{0} /* {1} */",
-						value.ToString(Shex.NumberType.Bool), value.UInt);
+						value.ToString(Shex.NumberType.Bool).ToUpper(), value.UInt);
 				}
 				else
 				{

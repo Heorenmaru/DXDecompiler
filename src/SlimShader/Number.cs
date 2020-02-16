@@ -183,7 +183,7 @@ namespace SlimShader
 						goto case NumberType.Float;
 					goto case NumberType.Int;
 				case NumberType.Bool:
-					return UInt == 0 ? "FALSE" : "TRUE";
+					return UInt == 0 ? "false" : "true";
 				default:
 					throw new InvalidOperationException(string.Format("Type '{0}' is not supported.", type));
 			}
