@@ -1,7 +1,6 @@
-﻿using SlimShader.Util;
-using System;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.Chunks.Fx10
@@ -20,7 +19,7 @@ namespace SlimShader.Chunks.Fx10
 			Techniques = new List<EffectTechnique>();
 			Annotations = new List<EffectAnnotation>();
 		}
-		public static EffectGroup Parse(BytecodeReader reader, BytecodeReader groupReader)
+		public static EffectGroup Parse(BytecodeReader reader, BytecodeReader groupReader, ShaderVersion version)
 		{
 			var result = new EffectGroup();
 			result.NameOffset = groupReader.ReadUInt32();
@@ -36,7 +35,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			for(int i = 0; i < result.TechniqueCount; i++)
 			{
-				result.Techniques.Add(EffectTechnique.Parse(reader, groupReader));
+				result.Techniques.Add(EffectTechnique.Parse(reader, groupReader, version));
 			}
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{

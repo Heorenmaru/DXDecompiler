@@ -7,6 +7,7 @@ namespace SlimShader.Chunks.Shex
 		UInt,
 		Float,
 		Double,
-		Bool
+		Bool,
+		Hex
 	}
 }

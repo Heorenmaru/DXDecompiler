@@ -128,6 +128,10 @@ namespace SlimShader.Chunks.Fx10
 						numberType = NumberType.Bool;
 						break;
 				}
+				if(Type.VariableClass == Rdef.ShaderVariableClass.Struct)
+				{
+					numberType = NumberType.Hex;
+				}
 				if(Type.VariableClass == Rdef.ShaderVariableClass.Scalar)
 				{
 					defaultValue = $" = {DefaultValue[0].ToString(numberType)}";
@@ -148,6 +152,9 @@ namespace SlimShader.Chunks.Fx10
 				string componentPacking = "";
 				switch (componentOffset)
 				{
+					case 0:
+						componentPacking = ".x";
+						break;
 					case 1:
 						componentPacking = ".y";
 						break;
