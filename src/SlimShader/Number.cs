@@ -150,6 +150,8 @@ namespace SlimShader
 			const uint uintThresholdPos = 0xfff00000; // TODO: Work out the actual float threshold.
 			switch (type)
 			{
+				case NumberType.Hex:
+					return "0x" + Int.ToString("x8");
 				case NumberType.Int:
 					if (Int > hexThreshold)
 						return "0x" + Int.ToString("x8");
@@ -164,8 +166,8 @@ namespace SlimShader
 					if (RawBytes[0] == 0 && RawBytes[1] == 0 && RawBytes[2] == 0 && RawBytes[3] == 128)
 						return "-0.000000"; // "Negative" zero
 					if (Math.Abs(Float) > 10000000000000000.0) // TODO: Threshold is guessed
-						return Float.ToString("G7");
-					//	return DoubleConverter.ToExactString(Float);
+						return DoubleConverter.ToExactString(Float);
+					return DoubleConverter.ToExactString(Float);
 					var result = ((double) Float).ToString("G7");
 					if (!result.StartsWith("-") && Float < 0.0f)
 						result = "-" + result;

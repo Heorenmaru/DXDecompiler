@@ -46,6 +46,7 @@ namespace SlimShader.Tests.Util
   		}
 		public static string NormalizeAssembly(string assembly)
 		{
+			assembly = assembly.Trim();
 			assembly = Regex.Replace(assembly, @"([^\w\n]|^)([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)", match =>
 			{
 				if (match.Groups[2].Value == "-0")
