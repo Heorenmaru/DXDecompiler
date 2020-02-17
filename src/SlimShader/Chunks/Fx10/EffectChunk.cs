@@ -1,7 +1,5 @@
 ﻿using SlimShader.Util;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.Chunks.Fx10
@@ -128,14 +126,14 @@ namespace SlimShader.Chunks.Fx10
 				}
 				for (int i = 0; i < header.GroupCount; i++)
 				{
-					result.Groups.Add(EffectGroup.Parse(bodyReader, footerReader));
+					result.Groups.Add(EffectGroup.Parse(bodyReader, footerReader, header.Version));
 				}
 			}
 			else
 			{
 				for (int i = 0; i < header.Techniques; i++)
 				{
-					result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader));
+					result.Techniques.Add(EffectTechnique.Parse(bodyReader, footerReader, header.Version));
 				}
 			}
 			var headerDataReader = reader.CopyAtCurrentPosition();

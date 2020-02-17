@@ -1,8 +1,6 @@
 ﻿using SlimShader.Chunks.Common;
 using SlimShader.Util;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.Chunks.Fx10
@@ -18,16 +16,18 @@ namespace SlimShader.Chunks.Fx10
 		public uint PassCount;
 		public uint AnnotationCount;
 
+		private ShaderVersion m_Version;
 		public List<EffectAnnotation> Annotations { get; private set; }
 		public List<EffectPass> Passes { get; private set; }
-		public EffectTechnique()
+		public EffectTechnique(ShaderVersion version)
 		{
 			Annotations = new List<EffectAnnotation>();
 			Passes = new List<EffectPass>();
+			m_Version = version;
 		}
-		public static EffectTechnique Parse(BytecodeReader reader, BytecodeReader techniqueReader)
+		public static EffectTechnique Parse(BytecodeReader reader, BytecodeReader techniqueReader, ShaderVersion version)
 		{
-			var result = new EffectTechnique();
+			var result = new EffectTechnique(version);
 			var nameOffset = result.NameOffset = techniqueReader.ReadUInt32();
 			var nameReader = reader.CopyAtOffset((int)nameOffset);
 			result.Name = nameReader.ReadString();
@@ -63,10 +63,11 @@ namespace SlimShader.Chunks.Fx10
 		}
 		public string ToString(int indent)
 		{
+			var techniqueVersion = m_Version.MajorVersion == 5 ? "11" : "10";
 			var sb = new StringBuilder();
 			var indentString = new string(' ', indent * 4);
 			sb.Append(indentString);
-			sb.AppendLine(string.Format("technique11 {0}", Name));
+			sb.AppendLine(string.Format("technique{0} {1}", techniqueVersion, Name));
 			sb.Append(indentString);
 			sb.AppendLine("{");
 			foreach(var pass in Passes)

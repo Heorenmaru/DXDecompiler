@@ -250,14 +250,17 @@ namespace SlimShader.Chunks.Fx10
 			} else if(Assignments.Count > 1) {
 				sb.AppendLine();
 				sb.AppendLine("{");
-				foreach (var assignment in Assignments)
+				for (int i = 0; i < Assignments.Count; i++)
 				{
+					var assignment = Assignments[i];
 					sb.AppendLine("    {");
 					foreach (var subAssignment in assignment)
 					{
 						sb.AppendLine($"        {subAssignment}");
 					}
-					sb.AppendLine("    },");
+					sb.Append("    }");
+					if (i < Assignments.Count - 1) sb.Append(",");
+					sb.AppendLine();
 				}
 				sb.Append("}");
 			}
