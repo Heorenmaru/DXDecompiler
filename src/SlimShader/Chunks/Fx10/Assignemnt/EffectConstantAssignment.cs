@@ -65,7 +65,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			if (type == typeof(byte))
 			{
-				if (numberType == Shex.NumberType.UInt)
+				if (numberType == Shex.NumberType.UInt || numberType == Shex.NumberType.Int)
 				{
 					return string.Format("0x{0:x2}", value.Byte0);
 				}

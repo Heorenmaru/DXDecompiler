@@ -278,6 +278,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			if (SharedBuffers.Count > 0)
 			{
+				sb.AppendLine("//");
 				sb.AppendLine(string.Format("// {0} shared buffer(s)", SharedBuffers.Count));
 				sb.AppendLine("//");
 				foreach (var buffer in SharedBuffers)
@@ -294,6 +295,7 @@ namespace SlimShader.Chunks.Fx10
 				{
 					sb.AppendLine(variable.ToString());
 				}
+				sb.AppendLine();
 			}
 			if (InterfaceVariables.Count > 0)
 			{
@@ -313,7 +315,7 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendLine("//");
 				foreach (var technique in Techniques)
 				{
-					sb.AppendLine(technique.ToString());
+					sb.Append(technique.ToString());
 				}
 			}
 			if (Groups.Count > 0)

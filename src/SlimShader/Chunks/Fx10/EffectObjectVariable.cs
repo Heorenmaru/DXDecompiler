@@ -226,7 +226,7 @@ namespace SlimShader.Chunks.Fx10
 			{
 				arrayFormat = string.Format("[{0}]", Type.ElementCount);
 			}
-			sb.Append(string.Format("{0} {1}{2}", Type.TypeName, Name, arrayFormat));
+			sb.Append(string.Format("{0,-7} {1}{2}", Type.TypeName, Name, arrayFormat));
 
 			if (Annotations.Count > 0)
 			{

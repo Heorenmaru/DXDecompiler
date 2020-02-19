@@ -43,6 +43,8 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine("asm {");
 			sb.AppendLine(Shader.ToString());
 			sb.Append("}");
+			sb.AppendLine();
+			sb.Append(string.Format("/* Stream out decl: \"{0}\" */", SODecl));
 			return sb.ToString();
 		}
 	}

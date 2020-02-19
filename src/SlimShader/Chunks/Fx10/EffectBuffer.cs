@@ -16,12 +16,12 @@ namespace SlimShader.Chunks.Fx10
 			ShaderVariableType.CBuffer : ShaderVariableType.TBuffer;
 		public uint RegisterNumber { get; private set; }
 		public uint Unknown0 { get; private set; }
-		public List<EffectBufferVariable> Variables { get; private set; }
+		public List<EffectNumericVariable> Variables { get; private set; }
 
 		uint NameOffset;
 		public EffectBuffer()
 		{
-			Variables = new List<EffectBufferVariable>();
+			Variables = new List<EffectNumericVariable>();
 		}
 		public static EffectBuffer Parse(BytecodeReader reader, BytecodeReader bufferReader, bool isShared)
 		{
@@ -41,7 +41,7 @@ namespace SlimShader.Chunks.Fx10
 			//Debug.Assert(result.Unknown0 == 0, $"EffectBuffer.Unknown0: {result.Unknown0}");
 			for (int i = 0; i < result.VariableCount; i++)
 			{
-				result.Variables.Add(EffectBufferVariable.Parse(reader, bufferReader, isShared));
+				result.Variables.Add(EffectNumericVariable.Parse(reader, bufferReader, isShared));
 			}
 			return result;
 		}
