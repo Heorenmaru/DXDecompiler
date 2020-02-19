@@ -31,7 +31,7 @@ namespace SlimShader.Tests
 			Assert.AreEqual(variableDesc.BufferOffset, variableDesc.BufferOffset);
 			Assert.AreEqual(variableDesc.ExplicitBindPoint, variableDesc.ExplicitBindPoint);
 
-			if (variable is EffectBufferVariable v1)
+			if (variable is EffectNumericVariable v1)
 			{
 				Assert.AreEqual(variableDesc.Name, v1.Name);
 				Assert.AreEqual(0, v1.ExplicitBindPoint);

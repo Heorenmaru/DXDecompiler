@@ -12,7 +12,7 @@ namespace SlimShader.Chunks.Fx10
 	/// 
 	/// Base on D3D10_EFFECT_VARIABLE_DESC
 	/// </summary>
-	public class EffectBufferVariable : IEffectVariable
+	public class EffectNumericVariable : IEffectVariable
 	{
 		public string Name { get; private set; }
 		public EffectType Type { get; private set; }
@@ -32,13 +32,13 @@ namespace SlimShader.Chunks.Fx10
 		uint NameOffset;
 		uint TypeOffset;
 		public uint DefaultValueOffset;
-		public EffectBufferVariable()
+		public EffectNumericVariable()
 		{
 			Annotations = new List<EffectAnnotation>();
 		}
-		internal static EffectBufferVariable Parse(BytecodeReader reader, BytecodeReader variableReader, bool isShared)
+		internal static EffectNumericVariable Parse(BytecodeReader reader, BytecodeReader variableReader, bool isShared)
 		{
-			var result = new EffectBufferVariable();
+			var result = new EffectNumericVariable();
 			var nameOffset = result.NameOffset = variableReader.ReadUInt32();
 			var nameReader = reader.CopyAtOffset((int)nameOffset);
 			result.Name = nameReader.ReadString();
@@ -167,8 +167,9 @@ namespace SlimShader.Chunks.Fx10
 				}
 				packOffset = string.Format(" : packoffset(c{0}{1})", BufferOffset / 16, componentPacking);
 			}
-			string name = string.Format("{0,-7} {1}{2}{3}{4};", 
-					Type.TypeName, Name, elements, defaultValue, packOffset);
+			string semantic = string.IsNullOrEmpty(Semantic) ? "" : string.Format(" : {0}", Semantic);
+			string name = string.Format("{0,-7} {1}{2}{3}{4}{5};",
+					Type.TypeName, Name, elements,semantic, defaultValue, packOffset);
 			return string.Format("    {0,-36}// Offset: {1, 4}, size: {2, 4}",
 				name, BufferOffset, Type.UnpackedSize);
 		}

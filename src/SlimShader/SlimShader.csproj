@@ -61,7 +61,7 @@
     <Compile Include="Chunks\Fx10\Assignemnt\EffectCompilerAssignmentType.cs" />
     <Compile Include="Chunks\Fx10\EffectAnnotation.cs" />
     <Compile Include="Chunks\Fx10\EffectBuffer.cs" />
-    <Compile Include="Chunks\Fx10\EffectBufferVariable.cs" />
+    <Compile Include="Chunks\Fx10\EffectNumericVariable.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectConstantAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectConstantIndexAssignment.cs" />
     <Compile Include="Chunks\Fx10\EffectGroup.cs" />

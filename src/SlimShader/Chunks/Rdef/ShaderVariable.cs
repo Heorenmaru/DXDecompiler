@@ -153,8 +153,17 @@ namespace SlimShader.Chunks.Rdef
 			if (DefaultValue != null)
 			{
 				sb.Append("//      = ");
-				foreach (Number number in DefaultValue)
+				for (int i = 0; i < DefaultValue.Count; i++)
+				{
+					if (i % 4 == 0 && i != 0)
+					{
+						sb.AppendLine();
+						sb.Append("//        ");
+					}
+					var number = DefaultValue[i];
 					sb.AppendFormat("0x{0:x8} ", number.UInt);
+
+				}
 				sb.AppendLine();
 			}
 
