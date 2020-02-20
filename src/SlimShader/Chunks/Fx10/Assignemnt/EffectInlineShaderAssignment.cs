@@ -43,7 +43,10 @@ namespace SlimShader.Chunks.Fx10
 			}
 			var sb = new StringBuilder();
 			sb.AppendLine(string.Format("{0} = asm {{", MemberType));
-			sb.AppendLine(Shader.ToString());
+			sb.Append("    ");
+			var shaderText = Shader.ToString()
+				.Replace(Environment.NewLine, $"{Environment.NewLine}    ");
+			sb.AppendLine(shaderText);
 			sb.Append("};");
 			return sb.ToString();
 		}

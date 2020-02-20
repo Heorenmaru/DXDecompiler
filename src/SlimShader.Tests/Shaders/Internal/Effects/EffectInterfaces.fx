@@ -33,12 +33,22 @@ interface iInterface2
 };
 iInterface1 gAbstractInterface1;
 iInterface1 gAbstractInterface2;
+iInterface1 gAbstractInterface3[4];
 iInterface2 gAbstractInterface4;
 iInterface2 gAbstractInterface5[4];
 cClass1 gAbstractInterface6;
 cClass2 gAbstractInterface7;
 cClass2 gAbstractInterface8[3];
-float4 main(float4 color : COLOR0) :SV_TARGET
+float4 main(float4 color : COLOR0, iInterface1 testFunc1, iInterface1 testFunc2) : SV_TARGET
+{
+	float4 result = 0;
+	result += gAbstractInterface1.Func1(color);
+	result += gAbstractInterface7.Func1(color);
+	result += testFunc1.Func1(color);
+	result += testFunc2.Func1(color);
+	return result;
+}
+float4 PSInline(float4 color : COLOR0) : SV_TARGET
 {
 	float4 result = 0;
 	result += gAbstractInterface1.Func1(color);
@@ -71,11 +81,30 @@ void CSMain(uint3 DTid : SV_DispatchThreadID)
 }
 
 
-PixelShader PS = CompileShader(ps_5_0, main());
+PixelShader PS1 = CompileShader(ps_5_0, main());
+PixelShader PS2 = BindInterfaces(
+	CompileShader(ps_5_0, main()),
+	gAbstractInterface2,
+	gAbstractInterface3[2]);
 ComputeShader CS5 = CompileShader(cs_5_0, CSMain());
 technique11 tech1 {
 	pass p0 {
-		SetPixelShader(PS);
+		SetPixelShader(BindInterfaces(
+			PS1,
+			gAbstractInterface2,
+			gAbstractInterface3[1]));
+	}
+
+}
+
+technique11 tech2 {
+	pass p0 {
+		SetPixelShader(PS2);
 		SetComputeShader(CS5);
+	}
+}
+technique11 tech3 {
+	pass p0 {
+		SetPixelShader(CompileShader(ps_5_0, PSInline()));
 	}
 }
