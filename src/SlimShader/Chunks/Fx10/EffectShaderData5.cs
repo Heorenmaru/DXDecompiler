@@ -10,18 +10,19 @@ namespace SlimShader.Chunks.Fx10
 	{
 		public BytecodeContainer Shader { get; private set; }
 		public List<string> SODecls { get; private set; }
-
 		public uint[] SODeclsOffset { get; private set; }
 		public uint SODeclsCount { get; private set; }
 		public uint RasterizedStream { get; private set; }
-		public uint InterfaceBindingCount { get; private set; }
-		public uint InterfaceBindingOffset { get; private set; }
+		public List<EffectInterfaceInitializer> InterfaceBindings { get; private set; }
 
+		public uint InterfaceBindingCount;
+		public uint InterfaceBindingOffset;
 		uint ShaderOffset;
 		public EffectShaderData5()
 		{
 			SODeclsOffset = new uint[4];
 			SODecls = new List<string>();
+			InterfaceBindings = new List<EffectInterfaceInitializer>();
 		}
 		public static EffectShaderData5 Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
@@ -33,8 +34,8 @@ namespace SlimShader.Chunks.Fx10
 			result.SODeclsOffset[3] = variableReader.ReadUInt32();
 			var SoDeclsCount = result.SODeclsCount = variableReader.ReadUInt32();
 			result.RasterizedStream = variableReader.ReadUInt32();
-			result.InterfaceBindingCount = variableReader.ReadUInt32();
-			result.InterfaceBindingOffset = variableReader.ReadUInt32();
+			var interfaceBindingCount = result.InterfaceBindingCount = variableReader.ReadUInt32();
+			var interfaceBindingOffset = result.InterfaceBindingOffset = variableReader.ReadUInt32();
 			var shaderReader = reader.CopyAtOffset((int)shaderOffset);
 			var shaderSize = shaderReader.ReadUInt32();
 			if (shaderSize != 0)
@@ -50,6 +51,11 @@ namespace SlimShader.Chunks.Fx10
 					result.SODecls.Add(soDeclReader.ReadString());
 				}
 			}
+			var interfaceReader = reader.CopyAtOffset((int)interfaceBindingOffset);
+			for(int i = 0; i < interfaceBindingCount; i++)
+			{
+				result.InterfaceBindings.Add(EffectInterfaceInitializer.Parse(reader, interfaceReader));
+			}
 			return result;
 		}
 		public string Dump()
@@ -63,6 +69,10 @@ namespace SlimShader.Chunks.Fx10
 			sb.AppendLine($"  EffectObject.RasterizedStream: {RasterizedStream} ({RasterizedStream.ToString("X4")})");
 			sb.AppendLine($"  EffectObject.InterfaceBindingCount: {InterfaceBindingCount} ({InterfaceBindingCount.ToString("X4")})");
 			sb.AppendLine($"  EffectObject.InterfaceBindingOffset: {InterfaceBindingOffset} ({InterfaceBindingOffset.ToString("X4")})");
+			foreach(var binding in InterfaceBindings)
+			{
+				sb.AppendLine(binding.Dump());
+			}
 			return sb.ToString();
 		}
 		public override string ToString()
@@ -89,10 +99,11 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendLine();
 				sb.Append(string.Format("/* Stream {0} to rasterizer */", RasterizedStream));
 			}
-			if(InterfaceBindingCount != 0 || InterfaceBindingOffset != 0)
+			for (int i = 0; i < InterfaceBindings.Count; i++)
 			{
+				var binding = InterfaceBindings[i];
 				sb.AppendLine();
-				sb.Append("interfacebind");
+				sb.Append(string.Format("/* Interface parameter {0} bound to: {1} */", i, binding));
 			}
 			return sb.ToString();
 		}

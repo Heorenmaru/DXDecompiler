@@ -8,11 +8,12 @@ namespace SlimShader.Chunks.Fx10
 {
 	public class EffectExpressionAssignment : EffectAssignment
 	{
-		public uint CodeOffset { get; private set; }
+		public BytecodeContainer Shader { get; private set; }
+		public uint CodeOffset;
 		public static EffectExpressionAssignment Parse(BytecodeReader reader, BytecodeReader assignmentReader)
 		{
 			var result = new EffectExpressionAssignment();
-			result.CodeOffset = assignmentReader.ReadUInt32();
+			var codeOffset = result.CodeOffset = assignmentReader.ReadUInt32();
 			return result;
 		}
 		public override string Dump()

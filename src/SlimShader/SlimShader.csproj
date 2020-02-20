@@ -87,6 +87,7 @@
     <Compile Include="Chunks\Fx10\EffectObjectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectType.cs" />
     <Compile Include="Chunks\Fx10\IEffectVariable.cs" />
+    <Compile Include="Chunks\Fx10\EffectInterfaceInitializer.cs" />
     <Compile Include="Chunks\Fx10\NumericLayout.cs" />
     <Compile Include="Chunks\Fx10\VariableFlags.cs" />
     <Compile Include="Chunks\Libf\FunctionInfo.cs" />

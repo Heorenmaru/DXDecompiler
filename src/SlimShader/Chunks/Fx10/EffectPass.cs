@@ -63,9 +63,18 @@ namespace SlimShader.Chunks.Fx10
 			var sb = new StringBuilder();
 			sb.AppendLine(string.Format("{0}pass {1}", indentString, Name));
 			sb.AppendLine(string.Format("{0}{{", indentString));
-			foreach(var shader in Assignments)
+			foreach(var assignment in Assignments)
 			{
-				sb.AppendLine(string.Format("{0}    {1}", indentString, shader.ToString()));
+				if (assignment is EffectInlineShaderAssignment || assignment is EffectInlineShader5Assignment)
+				{
+					var shaderText = assignment.ToString()
+						.Replace(Environment.NewLine, $"{Environment.NewLine}{indentString}");
+					sb.AppendLine(string.Format("{0}    {1}", indentString, shaderText));
+				}
+				else
+				{
+					sb.AppendLine(string.Format("{0}    {1}", indentString, assignment.ToString()));
+				}
 			}
 			sb.AppendLine(string.Format("{0}}}", indentString));
 			sb.AppendLine();
