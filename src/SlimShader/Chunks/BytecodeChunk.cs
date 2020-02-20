@@ -42,6 +42,9 @@ namespace SlimShader.Chunks
 			{ "LIBH".ToFourCc(), ChunkType.Libh },
 			{ "LFS0".ToFourCc(), ChunkType.Lfs0 },
 			{ "FX10".ToFourCc(), ChunkType.Fx10 },
+			{ "CTAB".ToFourCc(), ChunkType.Ctab },
+			{ "CLI4".ToFourCc(), ChunkType.Cli4 },
+			{ "FXLC".ToFourCc(), ChunkType.Fxlc }
 		};
 
 		public BytecodeContainer Container { get; private set; }
@@ -124,6 +127,15 @@ namespace SlimShader.Chunks
 					break;
 				case ChunkType.Fx10:
 					chunk = EffectChunk.Parse(chunkContentReader, chunkSize);
+					break;
+				case ChunkType.Ctab:
+					chunk = CtabChunk.Parse(chunkContentReader, chunkSize);
+					break;
+				case ChunkType.Cli4:
+					chunk = Cli4Chunk.Parse(chunkContentReader, chunkSize);
+					break;
+				case ChunkType.Fxlc:
+					chunk = FxlcChunk.Parse(chunkContentReader, chunkSize);
 					break;
 				default :
 					throw new ParseException("Invalid chunk type: " + chunkType);
