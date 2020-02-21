@@ -1,5 +1,4 @@
-﻿using SlimShader.Chunks.RTS0;
-using SlimShader.Util;
+﻿using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
