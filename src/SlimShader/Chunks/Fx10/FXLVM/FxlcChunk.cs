@@ -1,5 +1,4 @@
 ﻿using SlimShader.Chunks.Fx10.FXLVM;
-using SlimShader.Chunks.Shex;
 using SlimShader.DX9Shader;
 using SlimShader.Util;
 using System;

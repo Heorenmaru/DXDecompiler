@@ -1,9 +1,5 @@
 ﻿using SlimShader.Chunks.Fx10.Assignemnt;
 using SlimShader.Util;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.Chunks.Fx10
