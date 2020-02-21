@@ -1,0 +1,41 @@
+﻿namespace SlimShader.Chunks.Fx10.FXLVM
+{
+	public enum FxTokenType
+	{
+		Mov = 256,
+		Neg = 257,
+		Exp = 261,
+		Log = 262,
+		Sin = 264,
+		Cos = 265,
+		Ineg = 288,
+		Imax = 288,
+		Not = 289,
+		Utof = 305,
+		Ftoi = 306,
+		Ftou = 307,
+		Floor = 313,
+		Ceil = 314,
+		Min = 512,
+		Max = 513,
+		Add = 516,
+		Mul = 517,
+		Div = 520,
+		Bilt = 528,
+		Bieq = 530,
+		Bine = 531,
+		Bult = 533,
+		Iadd = 534,
+		Imul = 537,
+		Udiv = 538,
+		Imin = 541,
+		Umin = 543,
+		Umax = 544,
+		Or = 561,
+		Xor = 563,
+		Ishl = 564,
+		Ushr = 566,
+		Movc = 769,
+		Dot = 1280
+	}
+}

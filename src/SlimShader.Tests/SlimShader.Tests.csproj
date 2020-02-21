@@ -351,6 +351,7 @@
     <Content Include="Shaders\Internal\Effects\EffectPacking.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="DoubleFormatterTests.cs" />
     <Compile Include="MiscTests.cs" />
     <Compile Include="TestEffectCreation.cs" />
     <Compile Include="TestLibraryShader.cs" />
