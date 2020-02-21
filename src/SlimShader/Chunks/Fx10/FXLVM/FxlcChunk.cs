@@ -1,6 +1,8 @@
-﻿using SlimShader.Chunks.Shex;
+﻿using SlimShader.Chunks.Fx10.FXLVM;
+using SlimShader.Chunks.Shex;
 using SlimShader.DX9Shader;
 using SlimShader.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,16 +12,24 @@ namespace SlimShader.Chunks.Fx10
 	{
 		public ShaderModel ShaderModel;
 		public List<FxlcToken> Tokens = new List<FxlcToken>();
+
+		uint TokenCount;
 		byte[] Data;
 		public static BytecodeChunk Parse(BytecodeReader reader, uint chunkSize)
 		{
 			var result = new FxlcChunk();
 			result.ShaderModel = new ShaderModel(5, 0, ShaderType.Fx);
 			var chunkReader = reader.CopyAtCurrentPosition();
-			var tokenCount = chunkReader.ReadUInt32();
-			for (int i = 0; i < tokenCount; i++)
+			var tokenCount = result.TokenCount = chunkReader.ReadUInt32();
+			try
 			{
-				result.Tokens.Add(FxlcToken.Parse(chunkReader));
+				for (int i = 0; i < tokenCount; i++)
+				{
+					result.Tokens.Add(FxlcToken.Parse(chunkReader));
+				}
+			} catch(Exception ex)
+			{
+
 			}
 			result.Data = reader.ReadBytes((int)chunkSize);
 			return result;
@@ -74,7 +84,8 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(GetType().Name);
-			foreach(var token in Tokens)
+			sb.AppendLine($"Tokens TokenCount {TokenCount} TokensRead {Tokens.Count} ExpectedTokenCount {(Data.Length-16)/(4*8)} ChunkSize {Data.Length}");
+			foreach (var token in Tokens)
 			{
 				sb.AppendLine(token.ToString());
 			}

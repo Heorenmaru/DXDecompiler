@@ -59,7 +59,7 @@
     <Compile Include="Chunks\Fx10\Assignemnt\EffectInlineShaderAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectVariableAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectCompilerAssignmentType.cs" />
-    <Compile Include="Chunks\Fx10\FxlcToken.cs" />
+    <Compile Include="Chunks\Fx10\FXLVM\FxlcToken.cs" />
     <Compile Include="Chunks\Fx10\Cli4Chunk.cs" />
     <Compile Include="Chunks\Fx10\EffectAnnotation.cs" />
     <Compile Include="Chunks\Fx10\EffectBuffer.cs" />
@@ -89,7 +89,10 @@
     <Compile Include="Chunks\Fx10\EffectHeader.cs" />
     <Compile Include="Chunks\Fx10\EffectObjectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectType.cs" />
-    <Compile Include="Chunks\Fx10\FxlcChunk.cs" />
+    <Compile Include="Chunks\Fx10\FXLVM\FxlcChunk.cs" />
+    <Compile Include="Chunks\Fx10\FXLVM\FxTokenType.cs" />
+    <Compile Include="Chunks\Fx10\FXLVM\Operand.cs" />
+    <Compile Include="Chunks\Fx10\FXLVM\OperandType.cs" />
     <Compile Include="Chunks\Fx10\IEffectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectInterfaceInitializer.cs" />
     <Compile Include="Chunks\Fx10\NumericLayout.cs" />
