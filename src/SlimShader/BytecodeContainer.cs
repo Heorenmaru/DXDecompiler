@@ -64,6 +64,11 @@ namespace SlimShader
 			get { return Chunks.OfType<ShaderProgramChunk>().SingleOrDefault(); }
 		}
 
+		public T GetChunk<T>()
+		{
+			 return Chunks.OfType<T>().SingleOrDefault();
+		}
+
 		public StatisticsChunk Statistics
 		{
 			get { return Chunks.OfType<StatisticsChunk>().SingleOrDefault(); }

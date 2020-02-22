@@ -59,11 +59,11 @@
     <Compile Include="Chunks\Fx10\Assignemnt\EffectInlineShaderAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectVariableAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectCompilerAssignmentType.cs" />
-    <Compile Include="Chunks\Fx10\FXLVM\FxlcToken.cs" />
-    <Compile Include="Chunks\Fx10\Cli4Chunk.cs" />
+    <Compile Include="Chunks\Fxlvm\FxlcToken.cs" />
+    <Compile Include="Chunks\Fxlvm\Cli4Chunk.cs" />
     <Compile Include="Chunks\Fx10\EffectAnnotation.cs" />
     <Compile Include="Chunks\Fx10\EffectBuffer.cs" />
-    <Compile Include="Chunks\Fx10\CtabChunk.cs" />
+    <Compile Include="Chunks\Fxlvm\CtabChunk.cs" />
     <Compile Include="Chunks\Fx10\EffectNumericVariable.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectConstantAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectConstantIndexAssignment.cs" />
@@ -89,10 +89,10 @@
     <Compile Include="Chunks\Fx10\EffectHeader.cs" />
     <Compile Include="Chunks\Fx10\EffectObjectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectType.cs" />
-    <Compile Include="Chunks\Fx10\FXLVM\FxlcChunk.cs" />
-    <Compile Include="Chunks\Fx10\FXLVM\FxTokenType.cs" />
-    <Compile Include="Chunks\Fx10\FXLVM\Operand.cs" />
-    <Compile Include="Chunks\Fx10\FXLVM\OperandType.cs" />
+    <Compile Include="Chunks\Fxlvm\FxlcChunk.cs" />
+    <Compile Include="Chunks\Fxlvm\FxlcTokenType.cs" />
+    <Compile Include="Chunks\Fxlvm\FxlcOperand.cs" />
+    <Compile Include="Chunks\Fxlvm\FxlcOperandType.cs" />
     <Compile Include="Chunks\Fx10\IEffectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectInterfaceInitializer.cs" />
     <Compile Include="Chunks\Fx10\NumericLayout.cs" />
@@ -337,6 +337,7 @@
     <Compile Include="Util\DecoderExtensions.cs" />
     <Compile Include="Chunks\DescriptionAttribute.cs" />
     <Compile Include="Util\DoubleConverter.cs" />
+    <Compile Include="Util\FormatUtil.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

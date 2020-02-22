@@ -1,18 +1,13 @@
-﻿using SlimShader.Util;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
-namespace SlimShader.Chunks.Fx10
+namespace SlimShader.Util
 {
-	public class Cli4Chunk : BytecodeChunk
+	public static class FormatUtil
 	{
-		byte[] Data;
-		public static BytecodeChunk Parse(BytecodeReader chunkReader, uint chunkSize)
-		{
-			var result = new Cli4Chunk();
-			result.Data = chunkReader.ReadBytes((int)chunkSize);
-			return result;
-		}
-		public static string FormatReadable(byte[] data, bool endian = false)
+		public static string FormatBytes(byte[] data)
 		{
 			var sb = new StringBuilder();
 			for (int i = 0; i < data.Length; i += 16)
@@ -20,10 +15,9 @@ namespace SlimShader.Chunks.Fx10
 				sb.AppendFormat("// {0}:  ", i.ToString("X4"));
 				for (int j = i; j < i + 16; j++)
 				{
-					var index = endian ? j : j + (3 - (j % 4) * 2);
-					if (index < data.Length)
+					if (j < data.Length)
 					{
-						sb.Append(data[index].ToString("X2"));
+						sb.Append(data[j].ToString("X2"));
 					}
 					else
 					{
@@ -56,13 +50,6 @@ namespace SlimShader.Chunks.Fx10
 				}
 				sb.AppendLine();
 			}
-			return sb.ToString();
-		}
-		public override string ToString()
-		{
-			var sb = new StringBuilder();
-			sb.AppendLine(GetType().Name);
-			sb.AppendLine(FormatReadable(Data));
 			return sb.ToString();
 		}
 	}

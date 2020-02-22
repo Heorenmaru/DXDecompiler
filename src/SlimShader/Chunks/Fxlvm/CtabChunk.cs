@@ -1,9 +1,10 @@
 ﻿using SlimShader.DX9Shader;
 using SlimShader.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
-namespace SlimShader.Chunks.Fx10
+namespace SlimShader.Chunks.Fxlvm
 {
 	public class CtabChunk : BytecodeChunk
 	{
@@ -18,9 +19,10 @@ namespace SlimShader.Chunks.Fx10
 
 		public uint numConstants;
 		public uint creatorPosition;
-		byte[] Data;
+
 		public static BytecodeChunk Parse(BytecodeReader reader, uint chunkSize)
 		{
+			//TODO: Merge Ctab parsing with DX9 Ctab
 			var result = new CtabChunk();
 			var chunkReader = reader.CopyAtCurrentPosition();
 			var size = result.creatorPosition = chunkReader.ReadUInt32();
@@ -45,10 +47,21 @@ namespace SlimShader.Chunks.Fx10
 				ConstantDeclaration declaration = ReadConstantDeclaration(reader, chunkReader);
 				constantDeclarations.Add(declaration);
 			}
-			var ct = result.ConstantTable = new ConstantTable(creatorString, shaderModel, (int)majorVersion, (int)minorVersion, constantDeclarations);
-			result.Data = reader.ReadBytes((int)chunkSize);
+			result.ConstantTable = new ConstantTable(creatorString, shaderModel, (int)majorVersion, (int)minorVersion, constantDeclarations);
 			return result;
 		}
+
+		public string GetVariable(uint elementIndex)
+		{
+			var decl = ConstantTable.ConstantDeclarations
+				.FirstOrDefault((v) => v.RegisterIndex == elementIndex);
+			if(decl == null)
+			{
+				return string.Format("var{0}", elementIndex);
+			}
+			return decl.Name;
+		}
+
 		private static ConstantDeclaration ReadConstantDeclaration(BytecodeReader reader, BytecodeReader ctabReader)
 		{
 			// D3DXSHADER_CONSTANTINFO
@@ -81,56 +94,11 @@ namespace SlimShader.Chunks.Fx10
 			var numStructMembers = typeInfoReader.ReadUInt16();
 			var structMemberInfoOffset = typeInfoReader.ReadUInt32();
 			//System.Diagnostics.Debug.Assert(numElements == 1);
-			System.Diagnostics.Debug.Assert(structMemberInfoOffset == 0);
+			//System.Diagnostics.Debug.Assert(structMemberInfoOffset == 0);
 
 			return new ConstantDeclaration(name, registerSet, (short)registerIndex, (short)registerCount, cl, type, rows, columns, numElements, defaultValue);
 		}
-		public static string FormatReadable(byte[] data, bool endian = false)
-		{
-			var sb = new StringBuilder();
-			for (int i = 0; i < data.Length; i += 16)
-			{
-				sb.AppendFormat("// {0}:  ", i.ToString("X4"));
-				for (int j = i; j < i + 16; j++)
-				{
-					var index = endian ? j : j + (3 - (j % 4) * 2);
-					if (index < data.Length)
-					{
-						sb.Append(data[index].ToString("X2"));
-					}
-					else
-					{
-						sb.Append("  ");
-					}
-					if ((j + 1) % 4 == 0)
-					{
-						sb.Append("  ");
-					}
-				}
-				for (int j = i; j < i + 16 && j < data.Length; j++)
-				{
-					var c = (char)data[j];
-					if (char.IsControl(c))
-					{
-						sb.Append("_");
-					}
-					else if (c > 0x7E)
-					{
-						sb.Append('.');
-					}
-					else if (char.IsWhiteSpace(c))
-					{
-						sb.Append('.');
-					}
-					else
-					{
-						sb.Append(c);
-					}
-				}
-				sb.AppendLine();
-			}
-			return sb.ToString();
-		}
+
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
@@ -146,7 +114,6 @@ namespace SlimShader.Chunks.Fx10
 			{
 				sb.AppendLine($"ConstantDeclarations: {decl}");
 			}
-			sb.AppendLine(FormatReadable(Data));
 			return sb.ToString();
 		}
 	}
