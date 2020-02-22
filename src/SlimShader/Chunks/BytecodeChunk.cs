@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using SlimShader.Chunks.Aon9;
 using SlimShader.Chunks.Fx10;
+using SlimShader.Chunks.Fxlvm;
 using SlimShader.Chunks.Ifce;
 using SlimShader.Chunks.Libf;
 using SlimShader.Chunks.Priv;
@@ -135,7 +136,7 @@ namespace SlimShader.Chunks
 					chunk = Cli4Chunk.Parse(chunkContentReader, chunkSize);
 					break;
 				case ChunkType.Fxlc:
-					chunk = FxlcChunk.Parse(chunkContentReader, chunkSize);
+					chunk = FxlcChunk.Parse(chunkContentReader, chunkSize, container);
 					break;
 				default :
 					throw new ParseException("Invalid chunk type: " + chunkType);

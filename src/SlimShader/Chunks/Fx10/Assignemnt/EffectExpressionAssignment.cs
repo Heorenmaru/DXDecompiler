@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Fxlvm;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,14 +39,15 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.Append(MemberType.ToString());
-			sb.Append(" = 0; // TODO Expression assignment not current supported");
+			sb.Append(" = eval(");
 			if(Shader != null)
 			{
-				foreach(var chunk in Shader.Chunks)
-				{
-					sb.AppendLine(chunk.ToString());
-				}
+				var chunk = Shader.GetChunk<FxlcChunk>();
+				var code = string.Join($"{Environment.NewLine}                    ",
+					chunk.Tokens);
+				sb.Append(code);
 			}
+			sb.Append(");");
 			return sb.ToString();
 		}
 	}
