@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Rdef;
+using SlimShader.Util;
 using System.Collections.Generic;
 using System.Text;
 
@@ -27,9 +28,11 @@ namespace SlimShader.Chunks.Libf
 		public override string ToString()
 		{
 			var sb = new StringBuilder();
+			var returnsValue = Parameters[0].VariableType == ShaderVariableType.Void ?
+				"no" : "yes";
 			sb.AppendLine(string.Format("// Function parameter signature (return: {0}, parameters: {1}):",
-				"yes", Parameters.Count));
-			sb.Append("//");
+				returnsValue, Parameters.Count - 1));
+			sb.AppendLine("//");
 			sb.AppendLine("// Name                 SemanticName         In 1st,Num,Mask Out 1st,Num,Mask Type                           ");
 			sb.AppendLine("// -------------------- -------------------- --------------- ---------------- ------------------------------ ");
 			foreach(var param in Parameters)

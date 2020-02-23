@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using SharpDX.D3DCompiler;
+using SharpDX.Direct3D11;
 using SlimShader.Chunks;
+using SlimShader.Chunks.Fx10;
 using SlimShader.Chunks.Libf;
 using SlimShader.Chunks.Rdef;
 using SlimShader.Chunks.Shex;
@@ -66,11 +68,14 @@ namespace SlimShader.Tests
 			// Act.
 			var bytecode = File.ReadAllBytes(file + ".o");
 			var container = BytecodeContainer.Parse(bytecode);
-			var decompiledAsmText = string.Join(Environment.NewLine, container.ToString()
-				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
-				.Select(x => x.Trim()));
+			var decompiledAsmText = container.ToString();
 
 			File.WriteAllText($"{file}.d.asm", decompiledAsmText);
+			File.WriteAllText($"{file}.x", FileUtil.FormatReadable(bytecode));
+
+			decompiledAsmText = string.Join(Environment.NewLine, decompiledAsmText
+				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
+				.Select(x => x.Trim()));
 
 			decompiledAsmText = TestUtils.NormalizeAssembly(decompiledAsmText);
 			asmFileText = TestUtils.NormalizeAssembly(asmFileText);
@@ -158,25 +163,7 @@ namespace SlimShader.Tests
 			}
 
 		}
-		[TestCaseSource("TestShaders")]
-		public void DumpStructure(string relPath)
-		{
-			// Arrange.
-			var file = $"{ShaderDirectory}/{relPath}";
-			var relDir = Path.GetDirectoryName(relPath);
-			Directory.CreateDirectory($"{OutputDir}/{relDir}");
-			var sourceName = GetSourceNameFromObject($"{ShaderDirectory}/{relPath}.o");
-			if (ShaderDirectory != OutputDir) File.Copy($"{ShaderDirectory}/{relDir}/{sourceName}", $"{OutputDir}/{relDir}/{sourceName}", true);
-			var binaryFileBytes = File.ReadAllBytes(file + ".o");
 
-			// Act.
-			var shaderBytecode = DebugParser.DebugBytecodeContainer.Parse(binaryFileBytes);
-			var result = shaderBytecode.Dump();
-			File.WriteAllText($"{OutputDir}/{relPath}.d.txt", result);
-
-			// Assert.
-			Assert.That(!result.Contains("Unread Memory"));
-		}
 
 		/// <summary>
 		/// Compare with actual Direct3D reflected objects.
@@ -189,10 +176,23 @@ namespace SlimShader.Tests
 			var binaryFileBytes = File.ReadAllBytes(file + ".o");
 
 			// Act.
+			if( binaryFileBytes[0] == 0x01 &&
+				binaryFileBytes[1] == 0x20 &&
+				binaryFileBytes[2] == 0xFF &&
+				binaryFileBytes[3] == 0xFE)
+			{
+				Effects11.CompareEffect(null, binaryFileBytes, Path.GetFileNameWithoutExtension(relPath));
+				return;
+			}
 			var container = BytecodeContainer.Parse(binaryFileBytes);
 			if (container.Chunks.OfType<LibHeaderChunk>().Any())
 			{
 				CompareLibrary(container, binaryFileBytes);
+				return;
+			}
+			if (container.Chunks.OfType<EffectChunk>().Any())
+			{
+				Effects10.CompareEffect(container, binaryFileBytes, Path.GetFileNameWithoutExtension(relPath));
 				return;
 			}
 			using (var shaderBytecode = ShaderBytecode.FromStream(new MemoryStream(binaryFileBytes)))
@@ -332,7 +332,7 @@ namespace SlimShader.Tests
 			var desc = libReflection.Description;
 			Assert.AreEqual(desc.Creator, libHeader.CreatorString);
 			Assert.AreEqual(desc.FunctionCount, libHeader.FunctionDescs.Count);
-			Assert.AreEqual(desc.Flags, libHeader.Flags);
+			Assert.AreEqual(desc.Flags, 0);
 		}
 
 		private static void CompareConstantBuffer(SharpDX.D3DCompiler.ConstantBuffer expected, Chunks.Rdef.ConstantBuffer actual)

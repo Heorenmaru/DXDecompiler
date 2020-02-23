@@ -11,7 +11,7 @@ namespace SlimShader.Chunks.Libf
 	/// </summary>
 	public class LibfChunk : BytecodeChunk
 	{
-		BytecodeContainer LibraryContainer;
+		public BytecodeContainer LibraryContainer { get; private set; }
 		public static LibfChunk Parse(BytecodeReader reader, uint chunkSize)
 		{
 			var result = new LibfChunk();

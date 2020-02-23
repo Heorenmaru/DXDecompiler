@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SlimShader.DX9Shader.FX9;
+
 namespace SlimShader.DX9Shader
 {
 
@@ -22,7 +24,7 @@ namespace SlimShader.DX9Shader
 		public int MajorVersion { get; private set; }
 		public int MinorVersion { get; private set; }
 		public ShaderType Type { get; private set; }
-
+		public Fx9Chunk EffectChunk { get; set; }
 		public IList<Token> Tokens { get; private set; }
 		public ConstantTable ConstantTable { get; private set; }
 		public IEnumerable<InstructionToken> Instructions => Tokens.OfType<InstructionToken>();

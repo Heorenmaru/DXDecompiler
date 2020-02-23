@@ -50,17 +50,8 @@ namespace SlimShader.Tests
 			var bytecode = File.ReadAllBytes(file + ".o");
 			var shader = ShaderReader.ReadShader(bytecode);
 
-			var asmWriter = new AsmWriter(shader);
-			string decompiledAsm = "";
-			using (var stream = new MemoryStream())
-			{
-				asmWriter.Write(stream);
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					decompiledAsm = reader.ReadToEnd();
-				}
-			}
+			var decompiledAsm = AsmWriter.Disassemble(shader);
+
 			var decompiledAsmText = string.Join(Environment.NewLine, decompiledAsm
 				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
 				.Select(x => x.Trim()));
@@ -69,6 +60,35 @@ namespace SlimShader.Tests
 
 			// Assert.
 			Assert.That(decompiledAsmText, Is.EqualTo(asmFileText));
+		}
+
+		/// <summary>
+		/// Compare ASM output produced by fxc.exe and SlimShader.
+		/// </summary>
+		[TestCaseSource("TestShaders")]
+		public void Decompile(string relPath)
+		{
+			string file = $"{ShaderDirectory}/{relPath}";
+			// Arrange.
+			// Act.
+			var bytecode = File.ReadAllBytes(file + ".o");
+			var shader = ShaderReader.ReadShader(bytecode);
+
+			var hlslWriter = new HlslWriter(shader);
+			string decompiledHlsl = "";
+			using (var stream = new MemoryStream())
+			{
+				hlslWriter.Write(stream);
+				stream.Position = 0;
+				using (var reader = new StreamReader(stream, Encoding.UTF8))
+				{
+					decompiledHlsl = reader.ReadToEnd();
+				}
+			}
+
+			File.WriteAllText($"{file}.d.hlsl", decompiledHlsl);
+
+			// Assert.
 		}
 
 		/// <summary>

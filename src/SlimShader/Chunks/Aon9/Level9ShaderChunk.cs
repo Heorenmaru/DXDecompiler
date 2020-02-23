@@ -91,10 +91,7 @@ namespace SlimShader.Chunks.Aon9
 			}
 			var shaderChunkReader = chunkContentReader.CopyAtOffset((int)shaderOffset);
 			var byteCode = shaderChunkReader.ReadBytes((int)shaderSize);
-			using (var memoryStream = new MemoryStream(byteCode))
-			{
-				result.ShaderModel = DX9Shader.ShaderReader.ReadShader(memoryStream);
-			}
+			result.ShaderModel = DX9Shader.ShaderReader.ReadShader(byteCode);
 			return result;
 		}
 		public override string ToString()

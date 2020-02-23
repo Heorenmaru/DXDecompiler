@@ -7,9 +7,6 @@ using SlimShader.Util;
 
 namespace SlimShader.Chunks.Rdef
 {
-	/// <summary>
-	/// Roughly corresponds to the D3D11_SHADER_DESC structure.
-	/// </summary>
 	public class ResourceDefinitionChunk : BytecodeChunk
 	{
 		public List<ConstantBuffer> ConstantBuffers { get; private set; }
@@ -46,7 +43,7 @@ namespace SlimShader.Chunks.Rdef
 				Creator = creator
 			};
 
-			if (target.MajorVersion == 5)
+			if (target.MajorVersion == 5 || target.ProgramType == ProgramType.LibraryShader)
 			{
 				if (target.MinorVersion == 0)
 				{
