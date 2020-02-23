@@ -146,6 +146,16 @@
     <Compile Include="DebugParser\DebugEntry.cs" />
     <Compile Include="DebugParser\DebugNumber.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
+    <Compile Include="DebugParser\FX9\DebugAnnotation.cs" />
+    <Compile Include="DebugParser\FX9\DebugBinaryData.cs" />
+    <Compile Include="DebugParser\FX9\DebugFx9Chunk.cs" />
+    <Compile Include="DebugParser\FX9\DebugInlineShader.cs" />
+    <Compile Include="DebugParser\FX9\DebugPass.cs" />
+    <Compile Include="DebugParser\FX9\DebugTechnique.cs" />
+    <Compile Include="DebugParser\FX9\DebugUnknownObject.cs" />
+    <Compile Include="DebugParser\FX9\DebugVariable.cs" />
+    <Compile Include="DebugParser\FX9\DebugVariableData.cs" />
+    <Compile Include="DebugParser\FX9\Extensions.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
     <Compile Include="DebugParser\Icfe\DebugInterfaceSlot.cs" />

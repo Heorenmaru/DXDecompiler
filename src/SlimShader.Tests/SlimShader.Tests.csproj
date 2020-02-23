@@ -155,6 +155,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\BasicHLSL_PS_5_1.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\AntiAlias\AntiAlias_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -173,16 +175,12 @@
     <Content Include="ShadersDX9\Sdk\Direct3D\CustomUI\CustomUI_VS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Compile Include="TestLibraryShader.cs" />
-    <Compile Include="Util.cs" />
-    <Compile Include="Util\DecoderExtensionsTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BytecodeContainerTests.cs" />
-    <Compile Include="Util\TestUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\DepthOfField\DepthOfField_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -412,7 +410,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="ShadersDX9\CompileShader2.bat" />
-    <None Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.o">
+    <Content Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial14_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1860,13 +1860,13 @@
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\HDRPipeline\HDRSource_VS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_FX.o">
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2.o">
+    </Content>
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_PS_2a.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1894,7 +1894,8 @@
     <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3sw.o">
+    <Content Include="ShadersDX9\Sdk\Direct3D\SimpleSample\SimpleSample_VS_3sw.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\HDRPipeline\Luminance_DownSamplePS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -2006,7 +2007,7 @@
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\OptimizedMesh\OptimizedMesh_VS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="Shaders\CompileShader.bat" />
     <None Include="Shaders\CompileShader2.bat" />
     <None Include="Shaders\CompileShaders.bat" />
@@ -2493,6 +2494,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\SkinnedMesh\skinnedmesh.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\HlslCrossCompiler\apps\Extrude.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -2689,6 +2692,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\CompiledEffect\CompiledEffect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\HlslCrossCompiler\ps5\interfaces.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3201,6 +3206,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Misc\LibraryTest_4_0.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Sdk\Direct3D10\ContentStreaming\ContentStreaming.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3226,6 +3233,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Misc\ShaderWithRootSignature.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Sdk\Direct3D10\DDSWithoutD3DX\DDSWithoutD3DX.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3411,6 +3420,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Sdk\Direct3D10\CubeMapGS\CubeMapGS_GS.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Sdk\Direct3D10\SubD10\SubD10.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -4157,6 +4168,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Sdk\Direct3D10\BasicHLSL10\BasicHLSL10.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\Sdk\Direct3D10\10BitScanout10\10BitScanout10_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

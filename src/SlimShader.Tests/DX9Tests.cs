@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SharpDX.D3DCompiler;
 using SlimShader.Chunks.Rdef;
 using SlimShader.Chunks.Xsgn;
+using SlimShader.DebugParser.FX9;
 using SlimShader.Decompiler;
 using SlimShader.DX9Shader;
 using SlimShader.Tests.Util;
@@ -91,34 +92,45 @@ namespace SlimShader.Tests
 			// Assert.
 		}
 
-		/// <summary>
-		/// Compare ASM output produced by fxc.exe and SlimShader.
-		/// </summary>
 		[TestCaseSource("TestShaders")]
-		public void Decompile(string relPath)
+		public void DumpStructure(string relPath)
 		{
 			string file = $"{ShaderDirectory}/{relPath}";
 			// Arrange.
 			// Act.
 			var bytecode = File.ReadAllBytes(file + ".o");
-			var shader = ShaderReader.ReadShader(bytecode);
-
-			var hlslWriter = new HlslWriter(shader);
-			string decompiledHlsl = "";
-			using (var stream = new MemoryStream())
+			
+			if(bytecode[2] == 255 && bytecode[3] == 254)
 			{
-				hlslWriter.Write(stream);
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
+				var reader = new DebugParser.DebugBytecodeReader(bytecode, 0, bytecode.Length);
+				string error = "";
+				try
 				{
-					decompiledHlsl = reader.ReadToEnd();
+					reader.ReadByte("minorVersion");
+					reader.ReadByte("majorVersion");
+					reader.ReadUInt16("shaderType");
+					DebugFx9Chunk.Parse(reader, (uint)(bytecode.Length - 4));
+				} catch(Exception ex)
+				{
+					error = ex.ToString();
 				}
+				var dump = reader.DumpStructure();
+				if (!string.IsNullOrEmpty(error))
+				{
+					dump += "\n" + error;
+				}
+				File.WriteAllText($"{file}.d.txt", dump);
+
+			} else
+			{
+				return;
 			}
 
-			File.WriteAllText($"{file}.d.hlsl", decompiledHlsl);
+			
 
 			// Assert.
 		}
+
 		public static string GetSourceNameFromObject(string path)
 		{
 			path = path.Replace(".o", "");

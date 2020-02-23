@@ -33,7 +33,7 @@ namespace HlslUnit
         private const int ContextIndex = 0;
 
         private readonly List<ConstantBuffer> _constantBuffers;
-        private readonly List<DebugResourceBinding> _resourceBindings;
+        private readonly List<ResourceBinding> _resourceBindings;
         private readonly InputSignatureChunk _inputSignature;
 	    private readonly int _inputSignatureSize;
         private readonly OutputSignatureChunk _outputSignature;

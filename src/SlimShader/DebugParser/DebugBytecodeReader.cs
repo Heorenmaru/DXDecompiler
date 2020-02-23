@@ -120,6 +120,20 @@ namespace SlimShader.DebugParser
 			return (T)result;
 		}
 
+		public string TryReadString(string name)
+		{
+			var length = _reader.ReadUInt32();
+			string result = "";
+			if(length > 0)
+			{
+				var bytes = _reader.ReadBytes((int)length);
+				result = Encoding.UTF8.GetString(bytes, 0, bytes.Length - 1);
+			}
+			var entry = AddEntry(name, length + 4);
+			entry.Value = result;
+			return result;
+		}
+
 		public string ReadString(string name)
 		{
 			var sb = new StringBuilder();
@@ -226,11 +240,11 @@ namespace SlimShader.DebugParser
 				sb.Append($"[{_offset}:{next}]");
 			}
 			sb.AppendLine();
-			return sb.ToString(); ;
+			return sb.ToString();
 		}
 		public DebugBytecodeReader CopyAtCurrentPosition(string name, DebugBytecodeReader parent, int? count = null)
 		{
-			return CopyAtOffset(name, parent,(int)_reader.BaseStream.Position, count);
+			return CopyAtOffset(name, parent, (int)_reader.BaseStream.Position, count);
 		}
 
 		public DebugBytecodeReader CopyAtOffset(string name, DebugBytecodeReader parent, int offset, int? count = null)
