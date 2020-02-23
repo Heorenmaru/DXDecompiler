@@ -23,10 +23,9 @@ namespace SlimShader.DebugParser.FX9
 		public static DebugFx9Chunk Parse(DebugBytecodeReader reader, uint length)
 		{
 			var result = new DebugFx9Chunk();
-			var chunkReader = reader.CopyAtCurrentPosition("ChunkReader", reader);
-			var footerOffset = chunkReader.ReadUInt32("footerOffset");
-			var bodyReader = chunkReader.CopyAtCurrentPosition("BodyReader", reader);
-			var footerReader = reader.CopyAtOffset("footerReader", reader, (int)footerOffset + 4);
+			var footerOffset = reader.ReadUInt32("footerOffset");
+			var bodyReader = reader.CopyAtCurrentPosition("BodyReader", reader);
+			var footerReader = bodyReader.CopyAtOffset("FooterReader", reader, (int)footerOffset);
 			var variableCount = result.VariableCount = footerReader.ReadUInt32("VariableCount");
 			var techniqueCount = result.TechniqueCount = footerReader.ReadUInt32("TechniqueCount");
 			result.PassCount = footerReader.ReadUInt32("PassCount");
