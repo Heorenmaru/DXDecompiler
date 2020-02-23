@@ -33,14 +33,13 @@ namespace SlimShader.DX9Shader.FX9
 		byte[] BodyData;
 		byte[] FooterData;
 		byte[] Data;
-		uint unknownOffset;
-		uint headerUnknown;
+		uint FooterOffset;
 		string DebugError;
 		public static Fx9Chunk Parse(BytecodeReader reader, uint length)
 		{
 			var result = new Fx9Chunk();
 			var chunkReader = reader.CopyAtCurrentPosition();
-			var footerOffset = result.unknownOffset = chunkReader.ReadUInt32();
+			var footerOffset = result.FooterOffset = chunkReader.ReadUInt32();
 			try
 			{
 				result.length = length;
@@ -85,8 +84,7 @@ namespace SlimShader.DX9Shader.FX9
 			var sb = new StringBuilder();
 			sb.AppendLine("Fx9Chunk");
 			sb.AppendLine($"Length: {length} {length.ToString("X4")}");
-			sb.AppendLine($"UnknownOffset: {unknownOffset} {unknownOffset.ToString("X4")}");
-			sb.AppendLine($"HeaderUnknown: {headerUnknown} {headerUnknown.ToString("X4")}");
+			sb.AppendLine($"FooterOffset: {FooterOffset} {FooterOffset.ToString("X4")}");
 			sb.AppendLine($"VariableCount: {VariableCount} {VariableCount.ToString("X4")}");
 			sb.AppendLine($"TechniqueCount: {TechniqueCount} {TechniqueCount.ToString("X4")}");
 			sb.AppendLine($"PassCount?: {PassCount} {PassCount.ToString("X4")}");
