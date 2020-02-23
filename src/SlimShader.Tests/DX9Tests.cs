@@ -50,17 +50,8 @@ namespace SlimShader.Tests
 			var bytecode = File.ReadAllBytes(file + ".o");
 			var shader = ShaderReader.ReadShader(bytecode);
 
-			var asmWriter = new AsmWriter(shader);
-			string decompiledAsm = "";
-			using (var stream = new MemoryStream())
-			{
-				asmWriter.Write(stream);
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					decompiledAsm = reader.ReadToEnd();
-				}
-			}
+			var decompiledAsm = AsmWriter.Disassemble(shader);
+
 			var decompiledAsmText = string.Join(Environment.NewLine, decompiledAsm
 				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
 				.Select(x => x.Trim()));
