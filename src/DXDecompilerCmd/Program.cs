@@ -29,7 +29,8 @@ namespace DXDecompilerCmd
 			}
 			var dx9ShaderType = (SlimShader.DX9Shader.ShaderType)BitConverter.ToUInt16(data, 2);
 			if (dx9ShaderType == SlimShader.DX9Shader.ShaderType.Vertex ||
-				dx9ShaderType == SlimShader.DX9Shader.ShaderType.Pixel)
+				dx9ShaderType == SlimShader.DX9Shader.ShaderType.Pixel || 
+				dx9ShaderType == SlimShader.DX9Shader.ShaderType.Fx)
 			{
 				return ProgramType.DX9;
 			}

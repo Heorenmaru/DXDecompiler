@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SlimShader.Util;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,22 +14,16 @@ namespace SlimShader.DX9Shader
 			: base(input, new UTF8Encoding(false, true))
 		{
 		}
-		static public ShaderModel ReadShader(Stream stream)
-		{
-			using (var ss = new ShaderReader(stream))
-			{
-				return ss.ReadShader();
-			}
-		}
 		static public ShaderModel ReadShader(byte[] data)
 		{
+			
 			using(var ms = new MemoryStream(data))
 			using (var ss = new ShaderReader(ms))
 			{
-				return ss.ReadShader();
+				return ss._ReadShader(data);
 			}
 		}
-		virtual public ShaderModel ReadShader()
+		virtual public ShaderModel _ReadShader(byte[] data)
 		{
 			// Version token
 			byte minorVersion = ReadByte();
@@ -36,7 +31,11 @@ namespace SlimShader.DX9Shader
 			ShaderType shaderType = (ShaderType)ReadUInt16();
 			if(shaderType == ShaderType.Fx)
 			{
-				throw new Exception("FX shaders currently not supported");
+				var _shader = new ShaderModel(majorVersion, minorVersion, shaderType);
+				var bytecodeReader = new BytecodeReader(data, 4, data.Length - 4);
+				_shader.EffectChunk = FX9.Fx9Chunk.Parse(bytecodeReader, (uint)(data.Length - 4));
+				return _shader;
+				//throw new Exception("FX shaders currently not supported");
 			}
 			Debug.Assert(shaderType == ShaderType.Pixel || shaderType == ShaderType.Vertex || shaderType == ShaderType.Fx,
 				$"Shader does not contain a valid shader type {shaderType}");
