@@ -144,6 +144,7 @@
     <Compile Include="DebugParser\DebugBytecodeContainerHeader.cs" />
     <Compile Include="DebugParser\DebugBytecodeReader.cs" />
     <Compile Include="DebugParser\DebugEntry.cs" />
+    <Compile Include="DebugParser\DebugIndent.cs" />
     <Compile Include="DebugParser\DebugNumber.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
     <Compile Include="DebugParser\FX9\DebugAnnotation.cs" />

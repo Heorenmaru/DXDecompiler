@@ -26,7 +26,7 @@ namespace SlimShader.DebugParser.FX9
 			result.Data = DebugVariableData.Parse(reader, dataReader);
 
 			var unknownReader = reader.CopyAtOffset("DefaultValue", variableReader, (int)result.DefaultValueOffset);
-			result.DefaultValue = DebugUnknownObject.Parse(unknownReader, 2);
+			result.DefaultValue = DebugUnknownObject.Parse(unknownReader, 1);
 			return result;
 		}
 	}

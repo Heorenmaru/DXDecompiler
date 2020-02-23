@@ -33,22 +33,30 @@ namespace SlimShader.DebugParser.FX9
 
 			for (int i = 0; i < variableCount; i++)
 			{
+				footerReader.AddIndent($"Variable {i}");
 				result.Variables.Add(DebugVariable.Parse(bodyReader, footerReader));
+				footerReader.RemoveIndent();
 			}
 			for (int i = 0; i < techniqueCount; i++)
 			{
+				footerReader.AddIndent($"Technique {i}");
 				result.Techniques.Add(DebugTechnique.Parse(bodyReader, footerReader));
+				footerReader.RemoveIndent();
 			}
 
 			result.BinaryDataCount = footerReader.ReadUInt32("BinaryDataCount");
 			result.InlineShaderCount = footerReader.ReadUInt32("InlineShaderCount");
 			for (int i = 0; i < result.BinaryDataCount; i++)
 			{
+				footerReader.AddIndent($"BinaryData {i}");
 				result.BinaryDataList.Add(DebugBinaryData.Parse(bodyReader, footerReader));
+				footerReader.RemoveIndent();
 			}
 			for (int i = 0; i < result.InlineShaderCount; i++)
 			{
+				footerReader.AddIndent($"InlineShader {i}");
 				result.InlineShaders.Add(DebugInlineShader.Parse(bodyReader, footerReader));
+				footerReader.RemoveIndent();
 			}
 			return result;
 

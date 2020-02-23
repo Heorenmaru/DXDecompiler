@@ -8,6 +8,7 @@ namespace SlimShader.DebugParser
 {
 	public class DebugBytecodeReader : IDumpable
 	{
+		private static readonly bool FormatHex = true;
 		private readonly byte[] _buffer;
 		private readonly int _offset;
 		public int Indent;
@@ -53,6 +54,21 @@ namespace SlimShader.DebugParser
 			};
 			Root.Members.Add(result);
 			return result;
+		}
+
+		internal void AddIndent(string name)
+		{
+			var result = new DebugIndent()
+			{
+				Name = name,
+				Indent = Indent
+			};
+			Root.Members.Add(result);
+			Indent++;
+		}
+		internal void RemoveIndent()
+		{
+			Indent--;
 		}
 		public uint PeakUint32()
 		{
@@ -216,8 +232,19 @@ namespace SlimShader.DebugParser
 					{
 						var closest = sorted
 							.Last(e => e.AbsoluteIndex < i);
-						var rel = i - (closest.AbsoluteIndex - closest.RelativeIndex);
-						sb.Append($"Unread Memory {i}:{i + next - 1}[{rel}:{rel + next - 1}] (See {closest.AbsoluteIndex}:{closest.AbsoluteIndex + closest.Size} - {closest.Name})");
+	
+						
+						var absIndex = i;
+						var absOffset = i + next - 1;
+						var relIndex = i - (closest.AbsoluteIndex - closest.RelativeIndex);
+						var relOffset = relIndex + next - 1;
+						if (FormatHex)
+						{
+							sb.Append($"Unread Memory {absIndex.ToString("X4")}:{absOffset.ToString("X4")}[{relIndex.ToString("X4")}:{relOffset.ToString("X4")}] (See {closest.AbsoluteIndex.ToString("X4")}:{(closest.AbsoluteIndex + closest.Size).ToString("X4")} - {closest.Name})");
+						} else
+						{
+							sb.Append($"Unread Memory {absIndex}:{absOffset}[{relIndex}:{relOffset}] (See {closest.AbsoluteIndex}:{closest.AbsoluteIndex + closest.Size} - {closest.Name})");
+						}
 						var subset = _buffer.Skip(i).Take(next).ToArray();
 						sb.Append(" ");
 						sb.AppendLine(FormatBytes(subset));
@@ -232,12 +259,20 @@ namespace SlimShader.DebugParser
 			var indent = new string(' ', (int)Indent * 2);
 			string next = _offset + _buffer.Length == _buffer.Length ?
 					"*" :
+					FormatHex ?
+					(_offset + _buffer.Length - 1).ToString("X4") :
 					(_offset + _buffer.Length - 1).ToString();
 			var sb = new StringBuilder();
 			sb.Append($"{indent}Container: {_name}");
 			if (DumpOffsets)
 			{
-				sb.Append($"[{_offset}:{next}]");
+				if (FormatHex)
+				{
+					sb.Append($"[{_offset.ToString("X4")}:{next}]");
+				} else
+				{
+					sb.Append($"[{_offset}:{next}]");
+				}
 			}
 			sb.AppendLine();
 			return sb.ToString();

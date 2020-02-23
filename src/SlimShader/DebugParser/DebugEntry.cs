@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace SlimShader.DebugParser
 {
@@ -13,6 +10,11 @@ namespace SlimShader.DebugParser
 		public uint RelativeIndex;
 		public uint AbsoluteIndex;
 		public uint Size;
+		private bool formatHex;
+		public DebugEntry(bool formatHex = true)
+		{
+			this.formatHex = formatHex;
+		}
 		public string Dump()
 		{
 			var member = this;
@@ -21,7 +23,17 @@ namespace SlimShader.DebugParser
 			sb.Append(indent);
 			if (DebugBytecodeReader.DumpOffsets)
 			{
-				sb.Append($"{member.AbsoluteIndex}:{member.AbsoluteIndex + member.Size - 1}[{member.RelativeIndex}:{member.RelativeIndex + member.Size - 1}] - ");
+				var absIndex = member.AbsoluteIndex;
+				var absOffset = member.AbsoluteIndex + member.Size - 1;
+				var relIndex = member.RelativeIndex;
+				var relOffset = member.RelativeIndex + member.Size - 1;
+				if (formatHex)
+				{
+					sb.Append($"{absIndex.ToString("X4")}:{absOffset.ToString("X4")}[{relIndex.ToString("X4")}:{relOffset.ToString("X4")}] - ");
+				} else
+				{
+					sb.Append($"{absIndex}:{absOffset}[{relIndex}:{relOffset}] - ");
+				}
 			}
 			sb.Append($"{member.Name}={member.Value}\n");
 			return sb.ToString();
