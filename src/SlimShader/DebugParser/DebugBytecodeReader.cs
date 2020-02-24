@@ -140,13 +140,25 @@ namespace SlimShader.DebugParser
 		{
 			var length = _reader.ReadUInt32();
 			string result = "";
-			if(length > 0)
+			var toRead = length == 0 ? 0 : length;
+			if(toRead % 4 != 0)
 			{
-				var bytes = _reader.ReadBytes((int)length);
-				result = Encoding.UTF8.GetString(bytes, 0, bytes.Length - 1);
+				toRead += 4 - toRead % 4;
 			}
-			var entry = AddEntry(name, length + 4);
-			entry.Value = result;
+			var extraBytes = new byte[0];
+			if (length > 0)
+			{
+				var stringBytes = _reader.ReadBytes((int)length - 1);
+				extraBytes = _reader.ReadBytes((int)(toRead - (length - 1)));
+				result = Encoding.UTF8.GetString(stringBytes, 0, stringBytes.Length);
+			} else
+			{
+				extraBytes = _reader.ReadBytes((int)toRead);
+			}
+			string extra = Encoding.UTF8.GetString(extraBytes, 0, extraBytes.Length);
+			string extraHex = string.Join(" ", extraBytes.Select(b => b.ToString("X2")));
+			var entry = AddEntry(name, toRead);
+			entry.Value = $"\"{result}\" ({extraHex})";
 			return result;
 		}
 
