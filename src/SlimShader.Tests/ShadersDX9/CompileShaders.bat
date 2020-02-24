@@ -261,7 +261,7 @@ CALL CompileShader.bat SDK/Direct3D/ShadowVolume ShadowVolume.fx ShadowVolume_Sc
 CALL CompileShader.bat SDK/Direct3D/ShadowVolume ShadowVolume.fx ShadowVolume_ScenePS ps_2_0 PixScene || GOTO :error
 CALL CompileShader.bat SDK/Direct3D/ShadowVolume ShadowVolume.fx ShadowVolume_ShowDirtyStencilPS ps_2_0 ShowDirtyStencil || GOTO :error
 CALL CompileShader.bat SDK/Direct3D/ShadowVolume ShadowVolume.fx ShadowVolume_PixComplexityPS ps_2_0 PixComplexity || GOTO :error
-CALL CompileShader.bat SDK/Direct3D/ShadowVolume ShadowVolume.fx ShadowVolume_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat SDK/Direct3D/ShadowVolume ShadowVolume.fx ShadowVolume_FX fx_2_0 || GOTO :error
 
 CALL CompileShader.bat SDK/Direct3D/SimpleSample SimpleSample.fx SimpleSample_VS_2 vs_2_0 RenderSceneVS || GOTO :error
 CALL CompileShader.bat SDK/Direct3D/SimpleSample SimpleSample.fx SimpleSample_PS_2 ps_2_0 RenderScenePS || GOTO :error
