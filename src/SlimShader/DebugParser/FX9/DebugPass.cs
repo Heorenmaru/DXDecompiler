@@ -7,22 +7,26 @@ namespace SlimShader.DebugParser.FX9
 		public string Name { get; private set; }
 		public uint NameOffset;
 		public uint AnnotationCount;
-		public uint UnknownCount;
+		public uint AssignmentCount;
 		List<DebugAnnotation> Annotations = new List<DebugAnnotation>();
-		List<DebugUnknownObject> UnknownObjects = new List<DebugUnknownObject>();
+		List<DebugAssignment> Assignments = new List<DebugAssignment>();
 		public static DebugPass Parse(DebugBytecodeReader reader, DebugBytecodeReader passReader)
 		{
 			var result = new DebugPass();
 			result.NameOffset = passReader.ReadUInt32("NameOffset");
 			result.AnnotationCount = passReader.ReadUInt32("AnnoationCount");
-			result.UnknownCount = passReader.ReadUInt32("UnknownCount");
+			result.AssignmentCount = passReader.ReadUInt32("AssignmentCount");
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
+				passReader.AddIndent($"Annotation {i}");
 				result.Annotations.Add(DebugAnnotation.Parse(reader, passReader));
+				passReader.RemoveIndent();
 			}
-			for (int i = 0; i < result.UnknownCount; i++)
+			for (int i = 0; i < result.AssignmentCount; i++)
 			{
-				result.UnknownObjects.Add(DebugUnknownObject.Parse(passReader, 4));
+				passReader.AddIndent($"Assignment {i}");
+				result.Assignments.Add(DebugAssignment.Parse(reader, passReader));
+				passReader.RemoveIndent();
 			}
 			var nameReader = reader.CopyAtOffset("NameReader", passReader, (int)result.NameOffset);
 			result.Name = nameReader.TryReadString("Name");

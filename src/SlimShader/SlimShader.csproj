@@ -148,6 +148,7 @@
     <Compile Include="DebugParser\DebugNumber.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
     <Compile Include="DebugParser\FX9\DebugAnnotation.cs" />
+    <Compile Include="DebugParser\FX9\DebugAssignment.cs" />
     <Compile Include="DebugParser\FX9\DebugBinaryData.cs" />
     <Compile Include="DebugParser\FX9\DebugFx9Chunk.cs" />
     <Compile Include="DebugParser\FX9\DebugInlineShader.cs" />

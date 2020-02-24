@@ -5,7 +5,7 @@
 		public uint Unknown1;
 		public uint Unknown2;
 		public uint Unknown3;
-		public uint IsVertexShader;
+		public uint Index;
 		public uint IsVariable;
 		public uint ShaderSize;
 		public string VariableName { get; private set; }
@@ -16,7 +16,7 @@
 			result.Unknown1 = shaderReader.ReadUInt32("Unknown1");
 			result.Unknown2 = shaderReader.ReadUInt32("Unknown2");
 			result.Unknown3 = shaderReader.ReadUInt32("Unknown3");
-			result.IsVertexShader = shaderReader.ReadUInt32("IsVertexShader");
+			result.Index = shaderReader.ReadUInt32("Index?");
 			result.IsVariable = shaderReader.ReadUInt32("IsVariable");
 			var dataReader = shaderReader.CopyAtCurrentPosition("Data", shaderReader);
 			result.ShaderSize = shaderReader.ReadUInt32("ShaderSize");
