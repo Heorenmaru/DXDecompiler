@@ -13,7 +13,7 @@ namespace SlimShader.DX9Shader.FX9
 		public uint AnnotationCount;
 		public uint UnknownCount;
 		List<Annotation> Annotations = new List<Annotation>();
-		List<UnknownObject> UnknownObjects = new List<UnknownObject>();
+		List<Assignment> UnknownObjects = new List<Assignment>();
 		public static Pass Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new Pass();
@@ -26,7 +26,7 @@ namespace SlimShader.DX9Shader.FX9
 			}
 			for (int i = 0; i < result.UnknownCount; i++)
 			{
-				result.UnknownObjects.Add(UnknownObject.Parse(variableReader, 4));
+				result.UnknownObjects.Add(Assignment.Parse(reader, variableReader));
 			}
 			var nameReader = reader.CopyAtOffset((int)result.NameOffset);
 			result.Name = nameReader.TryReadString();

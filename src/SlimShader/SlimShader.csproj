@@ -270,6 +270,8 @@
     <Compile Include="DX9Shader\FX9\Extensions.cs" />
     <Compile Include="DX9Shader\FX9\Fx9Chunk.cs" />
     <Compile Include="DX9Shader\FX9\InlineShader.cs" />
+    <Compile Include="DX9Shader\FX9\Assignment.cs" />
+    <Compile Include="DX9Shader\FX9\StateType.cs" />
     <Compile Include="DX9Shader\FX9\UnknownObject.cs" />
     <Compile Include="DX9Shader\FX9\Pass.cs" />
     <Compile Include="DX9Shader\FX9\Technique.cs" />
