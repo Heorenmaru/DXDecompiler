@@ -12,8 +12,9 @@ namespace SlimShader.DX9Shader.FX9
 		public uint DefaultValueOffset;
 		public uint IsShared;
 		public uint AnnotationCount;
-		public VariableData Data;
+		public Parameter Data;
 		public UnknownObject DefaultValue;
+		public List<SamplerState> SamplerStates = new List<SamplerState>();
 		public List<Annotation> Annotations = new List<Annotation>();
 		public static Variable Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
@@ -27,10 +28,21 @@ namespace SlimShader.DX9Shader.FX9
 				result.Annotations.Add(Annotation.Parse(reader, variableReader));
 			}
 			var dataReader = reader.CopyAtOffset((int)result.DataOffset);
-			result.Data = VariableData.Parse(reader, dataReader);
-
-			var unknownReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
-			result.DefaultValue = UnknownObject.Parse(unknownReader, 2);
+			result.Data = Parameter.Parse(reader, dataReader);
+			if (result.Data.ParameterType == ParameterType.Sampler)
+			{
+				var stateReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
+				var stateCount = stateReader.ReadUInt32();
+				for(int i = 0; i < stateCount; i++)
+				{
+					result.SamplerStates.Add(SamplerState.Parse(reader, stateReader));
+				}
+			}
+			else
+			{
+				var unknownReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
+				result.DefaultValue = UnknownObject.Parse(unknownReader, 2);
+			}
 			return result;
 		}
 		public string Dump()
@@ -42,7 +54,17 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    Variable.IsShared: {IsShared} {IsShared.ToString("X4")}");
 			sb.AppendLine($"    Variable.AnnotationCount: {AnnotationCount} {AnnotationCount.ToString("X4")}");
 			sb.Append(Data.Dump());
-			sb.Append(DefaultValue.Dump());
+			if (Data.ParameterType == ParameterType.Sampler)
+			{
+				foreach(var state in SamplerStates)
+				{
+					sb.Append(state.Dump());
+				}
+			}
+			else
+			{
+				sb.Append(DefaultValue.Dump());
+			}
 			foreach (var annotation in Annotations)
 			{
 				sb.Append(annotation.Dump());

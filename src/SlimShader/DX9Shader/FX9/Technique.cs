@@ -12,8 +12,8 @@ namespace SlimShader.DX9Shader.FX9
 		public uint NameOffset;
 		public uint AnnotationCount;
 		public uint PassCount;
-		List<Annotation> Annotations = new List<Annotation>();
-		List<Pass> Passes = new List<Pass>();
+		public List<Annotation> Annotations = new List<Annotation>();
+		public List<Pass> Passes = new List<Pass>();
 		public static Technique Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new Technique();

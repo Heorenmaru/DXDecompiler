@@ -24,10 +24,10 @@ namespace SlimShader.DX9Shader.FX9
 		public uint ShaderCount;
 		public uint UnknownCount;
 		public uint InlineShaderCount;
-		List<Variable> Variables = new List<Variable>();
-		List<Technique> Techniques = new List<Technique>();
-		List<BinaryData> BinaryDataList = new List<BinaryData>();
-		List<InlineShader> InlineShaders = new List<InlineShader>();
+		public List<Variable> Variables = new List<Variable>();
+		public List<Technique> Techniques = new List<Technique>();
+		public List<BinaryData> BinaryDataList = new List<BinaryData>();
+		public List<InlineShader> InlineShaders = new List<InlineShader>();
 		public uint length;
 		byte[] HeaderData;
 		byte[] BodyData;
@@ -39,12 +39,12 @@ namespace SlimShader.DX9Shader.FX9
 		{
 			var result = new Fx9Chunk();
 			var chunkReader = reader.CopyAtCurrentPosition();
-			var footerOffset = result.FooterOffset = chunkReader.ReadUInt32();
+			var footerOffset = result.FooterOffset = chunkReader.ReadUInt32() + 4;
 			try
 			{
 				result.length = length;
 				var bodyReader = chunkReader.CopyAtCurrentPosition();
-				var footerReader = reader.CopyAtOffset((int)footerOffset + 4);
+				var footerReader = reader.CopyAtOffset((int)footerOffset);
 				var variableCount = result.VariableCount = footerReader.ReadUInt32();
 				var techniqueCount = result.TechniqueCount = footerReader.ReadUInt32();
 				result.PassCount = footerReader.ReadUInt32();
@@ -83,7 +83,9 @@ namespace SlimShader.DX9Shader.FX9
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine("Fx9Chunk");
-			sb.AppendLine($"Length: {length} {length.ToString("X4")}");
+			var bodyLength = (int)(Math.Max(FooterOffset - headerLength, 0));
+			var footerLength = (int)(length - bodyLength - headerLength);
+			sb.AppendLine($"Length: {length} ({length.ToString("X4")} Header {headerLength} ({headerLength.ToString("X4")}) Body {bodyLength} ({bodyLength.ToString("X4")}) Footer {footerLength} ({footerLength.ToString("X4")})");
 			sb.AppendLine($"FooterOffset: {FooterOffset} {FooterOffset.ToString("X4")}");
 			sb.AppendLine($"VariableCount: {VariableCount} {VariableCount.ToString("X4")}");
 			sb.AppendLine($"TechniqueCount: {TechniqueCount} {TechniqueCount.ToString("X4")}");
