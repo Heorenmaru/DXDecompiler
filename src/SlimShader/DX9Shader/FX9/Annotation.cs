@@ -10,14 +10,14 @@ namespace SlimShader.DX9Shader.FX9
 	{
 		public uint DataOffset;
 		public uint DefaultValueOffset;
-		VariableData Unknown2;
+		Parameter Unknown2;
 		public static Annotation Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new Annotation();
 			result.DataOffset = variableReader.ReadUInt32();
 			result.DefaultValueOffset = variableReader.ReadUInt32();
 			var unknownReader = reader.CopyAtOffset((int)result.DataOffset);
-			result.Unknown2 = VariableData.Parse(reader, unknownReader);
+			result.Unknown2 = Parameter.Parse(reader, unknownReader);
 			return result;
 		}
 		public string Dump()

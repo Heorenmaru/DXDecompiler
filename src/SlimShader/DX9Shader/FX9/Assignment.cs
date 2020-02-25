@@ -12,7 +12,7 @@ namespace SlimShader.DX9Shader.FX9
 		public uint ArrayIndex;
 		public uint TypeOffset;
 		public uint Unknown1;
-		public VariableData Variable;
+		public Parameter Variable;
 		public UnknownObject Unknown2;
 		public static Assignment Parse(BytecodeReader reader, BytecodeReader shaderReader)
 		{ 
@@ -23,7 +23,7 @@ namespace SlimShader.DX9Shader.FX9
 			result.Unknown1 = shaderReader.ReadUInt32();
 
 			var variableReader = reader.CopyAtOffset((int)result.TypeOffset);
-			result.Variable = VariableData.Parse(reader, variableReader);
+			result.Variable = Parameter.Parse(reader, variableReader);
 
 			var unknownReader = reader.CopyAtOffset((int)result.Unknown1);
 			result.Unknown2 = UnknownObject.Parse(unknownReader, 2);

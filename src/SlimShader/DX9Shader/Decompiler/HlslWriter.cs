@@ -29,6 +29,10 @@ namespace SlimShader.DX9Shader
 		}
 		public static string Decompile(ShaderModel shaderModel)
 		{
+			if (shaderModel.Type == ShaderType.Fx)
+			{
+				return shaderModel.EffectChunk.Dump();
+			}
 			var hlslWriter = new HlslWriter(shaderModel);
 			using (var stream = new MemoryStream())
 			{

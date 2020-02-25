@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
-	public class VariableData
+	public class Parameter
 	{
 		public ParameterType ParameterType { get; private set; }
 		public ParameterClass ParameterClass { get; private set; }
@@ -16,14 +16,13 @@ namespace SlimShader.DX9Shader.FX9
 		public uint Rows { get; private set; }
 		public uint Columns { get; private set; }
 		public uint StructMemberCount { get; private set; }
-		public List<VariableData> StructMembers = new List<VariableData>();
+		public List<Parameter> StructMembers = new List<Parameter>();
+
 		public uint NameOffset;
 		public uint SemanticOffset;
-		public uint Unknown1;
-		public uint Unknown2;
-		public static VariableData Parse(BytecodeReader reader, BytecodeReader variableReader)
+		public static Parameter Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
-			var result = new VariableData();
+			var result = new Parameter();
 			result.ParameterType = (ParameterType)variableReader.ReadUInt32();
 			result.ParameterClass = (ParameterClass)variableReader.ReadUInt32();
 			result.NameOffset = variableReader.ReadUInt32();
@@ -43,9 +42,8 @@ namespace SlimShader.DX9Shader.FX9
 				result.StructMemberCount = variableReader.ReadUInt32();
 				for(int i = 0; i < result.StructMemberCount; i++)
 				{
-					result.StructMembers.Add(VariableData.Parse(reader, variableReader));
+					result.StructMembers.Add(Parameter.Parse(reader, variableReader));
 				}
-				
 			}
 
 			var nameReader = reader.CopyAtOffset((int)result.NameOffset);
