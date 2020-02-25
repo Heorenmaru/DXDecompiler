@@ -26,6 +26,13 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    BinaryData.Index: {Index} {Index.ToString("X4")}");
 			sb.AppendLine($"    BinaryData.Size: {Size} {Size.ToString("X4")}");
 			sb.AppendLine($"    BinaryData.DataSize: {Data.Length} {Data.Length.ToString("X4")}");
+			string dataPreview = "";
+			for(int i = 0; i < Data.Length && i < 8*4; i += 4)
+			{
+				var val = BitConverter.ToUInt32(Data, i);
+				dataPreview += val.ToString("X4") + " ";
+			}
+			sb.AppendLine($"    BinaryData.Data: {dataPreview}");
 			return sb.ToString();
 		}
 	}

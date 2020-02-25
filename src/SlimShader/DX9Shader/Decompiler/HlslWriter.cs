@@ -31,7 +31,7 @@ namespace SlimShader.DX9Shader
 		{
 			if (shaderModel.Type == ShaderType.Fx)
 			{
-				return shaderModel.EffectChunk.Dump();
+				return EffectHLSLWriter.Decompile(shaderModel.EffectChunk);
 			}
 			var hlslWriter = new HlslWriter(shaderModel);
 			using (var stream = new MemoryStream())

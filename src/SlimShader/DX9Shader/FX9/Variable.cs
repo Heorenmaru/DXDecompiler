@@ -12,8 +12,8 @@ namespace SlimShader.DX9Shader.FX9
 		public uint DefaultValueOffset;
 		public uint IsShared;
 		public uint AnnotationCount;
-		public Parameter Data;
-		public UnknownObject DefaultValue;
+		public Parameter Parameter;
+		public List<Number> DefaultValue = new List<Number>();
 		public List<SamplerState> SamplerStates = new List<SamplerState>();
 		public List<Annotation> Annotations = new List<Annotation>();
 		public static Variable Parse(BytecodeReader reader, BytecodeReader variableReader)
@@ -28,8 +28,8 @@ namespace SlimShader.DX9Shader.FX9
 				result.Annotations.Add(Annotation.Parse(reader, variableReader));
 			}
 			var dataReader = reader.CopyAtOffset((int)result.DataOffset);
-			result.Data = Parameter.Parse(reader, dataReader);
-			if (result.Data.ParameterType == ParameterType.Sampler)
+			result.Parameter = Parameter.Parse(reader, dataReader);
+			if (result.Parameter.ParameterType.IsSampler())
 			{
 				var stateReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
 				var stateCount = stateReader.ReadUInt32();
@@ -38,10 +38,19 @@ namespace SlimShader.DX9Shader.FX9
 					result.SamplerStates.Add(SamplerState.Parse(reader, stateReader));
 				}
 			}
-			else
+			else if(result.Parameter.ParameterClass == ParameterClass.Object)
 			{
 				var unknownReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
-				result.DefaultValue = UnknownObject.Parse(unknownReader, 2);
+				result.DefaultValue.Add(Number.Parse(unknownReader));
+			} else
+			{
+				var unknownReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
+				var defaultValueCount = result.Parameter.GetSize() / 4;
+				for(int i = 0; i < defaultValueCount; i++)
+				{
+					result.DefaultValue.Add(Number.Parse(unknownReader));
+				}
+				
 			}
 			return result;
 		}
@@ -53,8 +62,8 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    Variable.DefaultValueOffset: {DefaultValueOffset} {DefaultValueOffset.ToString("X4")}");
 			sb.AppendLine($"    Variable.IsShared: {IsShared} {IsShared.ToString("X4")}");
 			sb.AppendLine($"    Variable.AnnotationCount: {AnnotationCount} {AnnotationCount.ToString("X4")}");
-			sb.Append(Data.Dump());
-			if (Data.ParameterType == ParameterType.Sampler)
+			sb.Append(Parameter.Dump());
+			if (Parameter.ParameterType == ParameterType.Sampler)
 			{
 				foreach(var state in SamplerStates)
 				{
@@ -63,7 +72,8 @@ namespace SlimShader.DX9Shader.FX9
 			}
 			else
 			{
-				sb.Append(DefaultValue.Dump());
+				var defaultValueText = string.Join(", ", DefaultValue);
+				sb.AppendLine($"    Variable.DefaultValue: {defaultValueText}");
 			}
 			foreach (var annotation in Annotations)
 			{
@@ -78,12 +88,12 @@ namespace SlimShader.DX9Shader.FX9
 			{
 				sb.Append("shared ");
 			}
-			sb.Append(Data.GetTypeName());
+			sb.Append(Parameter.GetTypeName());
 			sb.Append(" ");
-			sb.Append(Data.Name);
-			if (!string.IsNullOrEmpty(Data.Semantic))
+			sb.Append(Parameter.Name);
+			if (!string.IsNullOrEmpty(Parameter.Semantic))
 			{
-				sb.Append(string.Format(" : {0}", Data.Semantic));
+				sb.Append(string.Format(" : {0}", Parameter.Semantic));
 			}
 			return sb.ToString();
 		}

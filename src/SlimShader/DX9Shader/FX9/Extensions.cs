@@ -1,13 +1,25 @@
 ﻿using SlimShader.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
 	public static class Extensions
 	{
+		public static bool IsSampler(this ParameterType type)
+		{
+			switch (type)
+			{
+				case ParameterType.Sampler:
+				case ParameterType.Sampler1D:
+				case ParameterType.Sampler2D:
+				case ParameterType.Sampler3D:
+				case ParameterType.SamplerCube:
+					return true;
+				default:
+					return false;
+			}
+		}
 		public static string TryReadString(this BytecodeReader reader)
 		{
 			try

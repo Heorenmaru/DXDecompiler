@@ -29,7 +29,7 @@ namespace SlimShader.DX9Shader
 		{
 			if (shaderModel.Type == ShaderType.Fx)
 			{
-				return EffectWriter.Disassemble(shaderModel.EffectChunk);
+				return shaderModel.EffectChunk.Dump();
 			}
 			var asmWriter = new AsmWriter(shaderModel);
 			using (var stream = new MemoryStream())

@@ -14,6 +14,7 @@ namespace SlimShader.DX9Shader.FX9
 		public uint ValueOffset;
 
 		public Parameter Variable;
+		public UnknownObject Value;
 		public static SamplerState Parse(BytecodeReader reader, BytecodeReader stateReader)
 		{
 			var result = new SamplerState();
@@ -25,6 +26,8 @@ namespace SlimShader.DX9Shader.FX9
 			var variableReader = reader.CopyAtOffset((int)result.TypeOffset);
 			result.Variable = Parameter.Parse(reader, variableReader);
 
+			var unknownReader = reader.CopyAtOffset((int)result.ValueOffset);
+			result.Value = UnknownObject.Parse(unknownReader, 1);
 			return result;
 		}
 		public string Dump()
@@ -35,6 +38,7 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    SamplerState.TypeOffset: {TypeOffset} {TypeOffset.ToString("X4")}");
 			sb.AppendLine($"    SamplerState.ValueOffset: {ValueOffset} {ValueOffset.ToString("X4")}");
 			sb.Append(Variable.Dump());
+			sb.Append(Value.Dump());
 			return sb.ToString();
 		}
 	}
