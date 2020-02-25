@@ -20,6 +20,7 @@ namespace SlimShader.DX9Shader.FX9
 
 		public uint NameOffset;
 		public uint SemanticOffset;
+
 		public static Parameter Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new Parameter();
@@ -52,6 +53,23 @@ namespace SlimShader.DX9Shader.FX9
 			var semanticReader = reader.CopyAtOffset((int)result.SemanticOffset);
 			result.Semantic = semanticReader.TryReadString();
 			return result;
+		}
+		public uint GetSize()
+		{
+			switch (ParameterClass)
+			{
+				case ParameterClass.Scalar:
+					return 4;
+				case ParameterClass.Vector:
+					return Rows * 4;
+				case ParameterClass.MatrixColumns:
+				case ParameterClass.MatrixRows:
+					return Rows * Columns * 4;
+				case ParameterClass.Struct:
+					return (uint)StructMembers.Sum(m => m.GetSize());
+				default:
+					return 0;
+			}
 		}
 		public string Dump()
 		{

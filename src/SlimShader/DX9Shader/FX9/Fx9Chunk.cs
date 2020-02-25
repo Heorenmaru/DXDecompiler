@@ -7,13 +7,14 @@ using System.Text;
 namespace SlimShader.DX9Shader.FX9
 {
 	/// <summary>
-	/// VariableSize 4
+	/// Parameter 4
 	/// TechniqueSize 3 (No Pass)
 	/// PassSized 3 (No Shader)
 	/// InlineShaderSize 4
 	/// AnnotationSize2
 	/// StringSize = 7 (4 Variable, 3 Object, value="def")
 	/// PixelShaderSize = 6 (4 Varaible, 2 Object)
+	/// InlineShaderSize BodySize = 6 (5 Parameter, only 4 used?, 1 defaultvalue)
 	/// </summary>
 	public class Fx9Chunk
 	{

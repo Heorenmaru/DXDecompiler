@@ -147,7 +147,7 @@
     <Compile Include="Decompiler\Operands.cs" />
     <Compile Include="Decompiler\ConversionFlags.cs" />
     <Compile Include="DX9Shader\Asm\AsmWriter.cs" />
-    <Compile Include="DX9Shader\Asm\EffectWriter.cs" />
+    <Compile Include="DX9Shader\Asm\EffectAsmWriter.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
     <Compile Include="DX9Shader\Decompiler\BytecodeParser.cs" />
@@ -166,6 +166,7 @@
     <Compile Include="DX9Shader\Bytecode\Token.cs" />
     <Compile Include="DX9Shader\Bytecode\InstructionVerifier.cs" />
     <Compile Include="DX9Shader\Bytecode\Opcode.cs" />
+    <Compile Include="DX9Shader\Decompiler\EffectHLSLWriter.cs" />
     <Compile Include="DX9Shader\Decompiler\RegisterKey.cs" />
     <Compile Include="DX9Shader\Bytecode\RegisterType.cs" />
     <Compile Include="DX9Shader\Bytecode\ResultModifier.cs" />

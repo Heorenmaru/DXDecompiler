@@ -1,24 +1,22 @@
 ﻿using SlimShader.DX9Shader.FX9;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace SlimShader.DX9Shader
 {
-	public class EffectWriter
+	public class EffectAsmWriter
 	{
 		FX9.Fx9Chunk EffectChunk;
 		StreamWriter asmWriter;
 		int indent = 0;
-		public EffectWriter(FX9.Fx9Chunk effectChunk)
+		public EffectAsmWriter(FX9.Fx9Chunk effectChunk)
 		{
 			EffectChunk = effectChunk;
 		}
 		public static string Disassemble(FX9.Fx9Chunk effectChunk)
 		{
-			var asmWriter = new EffectWriter(effectChunk);
+			var asmWriter = new EffectAsmWriter(effectChunk);
 			using (var stream = new MemoryStream())
 			{
 				asmWriter.Write(stream);
@@ -66,10 +64,10 @@ namespace SlimShader.DX9Shader
 			WriteIndent();
 			WriteLine("}");
 		}
-		public void WriteAssignment(Assignment assignemnt)
+		public void WriteAssignment(Assignment assignment)
 		{
 			WriteIndent();
-			WriteLine("{0} = ", assignemnt.Type.ToString().ToLower());
+			WriteLine("{0} = ", assignment.Type.ToString().ToLower());
 			indent++;
 			WriteIndent();
 			WriteLine("asm {");
