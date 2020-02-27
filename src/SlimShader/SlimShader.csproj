@@ -196,6 +196,7 @@
     <Compile Include="Decompiler\Operands.cs" />
     <Compile Include="Decompiler\ConversionFlags.cs" />
     <Compile Include="DX9Shader\Asm\AsmWriter.cs" />
+    <Compile Include="DX9Shader\Asm\EffectAsmWriter.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
     <Compile Include="DX9Shader\Decompiler\BytecodeParser.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="DX9Shader\Bytecode\Token.cs" />
     <Compile Include="DX9Shader\Bytecode\InstructionVerifier.cs" />
     <Compile Include="DX9Shader\Bytecode\Opcode.cs" />
+    <Compile Include="DX9Shader\Decompiler\EffectHLSLWriter.cs" />
     <Compile Include="DX9Shader\Decompiler\RegisterKey.cs" />
     <Compile Include="DX9Shader\Bytecode\RegisterType.cs" />
     <Compile Include="DX9Shader\Bytecode\ResultModifier.cs" />
@@ -272,12 +274,13 @@
     <Compile Include="DX9Shader\FX9\Fx9Chunk.cs" />
     <Compile Include="DX9Shader\FX9\InlineShader.cs" />
     <Compile Include="DX9Shader\FX9\Assignment.cs" />
+    <Compile Include="DX9Shader\FX9\SamplerState.cs" />
     <Compile Include="DX9Shader\FX9\StateType.cs" />
     <Compile Include="DX9Shader\FX9\UnknownObject.cs" />
     <Compile Include="DX9Shader\FX9\Pass.cs" />
     <Compile Include="DX9Shader\FX9\Technique.cs" />
     <Compile Include="DX9Shader\FX9\Variable.cs" />
-    <Compile Include="DX9Shader\FX9\VariableData.cs" />
+    <Compile Include="DX9Shader\FX9\Parameter.cs" />
     <Compile Include="Number4.cs" />
     <Compile Include="Chunks\Shex\RegisterCounts.cs" />
     <Compile Include="Chunks\Shex\SyncFlags.cs" />

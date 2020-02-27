@@ -165,12 +165,12 @@
 		LightPhi = 144,
 		LightEnable = 145,
 		/// <summary>
-		/// Shader States
+		/// Shader States. Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/effect-states
 		/// </summary>
 		VertexShader = 146,
 		PixelShader = 147,
 		/// <summary>
-		/// Shader Constant States
+		/// Shader Constant States. Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/effect-states
 		/// </summary>
 		VertexShaderConstantF = 148,
 		VertexShaderConstantB = 149,
@@ -189,11 +189,11 @@
 		PixelShaderConstant3 = 162,
 		PixelShaderConstant4 = 163,
 		/// <summary>
-		/// Texture States
+		/// Texture States. Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/effect-states
 		/// </summary>
 		Texture = 164,
 		/// <summary>
-		/// Sampler Stage States
+		/// Sampler Stage States. Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/effect-states
 		/// </summary>
 		AddressU = 165,
 		AddressV = 166,
@@ -207,7 +207,7 @@
 		MaxAnisotropy = 174,
 		SRGBTexture = 175,
 		/// <summary>
-		/// Sampler State.
+		/// Sampler State. Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/effect-states
 		/// </summary>
 		Sampler = 178,
 	}

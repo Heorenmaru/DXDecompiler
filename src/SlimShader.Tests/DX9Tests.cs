@@ -73,19 +73,8 @@ namespace SlimShader.Tests
 			// Arrange.
 			// Act.
 			var bytecode = File.ReadAllBytes(file + ".o");
-			var shader = ShaderReader.ReadShader(bytecode);
 
-			var hlslWriter = new HlslWriter(shader);
-			string decompiledHlsl = "";
-			using (var stream = new MemoryStream())
-			{
-				hlslWriter.Write(stream);
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					decompiledHlsl = reader.ReadToEnd();
-				}
-			}
+			var decompiledHlsl = HlslWriter.Decompile(bytecode);
 
 			File.WriteAllText($"{file}.d.hlsl", decompiledHlsl);
 

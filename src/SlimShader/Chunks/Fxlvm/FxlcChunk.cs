@@ -13,7 +13,7 @@ namespace SlimShader.Chunks.Fxlvm
 		public static BytecodeChunk Parse(BytecodeReader reader, uint chunkSize, BytecodeContainer container)
 		{
 			var result = new FxlcChunk();
-			result.ShaderModel = new ShaderModel(5, 0, ShaderType.Fx);
+			result.ShaderModel = new ShaderModel(5, 0, ShaderType.Tx);
 			var chunkReader = reader.CopyAtCurrentPosition();
 			var tokenCount = chunkReader.ReadUInt32();
 			for (int i = 0; i < tokenCount; i++)
