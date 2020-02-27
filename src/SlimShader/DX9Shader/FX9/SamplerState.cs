@@ -9,7 +9,7 @@ namespace SlimShader.DX9Shader.FX9
 	public class SamplerState
 	{
 		public StateType Type;
-		public uint Unknown2;
+		public uint ArrayIndex;
 		public uint TypeOffset;
 		public uint ValueOffset;
 
@@ -19,7 +19,7 @@ namespace SlimShader.DX9Shader.FX9
 		{
 			var result = new SamplerState();
 			result.Type = (StateType)stateReader.ReadUInt32();
-			result.Unknown2 = stateReader.ReadUInt32();
+			result.ArrayIndex = stateReader.ReadUInt32();
 			result.TypeOffset = stateReader.ReadUInt32();
 			result.ValueOffset = stateReader.ReadUInt32();
 
@@ -34,7 +34,7 @@ namespace SlimShader.DX9Shader.FX9
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine($"    SamplerState.Type: {Type} {((int)Type).ToString("X4")}");
-			sb.AppendLine($"    SamplerState.Unk2: {Unknown2} {Unknown2.ToString("X4")}");
+			sb.AppendLine($"    SamplerState.ArrayIndex: {ArrayIndex} {ArrayIndex.ToString("X4")}");
 			sb.AppendLine($"    SamplerState.TypeOffset: {TypeOffset} {TypeOffset.ToString("X4")}");
 			sb.AppendLine($"    SamplerState.ValueOffset: {ValueOffset} {ValueOffset.ToString("X4")}");
 			sb.Append(Variable.Dump());

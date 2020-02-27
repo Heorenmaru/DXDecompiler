@@ -18,6 +18,7 @@ namespace SlimShader.DX9Shader.FX9
 		public byte[] Data = new byte[0];
 		public uint DataStart;
 		public uint DataEnd;
+		public string Version;
 		public static InlineShader Parse(BytecodeReader reader, BytecodeReader shaderReader)
 		{
 			var result = new InlineShader();
@@ -29,6 +30,8 @@ namespace SlimShader.DX9Shader.FX9
 			var dataReader = shaderReader.CopyAtCurrentPosition();
 			result.ShaderSize = shaderReader.ReadUInt32();
 			var toRead = result.ShaderSize + (result.ShaderSize % 4 == 0 ? 0 : 4 - result.ShaderSize % 4);
+
+
 			result.DataStart = (uint)shaderReader.CurrentPosition;
 			result.DataEnd = (uint)(shaderReader.CurrentPosition + toRead);
 			result.Data = shaderReader.ReadBytes((int)toRead);
@@ -37,6 +40,10 @@ namespace SlimShader.DX9Shader.FX9
 				result.VariableName = dataReader.TryReadString();
 			} else
 			{
+				var minor = result.Data[0];
+				var major = result.Data[1];
+				var type = (ShaderType)BitConverter.ToUInt16(result.Data, 2);
+				result.Version = $"{type}_{major}_{minor}";
 				result.VariableName = "";
 			}
 			return result;
@@ -57,6 +64,7 @@ namespace SlimShader.DX9Shader.FX9
 				sb.AppendLine($"    InlineShader.VariableName: {VariableName}");
 			} else
 			{
+				sb.AppendLine($"    InlineShader.Version: {Version}");
 				string dataPreview = "";
 				for (int i = 0; i < Data.Length && i < 8 * 4; i += 4)
 				{

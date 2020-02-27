@@ -1,5 +1,6 @@
 ﻿using SlimShader.Util;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
@@ -20,6 +21,58 @@ namespace SlimShader.DX9Shader.FX9
 					return false;
 			}
 		}
+		public static bool RequiresIndex(this StateType type)
+		{
+			switch (type)
+			{
+				case StateType.ColorOp:
+				case StateType.ColorArg0:
+				case StateType.ColorArg1:
+				case StateType.ColorArg2:
+				case StateType.AlphaOp:
+				case StateType.AlphaArg0:
+				case StateType.AlphaArg1:
+				case StateType.AlphaArg2:
+				case StateType.ResultArg:
+				case StateType.BumpEnvMat00:
+				case StateType.BumpEnvMat01:
+				case StateType.BumpEnvMat10:
+				case StateType.BumpEnvMat11:
+				case StateType.TexCoordIndex:
+				case StateType.BumpEnvLScale:
+				case StateType.BumpEnvLOffset:
+				case StateType.TextureTransformFlags:
+				case StateType.Constant:
+				case StateType.TextureTransform:
+				case StateType.LightType:
+				case StateType.LightDiffuse:
+				case StateType.LightSpecular:
+				case StateType.LightAmbient:
+				case StateType.LightPosition:
+				case StateType.LightDirection:
+				case StateType.LightRange:
+				case StateType.LightFalloff:
+				case StateType.LightAttenuation0:
+				case StateType.LightAttenuation1:
+				case StateType.LightAttenuation2:
+				case StateType.LightTheta:
+				case StateType.LightPhi:
+				case StateType.LightEnable:
+				case StateType.AddressU:
+				case StateType.AddressV:
+				case StateType.AddressW:
+				case StateType.BorderColor:
+				case StateType.MagFilter:
+				case StateType.MinFilter:
+				case StateType.MipFilter:
+				case StateType.MipMapLodBias:
+				case StateType.MaxMipLevel:
+				case StateType.MaxAnisotropy:
+					return true;
+				default:
+					return false;
+			}
+		}
 		public static string TryReadString(this BytecodeReader reader)
 		{
 			try
@@ -35,6 +88,23 @@ namespace SlimShader.DX9Shader.FX9
 			{
 				return "Error reading string";
 			}
+		}
+		public static List<Number> ReadParameterValue(this Parameter parameter, BytecodeReader valueReader)
+		{
+			var result = new List<Number>();
+			if (parameter.ParameterClass == ParameterClass.Object)
+			{
+				result.Add(Number.Parse(valueReader));
+			}
+			else
+			{
+				var defaultValueCount = parameter.GetSize() / 4;
+				for (int i = 0; i < defaultValueCount; i++)
+				{
+					result.Add(Number.Parse(valueReader));
+				}
+			}
+			return result;
 		}
 	}
 }

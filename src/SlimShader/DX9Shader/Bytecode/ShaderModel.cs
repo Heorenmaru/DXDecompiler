@@ -16,7 +16,14 @@ namespace SlimShader.DX9Shader
 	{
 		Vertex = 0xFFFE,
 		Pixel = 0xFFFF,
+		/// <summary>
+		/// Represets an effect chunk
+		/// </summary>
 		Fx = 0xFEFF,
+		/// <summary>
+		/// Represents a Fxlc expression chunk that contains FXLVM tokens
+		/// </summary>
+		Tx = 0x4658
 	}
 
 	public class ShaderModel

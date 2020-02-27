@@ -38,19 +38,10 @@ namespace SlimShader.DX9Shader.FX9
 					result.SamplerStates.Add(SamplerState.Parse(reader, stateReader));
 				}
 			}
-			else if(result.Parameter.ParameterClass == ParameterClass.Object)
+			else
 			{
-				var unknownReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
-				result.DefaultValue.Add(Number.Parse(unknownReader));
-			} else
-			{
-				var unknownReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
-				var defaultValueCount = result.Parameter.GetSize() / 4;
-				for(int i = 0; i < defaultValueCount; i++)
-				{
-					result.DefaultValue.Add(Number.Parse(unknownReader));
-				}
-				
+				var valueReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
+				result.DefaultValue = result.Parameter.ReadParameterValue(valueReader);
 			}
 			return result;
 		}
