@@ -1,9 +1,11 @@
 ﻿using SlimShader.DX9Shader;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SlimShader.DebugParser.FX9
 {
-	public class DebugVariableData
+	public class DebugParameter
 	{
 		public ParameterType ParameterType { get; private set; }
 		public ParameterClass ParameterClass { get; private set; }
@@ -13,14 +15,14 @@ namespace SlimShader.DebugParser.FX9
 		public uint Rows { get; private set; }
 		public uint Columns { get; private set; }
 		public uint StructMemberCount { get; private set; }
-		public List<DebugVariableData> StructMembers = new List<DebugVariableData>();
+		public List<DebugParameter> StructMembers = new List<DebugParameter>();
+
 		public uint NameOffset;
 		public uint SemanticOffset;
-		public uint Unknown1;
-		public uint Unknown2;
-		public static DebugVariableData Parse(DebugBytecodeReader reader, DebugBytecodeReader variableReader)
+
+		public static DebugParameter Parse(DebugBytecodeReader reader, DebugBytecodeReader variableReader)
 		{
-			var result = new DebugVariableData();
+			var result = new DebugParameter();
 			result.ParameterType = variableReader.ReadEnum32<ParameterType>("ParameterType");
 			result.ParameterClass = variableReader.ReadEnum32<ParameterClass>("ParameterClass");
 			result.NameOffset = variableReader.ReadUInt32("NameOffset");
@@ -48,11 +50,30 @@ namespace SlimShader.DebugParser.FX9
 				result.StructMemberCount = variableReader.ReadUInt32("StructMemberCount");
 				for (int i = 0; i < result.StructMemberCount; i++)
 				{
-					result.StructMembers.Add(DebugVariableData.Parse(reader, variableReader));
+					result.StructMembers.Add(DebugParameter.Parse(reader, variableReader));
 				}
 
 			}
 			return result;
+		}
+
+		public uint GetSize()
+		{
+			var elementCount = Math.Max(1, ElementCount);
+			switch (ParameterClass)
+			{
+				case ParameterClass.Scalar:
+					return 4 * elementCount;
+				case ParameterClass.Vector:
+					return Rows * 4 * elementCount;
+				case ParameterClass.MatrixColumns:
+				case ParameterClass.MatrixRows:
+					return Rows * Columns * 4 * elementCount;
+				case ParameterClass.Struct:
+					return (uint)StructMembers.Sum(m => m.GetSize()) * elementCount;
+				default:
+					return 0;
+			}
 		}
 	}
 }
