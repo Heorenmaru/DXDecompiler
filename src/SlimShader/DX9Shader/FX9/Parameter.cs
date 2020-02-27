@@ -56,17 +56,18 @@ namespace SlimShader.DX9Shader.FX9
 		}
 		public uint GetSize()
 		{
+			var elementCount = Math.Max(1, ElementCount);
 			switch (ParameterClass)
 			{
 				case ParameterClass.Scalar:
-					return 4;
+					return 4 * elementCount;
 				case ParameterClass.Vector:
-					return Rows * 4;
+					return Rows * 4 * elementCount;
 				case ParameterClass.MatrixColumns:
 				case ParameterClass.MatrixRows:
-					return Rows * Columns * 4;
+					return Rows * Columns * 4 * elementCount;
 				case ParameterClass.Struct:
-					return (uint)StructMembers.Sum(m => m.GetSize());
+					return (uint)StructMembers.Sum(m => m.GetSize()) * elementCount;
 				default:
 					return 0;
 			}
@@ -74,22 +75,22 @@ namespace SlimShader.DX9Shader.FX9
 		public string Dump()
 		{
 			var sb = new StringBuilder();
-			sb.AppendLine($"    VariableData.ParameterType: {ParameterType} {((uint)ParameterType).ToString("X4")}");
-			sb.AppendLine($"    VariableData.ParameterClass: {ParameterClass} {((uint)ParameterClass).ToString("X4")}");
-			sb.AppendLine($"    VariableData.Name: {Name} {NameOffset.ToString("X4")}");
-			sb.AppendLine($"    VariableData.Semantic: {Semantic} {SemanticOffset.ToString("X4")}");
+			sb.AppendLine($"    Parameter.ParameterType: {ParameterType} {((uint)ParameterType).ToString("X4")}");
+			sb.AppendLine($"    Parameter.ParameterClass: {ParameterClass} {((uint)ParameterClass).ToString("X4")}");
+			sb.AppendLine($"    Parameter.Name: {Name} {NameOffset.ToString("X4")}");
+			sb.AppendLine($"    Parameter.Semantic: {Semantic} {SemanticOffset.ToString("X4")}");
 			if (ParameterClass == ParameterClass.Scalar ||
 				ParameterClass == ParameterClass.Vector ||
 				ParameterClass == ParameterClass.MatrixRows ||
 				ParameterClass == ParameterClass.MatrixColumns)
 			{
-				sb.AppendLine($"    VariableData.ElementCount: {ElementCount} {ElementCount.ToString("X4")}");
-				sb.AppendLine($"    VariableData.Rows: {Rows} {Rows.ToString("X4")}");
-				sb.AppendLine($"    VariableData.Columns: {Columns} {Columns.ToString("X4")}");
+				sb.AppendLine($"    Parameter.ElementCount: {ElementCount} {ElementCount.ToString("X4")}");
+				sb.AppendLine($"    Parameter.Rows: {Rows} {Rows.ToString("X4")}");
+				sb.AppendLine($"    Parameter.Columns: {Columns} {Columns.ToString("X4")}");
 			}
 			if(ParameterClass == ParameterClass.Struct)
 			{
-				sb.AppendLine($"    VariableData.StructMembers: {StructMemberCount} {StructMemberCount.ToString("X4")}");
+				sb.AppendLine($"    Parameter.StructMembers: {StructMemberCount} {StructMemberCount.ToString("X4")}");
 				foreach(var member in StructMembers)
 				{
 					sb.Append(member.Dump());
@@ -97,20 +98,54 @@ namespace SlimShader.DX9Shader.FX9
 			}
 			return sb.ToString();
 		}
-		public string GetTypeName()
+		public string GetDecleration(int indentLevel = 0)
+		{
+			string arrayDecl = "";
+			string semanticDecl = "";
+			if(ElementCount > 0)
+			{
+				arrayDecl = string.Format("[{0}]", ElementCount);
+			}
+			if (!string.IsNullOrEmpty(Semantic))
+			{
+				semanticDecl = string.Format(" : {0}", Semantic);
+			}
+			return string.Format("{0} {1}{2}{3}", GetTypeName(indentLevel), Name, arrayDecl, semanticDecl);
+		}
+		public string GetTypeName(int indentLevel = 0)
 		{
 			var sb = new StringBuilder();
-			sb.Append(ParameterType.ToString().ToLower());
+			string indent = new string(' ', indentLevel * 4);
+			sb.Append(indent);
 			switch (ParameterClass)
 			{
 				case ParameterClass.Vector:
+					sb.Append(ParameterType.ToString().ToLower());
 					sb.Append(Rows);
 					break;
 				case ParameterClass.MatrixColumns:
+					sb.Append("column_major ");
+					sb.Append(ParameterType.ToString().ToLower());
 					sb.Append(string.Format("{0}x{1}", Columns, Rows));
 					break;
 				case ParameterClass.MatrixRows:
+					sb.Append("row_major ");
+					sb.Append(ParameterType.ToString().ToLower());
 					sb.Append(string.Format("{0}x{1}", Rows, Columns));
+					break;
+				case ParameterClass.Struct:
+					{
+						sb.AppendLine("struct {");
+						foreach(var member in StructMembers)
+						{
+							sb.AppendLine(string.Format("{0};", member.GetDecleration(indentLevel + 1)));
+						}
+						sb.Append(indent);
+						sb.Append("}");
+					}
+					break;
+				case ParameterClass.Object:
+					sb.Append(ParameterType.ToString().ToLower());
 					break;
 				default:
 					break;

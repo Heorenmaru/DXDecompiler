@@ -8,24 +8,31 @@ namespace SlimShader.DX9Shader.FX9
 {
 	public class Annotation
 	{
-		public uint DataOffset;
-		public uint DefaultValueOffset;
-		Parameter Unknown2;
+		public Parameter Parameter { get; private set; }
+		public List<Number> Value { get; private set; }
+		public uint ParameterOffset;
+		public uint ValueOffset;
+
 		public static Annotation Parse(BytecodeReader reader, BytecodeReader variableReader)
 		{
 			var result = new Annotation();
-			result.DataOffset = variableReader.ReadUInt32();
-			result.DefaultValueOffset = variableReader.ReadUInt32();
-			var unknownReader = reader.CopyAtOffset((int)result.DataOffset);
-			result.Unknown2 = Parameter.Parse(reader, unknownReader);
+			result.ParameterOffset = variableReader.ReadUInt32();
+			result.ValueOffset = variableReader.ReadUInt32();
+			var parameterReader = reader.CopyAtOffset((int)result.ParameterOffset);
+			result.Parameter = Parameter.Parse(reader, parameterReader);
+
+			var valueReader = reader.CopyAtOffset((int)result.ValueOffset);
+			result.Value = result.Parameter.ReadParameterValue(valueReader);
+
 			return result;
 		}
 		public string Dump()
 		{
 			var sb = new StringBuilder();
-			sb.AppendLine($"    Annotation.DataOffset: {DataOffset} {DataOffset.ToString("X4")}");
-			sb.AppendLine($"    Annotation.DefaultValueOffset: {DefaultValueOffset} {DefaultValueOffset.ToString("X4")}");
-			sb.Append(Unknown2.Dump());
+			sb.AppendLine($"    Annotation.ParameterOffset: {ParameterOffset} {ParameterOffset.ToString("X4")}");
+			sb.AppendLine($"    Annotation.ValueOffset: {ValueOffset} {ValueOffset.ToString("X4")}");
+			sb.Append(Parameter.Dump());
+			sb.AppendLine($"    Annotation.DefaultValueOffset: {ValueOffset} {ValueOffset.ToString("X4")}");
 			return sb.ToString();
 		}
 	}

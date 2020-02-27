@@ -38,7 +38,7 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    Pass.Name: {Name}");
 			sb.AppendLine($"    Pass.NameOffset: {NameOffset} {NameOffset.ToString("X4")}");
 			sb.AppendLine($"    Pass.AnnotationCount: {AnnotationCount} {AnnotationCount.ToString("X4")}");
-			sb.AppendLine($"    Pass.UnknownCount: {AssignmentCount} {AssignmentCount.ToString("X4")}");
+			sb.AppendLine($"    Pass.AssignmentCount: {AssignmentCount} {AssignmentCount.ToString("X4")}");
 			foreach (var annotation in Annotations)
 			{
 				sb.Append(annotation.Dump());
