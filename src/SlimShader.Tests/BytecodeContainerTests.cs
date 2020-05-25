@@ -180,6 +180,9 @@ namespace SlimShader.Tests
 			var result = shaderBytecode.Dump();
 			File.WriteAllText($"{OutputDir}/{relPath}.d.txt", result);
 
+			var html = shaderBytecode.DumpHTML();
+			File.WriteAllText($"{OutputDir}/{relPath}.d.html", html);
+
 			// Assert.
 			Assert.That(!result.Contains("Unread Memory"));
 		}

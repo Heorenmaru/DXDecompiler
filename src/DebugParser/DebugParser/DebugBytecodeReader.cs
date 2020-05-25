@@ -210,9 +210,7 @@ namespace SlimShader.DebugParser
 		}
 		public string DumpHtml()
 		{
-			var sb = new StringBuilder();
-
-			return sb.ToString();
+			return new DebugHtmlWriter(this, _buffer, Members).ToHtml();
 		}
 		public string DumpStructure()
 		{

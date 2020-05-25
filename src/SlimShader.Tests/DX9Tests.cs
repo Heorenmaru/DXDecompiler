@@ -110,6 +110,9 @@ namespace SlimShader.Tests
 				}
 				File.WriteAllText($"{file}.d.txt", dump);
 
+				var dumpHtml = reader.DumpHtml();
+				File.WriteAllText($"{file}.d.html", dumpHtml);
+
 			} else
 			{
 				return;

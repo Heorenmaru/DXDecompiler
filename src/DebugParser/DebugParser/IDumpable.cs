@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SlimShader.DebugParser
 {
-	interface IDumpable
+	public interface IDumpable
 	{
 		string Dump();
 	}

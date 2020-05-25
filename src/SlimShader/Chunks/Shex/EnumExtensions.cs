@@ -6,7 +6,7 @@ using SlimShader.Chunks.Fx10.Assignemnt;
 
 namespace SlimShader.Chunks.Shex
 {
-	internal static class EnumExtensions
+	public static class EnumExtensions
 	{
 		public static string GetDescription(this ComponentMask value)
 		{

@@ -96,5 +96,10 @@ namespace SlimShader.DebugParser
 			}
 			return dump;
 		}
+		public string DumpHTML()
+		{
+			var dump = _reader.DumpHtml();
+			return dump;
+		}
 	}
 }

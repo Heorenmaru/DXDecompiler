@@ -1,6 +1,7 @@
 ﻿using SlimShader.Chunks.Shex;
 using SlimShader.DebugParser.Shex.Tokens;
 using SlimShader.Util;
+using SlimShader.Chunks.Shex;
 using System;
 using System.Collections.Generic;
 

@@ -4367,6 +4367,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DebugParser\DebugParser.csproj">
+      <Project>{43b35c43-bd28-4731-81aa-772ee71c08b2}</Project>
+      <Name>DebugParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SlimShader\SlimShader.csproj">
       <Project>{0A69A67E-283B-424B-8785-3C81CD2EC34D}</Project>
       <Name>SlimShader</Name>

@@ -38,5 +38,28 @@ namespace SlimShader.DebugParser
 			sb.Append($"{member.Name}={member.Value}\n");
 			return sb.ToString();
 		}
+		public string DumpInline()
+		{
+			var member = this;
+			var sb = new StringBuilder();
+			sb.Append($"{member.Name}={member.Value}\n");
+			return sb.ToString();
+		}
+		public string GetOffsets()
+		{
+			var member = this;
+			var absIndex = member.AbsoluteIndex;
+			var absOffset = member.AbsoluteIndex + member.Size - 1;
+			var relIndex = member.RelativeIndex;
+			var relOffset = member.RelativeIndex + member.Size - 1;
+			if (formatHex)
+			{
+				return $"{absIndex.ToString("X4")}:{absOffset.ToString("X4")}[{relIndex.ToString("X4")}:{relOffset.ToString("X4")}]";
+			}
+			else
+			{
+				return $"{absIndex}:{absOffset}[{relIndex}:{relOffset}]";
+			}
+		}
 	}
 }
