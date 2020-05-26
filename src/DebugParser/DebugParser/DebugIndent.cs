@@ -5,7 +5,7 @@ namespace SlimShader.DebugParser
 	public class DebugIndent : IDumpable
 	{
 		public string Name;
-		public int Indent;
+		public int Indent { get; set; }
 		public string Dump()
 		{
 			var member = this;

@@ -8,5 +8,6 @@ namespace SlimShader.DebugParser
 	public interface IDumpable
 	{
 		string Dump();
+		int Indent { get; }
 	}
 }

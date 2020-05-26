@@ -10,14 +10,15 @@ namespace SlimShader.DebugParser
 	{
 		private static readonly bool FormatHex = true;
 		private readonly byte[] _buffer;
-		private readonly int _offset;
-		public int Indent;
+		public readonly int Offset;
+		public readonly int Count;
+		public int Indent { get; set; }
 		private readonly BinaryReader _reader;
 		private int _parentOffset;
 		private List<IDumpable> Members = new List<IDumpable>();
 		DebugBytecodeReader Root = null;
 		public static bool DumpOffsets = true;
-		string _name;
+		public string Name;
 		public bool EndOfBuffer
 		{
 			get { return _reader.BaseStream.Position >= _reader.BaseStream.Length; }
@@ -25,30 +26,32 @@ namespace SlimShader.DebugParser
 		public DebugBytecodeReader(byte[] buffer, int index, int count)
 		{
 			_buffer = buffer;
-			_offset = index;
+			Offset = index;
 			Indent = 0;
 			_parentOffset = 0;
 			Root = this;
+			Count = count;
 			_reader = new BinaryReader(new MemoryStream(buffer, index, count));
 		}
 		public DebugBytecodeReader(byte[] buffer, int index, int count, int parentIndex, int indent, string name, 
 			DebugBytecodeReader root)
 		{
 			_buffer = buffer;
-			_offset = index;
+			Offset = index;
 			_parentOffset = parentIndex;
 			_reader = new BinaryReader(new MemoryStream(buffer, index, count));
-			_name = name;
+			Name = name;
 			Root = root;
 			Indent = indent;
+			Count = count;
 		}
 		DebugEntry AddEntry(string name, uint size)
 		{
 			var result = new DebugEntry()
 			{
 				Name = name,
-				RelativeIndex = (uint)_offset - (uint)_parentOffset + (uint)_reader.BaseStream.Position - size,
-				AbsoluteIndex = (uint)_offset + (uint)_reader.BaseStream.Position - size,
+				RelativeIndex = (uint)Offset - (uint)_parentOffset + (uint)_reader.BaseStream.Position - size,
+				AbsoluteIndex = (uint)Offset + (uint)_reader.BaseStream.Position - size,
 				Size = size,
 				Indent = Indent
 			};
@@ -208,6 +211,17 @@ namespace SlimShader.DebugParser
 			sb.Append(")");
 			return sb.ToString();
 		}
+		public static string CharToReadable(char c)
+		{
+			if (char.IsControl(c) || char.IsWhiteSpace(c))
+			{
+				return ".";
+			}
+			else
+			{
+				return c.ToString();
+			}
+		}
 		public string DumpHtml()
 		{
 			return new DebugHtmlWriter(this, _buffer, Members).ToHtml();
@@ -273,21 +287,21 @@ namespace SlimShader.DebugParser
 		public string Dump()
 		{
 			var indent = new string(' ', (int)Indent * 2);
-			string next = _offset + _buffer.Length == _buffer.Length ?
+			string next = Offset + _buffer.Length == _buffer.Length ?
 					"*" :
 					FormatHex ?
-					(_offset + _buffer.Length - 1).ToString("X4") :
-					(_offset + _buffer.Length - 1).ToString();
+					(Offset + _buffer.Length - 1).ToString("X4") :
+					(Offset + _buffer.Length - 1).ToString();
 			var sb = new StringBuilder();
-			sb.Append($"{indent}Container: {_name}");
+			sb.Append($"{indent}Container: {Name}");
 			if (DumpOffsets)
 			{
 				if (FormatHex)
 				{
-					sb.Append($"[{_offset.ToString("X4")}:{next}]");
+					sb.Append($"[{Offset.ToString("X4")}:{next}]");
 				} else
 				{
-					sb.Append($"[{_offset}:{next}]");
+					sb.Append($"[{Offset}:{next}]");
 				}
 			}
 			sb.AppendLine();
@@ -301,8 +315,8 @@ namespace SlimShader.DebugParser
 		public DebugBytecodeReader CopyAtOffset(string name, DebugBytecodeReader parent, int offset, int? count = null)
 		{
 			count = count ?? (int)(_reader.BaseStream.Length - offset);
-			var result = new DebugBytecodeReader(_buffer, _offset + offset, count.Value, _offset, parent.Indent + 1, name, Root);
-			Members.Add(result);
+			var result = new DebugBytecodeReader(_buffer, Offset + offset, count.Value, Offset, parent.Indent + 1, name, Root);
+			Root.Members.Add(result);
 			return result;
 		}
 	}

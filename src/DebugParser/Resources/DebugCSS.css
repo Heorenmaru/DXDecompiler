@@ -1,12 +1,30 @@
-﻿/* Remove default bullets */
+﻿html * {
+    font-size: large;
+}
+#treeview {
+    overflow: auto;
+    max-height: 100vh;
+    padding: 0px 20px 0px 10px;
+}
+#hexview {
+    overflow: auto;
+    max-height: 100vh;
+    padding: 0px 20px 0px 20px;
+}
 ul, #myUL {
     list-style-type: none;
+    padding-left: 20px;
+    font-family: monospace;
 }
 
 /* Remove margins and padding from the parent ul */
 #myUL {
     margin: 0;
     padding: 0;
+}
+
+.tree-item {
+    display: flex;
 }
 
 /* Style the caret/arrow */
@@ -20,12 +38,24 @@ ul, #myUL {
     content: "\25B6";
     color: black;
     display: inline - block;
-    margin - right: 6px;
+    margin-right: 6px;
 }
 
 /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
 .caret-down::before {
     transform: rotate(90deg);
+}
+.highlighted {
+    background-color: #cc2c2c;
+    color: white;
+}
+.unused {
+    background-color: darkgray;
+    color: white;
+}
+.tree-label {
+    cursor: pointer;
+    user-select: none;
 }
 
 /* Hide the nested list */
@@ -40,10 +70,20 @@ ul, #myUL {
 
 .monospace {
     font-family: monospace;
-    font-size: 20px;
 }
 
 .monospace > span {
     display: inline-block;
-    width: 12px;
+}
+
+.panel-row {
+    display: flex;
+}
+
+.panel-column {
+    flex-basis: auto;
+}
+
+.panel-column-fit {
+    flex-basis: auto;
 }

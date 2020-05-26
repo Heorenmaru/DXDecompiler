@@ -6,7 +6,7 @@ namespace SlimShader.DebugParser
 	{
 		public string Name;
 		public string Value;
-		public int Indent;
+		public int Indent { get; set; }
 		public uint RelativeIndex;
 		public uint AbsoluteIndex;
 		public uint Size;
