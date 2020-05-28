@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace SlimShader.DebugParser
 {
@@ -9,6 +10,7 @@ namespace SlimShader.DebugParser
 		public int Indent { get; set; }
 		public uint RelativeIndex;
 		public uint AbsoluteIndex;
+		public string Type;
 		public uint Size;
 		private bool formatHex;
 		public DebugEntry(bool formatHex = true)

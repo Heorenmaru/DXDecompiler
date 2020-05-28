@@ -91,6 +91,7 @@ namespace SlimShader.DebugParser
 		{
 			var result = _reader.ReadUInt32();
 			var entry = AddEntry(name, 4);
+			entry.Type = "UInt32";
 			entry.Value = result.ToString();
 			return result;
 		}
@@ -98,6 +99,7 @@ namespace SlimShader.DebugParser
 		{
 			var result = _reader.ReadInt32();
 			var entry = AddEntry(name, 4);
+			entry.Type = "Int32";
 			entry.Value = result.ToString();
 			return result;
 		}
@@ -105,6 +107,7 @@ namespace SlimShader.DebugParser
 		{
 			var result = _reader.ReadUInt16();
 			var entry = AddEntry(name, 2);
+			entry.Type = "UInt16";
 			entry.Value = result.ToString();
 			return result;
 		}
@@ -112,6 +115,7 @@ namespace SlimShader.DebugParser
 		{
 			var result = _reader.ReadByte();
 			var entry = AddEntry(name, 1);
+			entry.Type = "Byte";
 			entry.Value = result.ToString();
 			return result;
 		}
@@ -119,6 +123,7 @@ namespace SlimShader.DebugParser
 		{
 			var result = Enum.ToObject(typeof(T), _reader.ReadUInt32());
 			var entry = AddEntry(name, 4);
+			entry.Type = "Enum";
 			entry.Value = result.ToString();
 			return (T)result;
 		}
@@ -127,6 +132,7 @@ namespace SlimShader.DebugParser
 		{
 			var result = Enum.ToObject(typeof(T), _reader.ReadUInt16());
 			var entry = AddEntry(name, 2);
+			entry.Type = "Enum16";
 			entry.Value = result.ToString();
 			return (T)result;
 		}
@@ -136,6 +142,7 @@ namespace SlimShader.DebugParser
 			var result = Enum.ToObject(typeof(T), _reader.ReadByte());
 			var entry = AddEntry(name, 1);
 			entry.Value = result.ToString();
+			entry.Type = "Enum8";
 			return (T)result;
 		}
 
@@ -162,6 +169,7 @@ namespace SlimShader.DebugParser
 			string extraHex = string.Join(" ", extraBytes.Select(b => b.ToString("X2")));
 			var entry = AddEntry(name, toRead);
 			entry.Value = $"\"{result}\" ({extraHex})";
+			entry.Type = "String";
 			return result;
 		}
 
@@ -176,6 +184,7 @@ namespace SlimShader.DebugParser
 			var result = sb.ToString();
 			var entry = AddEntry(name, (uint)result.Length + 1);
 			entry.Value = result;
+			entry.Type = "String";
 			return result;
 		}
 		public byte[] ReadBytes(string name, int count)
@@ -183,6 +192,7 @@ namespace SlimShader.DebugParser
 			var result = _reader.ReadBytes(count);
 			var entry = AddEntry(name, (uint)result.Length + 1);
 			entry.Value = $"byte[{result.Length}] {FormatBytes(result)}";
+			entry.Type = "Byte[]";
 			return result;
 		}
 		private string FormatBytes(byte[] data)

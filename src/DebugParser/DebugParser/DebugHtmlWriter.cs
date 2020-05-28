@@ -59,6 +59,11 @@ namespace SlimShader.DebugParser
 							new XElement("div",
 								new XAttribute("class", "panel-column"),
 								new XAttribute("id", "hexview")
+							),
+							new XElement("div",
+								new XAttribute("class", "panel-column"),
+								new XAttribute("id", "detailview"),
+								""
 							)
 						)
 					)
@@ -98,10 +103,22 @@ namespace SlimShader.DebugParser
 				XElement label = null;
 				if (entry is DebugEntry de)
 				{
-					label = new XElement("span", de.DumpInline().Trim(),
+					var valueLength = 7;
+					var value = de.Value.Length > valueLength ?
+						(de.Value.Substring(0, valueLength - 3) + "...") :
+						de.Value;
+					var text = $"{de.Name}={value}";
+					label = new XElement("span", text,
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", de.AbsoluteIndex),
-						new XAttribute("data-end", de.AbsoluteIndex + de.Size));
+						new XAttribute("data-end", de.AbsoluteIndex + de.Size),
+						new XAttribute("id", "member_" + entry.GetHashCode()),
+						new XAttribute("name", de.Name),
+						new XAttribute("value", de.Value),
+						new XAttribute("size", de.Size),
+						new XAttribute("rel-start", de.RelativeIndex),
+						new XAttribute("rel-end", de.RelativeIndex + de.Size),
+						new XAttribute("type", de.Type));
 				}
 				if(entry is DebugIndent di){
 					label = new XElement("span", "Indent: " + di.Name);
@@ -111,7 +128,15 @@ namespace SlimShader.DebugParser
 					label = new XElement("span", $"Container: {dr.Name}",
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", dr.Offset),
-						new XAttribute("data-end", dr.Offset + dr.Count));
+						new XAttribute("data-end", dr.Offset + dr.Count),
+						new XAttribute("id", "member_" + entry.GetHashCode()),
+						new XAttribute("name", dr.Name),
+						new XAttribute("value", ""),
+						new XAttribute("size", dr.Count),
+						new XAttribute("rel-start", dr.Offset),
+						new XAttribute("rel-end", dr.Offset + dr.Count),
+						new XAttribute("type", "Container")
+						);
 				}
 				var container = stack.Peek();
 				var li = new XElement("li");
@@ -153,10 +178,14 @@ namespace SlimShader.DebugParser
 				{
 					var text = j < buffer.Length ? buffer[j].ToString("X2") : "\u00A0\u00A0";
 					var hexElement = new XElement("span", text,
-						new XAttribute("index", j.ToString()));
-					if (j < used.Length && !used[j])
+						new XAttribute("index", j.ToString()),
+						new XAttribute("id", "b" + j.ToString()));
+					if (j < used.Length && used[j] == null)
 					{
 						hexElement.Add(new XAttribute("class", "unused"));
+					} else if(j < used.Length && used[j] != null)
+					{
+						hexElement.Add(new XAttribute("member", "member_" + used[j].GetHashCode()));
 					}
 					row.Add(hexElement);
 				}
@@ -170,15 +199,22 @@ namespace SlimShader.DebugParser
 
 			}
 		}
-		bool[] BuildUsedLookup()
+		DebugEntry[] BuildUsedLookup()
 		{
 			var entries = Members.OfType<DebugEntry>();
-			var used = new bool[buffer.Length];
+			var used = new DebugEntry[buffer.Length];
 			foreach (var entry in entries)
 			{
 				for (var i = entry.AbsoluteIndex; i < entry.AbsoluteIndex + entry.Size; i++)
 				{
-					used[i] = true;
+					if(used[i] == null)
+					{
+						used[i] = entry;
+					}
+					else if(entry.Indent > used[i].Indent)
+					{
+						used[i] = entry;
+					}
 				}
 			}
 			return used;
