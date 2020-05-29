@@ -47,6 +47,8 @@ namespace SlimShader.DebugParser
 				new XDocumentType("html", null, null, null),
 				new XElement("html",
 					new XElement("head",
+						new XElement("meta", 
+							new XAttribute("charset", "utf-8")),
 						styleTag,
 						javascriptTag),
 					new XElement("body",
@@ -81,7 +83,8 @@ namespace SlimShader.DebugParser
 			{
 				OmitXmlDeclaration = true,
 				Indent = true,
-				IndentChars = "\t"
+				IndentChars = "\t",
+				Encoding = Encoding.UTF8
 			};
 
 			using (var writer = XmlWriter.Create(stringBuilder, settings))
@@ -125,7 +128,7 @@ namespace SlimShader.DebugParser
 				}
 				if (entry is DebugBytecodeReader dr)
 				{
-					label = new XElement("span", $"Container: {dr.Name}",
+					label = new XElement("span", $"{dr.Name}",
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", dr.Offset),
 						new XAttribute("data-end", dr.Offset + dr.Count),
@@ -142,12 +145,15 @@ namespace SlimShader.DebugParser
 				var li = new XElement("li");
 				container.Add(li);
 				li.Add(span);
-				if (nextEntry != null && nextEntry.Indent > entry.Indent)
+				var nextIndent = nextEntry != null ?
+					((nextEntry is DebugBytecodeReader) ? nextEntry.Indent - 1 : nextEntry.Indent) : 0;
+				var indent = (entry is DebugBytecodeReader) ? entry.Indent - 1 : entry.Indent;
+				if (nextEntry != null && nextIndent > indent)
 				{
 					var caret = new XElement("span", new XAttribute("class", "caret"), "");
 					span.Add(caret);
 					span.Add(label);
-					if (nextEntry.Indent - entry.Indent > 1) throw new Exception("Unbalanced Indents");
+					if (nextIndent - indent > 1) throw new Exception("Unbalanced Indents");
 					var subList = new XElement("ul", new XAttribute("class", "nested"));
 					li.Add(subList);
 					stack.Push(subList);
@@ -155,9 +161,9 @@ namespace SlimShader.DebugParser
 				{
 					span.Add(label);
 				}
-				if (nextEntry != null && nextEntry.Indent < entry.Indent)
+				if (nextEntry != null && nextIndent < indent)
 				{
-					for (int j = 0; j < entry.Indent - nextEntry.Indent; j++)
+					for (int j = 0; j < indent - nextIndent; j++)
 					{
 						stack.Pop();
 					}
@@ -176,6 +182,7 @@ namespace SlimShader.DebugParser
 				element.Add(row);
 				for (int j = i; j < i + 16; j++)
 				{
+					
 					var text = j < buffer.Length ? buffer[j].ToString("X2") : "\u00A0\u00A0";
 					var hexElement = new XElement("span", text,
 						new XAttribute("index", j.ToString()),
@@ -192,7 +199,7 @@ namespace SlimShader.DebugParser
 				var asciiText = "";
 				for (int j = i; j < i + 16; j++)
 				{
-					asciiText += j < buffer.Length ? DebugBytecodeReader.CharToReadable((char)buffer[j]) : "\u00A0";
+					asciiText += j < buffer.Length ? DebugUtil.CharToReadable((char)buffer[j]) : "\u00A0";
 				}
 				var asciiElement = new XElement("span", asciiText);
 				row.Add(asciiElement);

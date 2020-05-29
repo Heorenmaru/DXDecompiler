@@ -82,7 +82,7 @@ namespace SlimShader.DebugParser
 		public uint PeakUInt32At(int offset)
 		{
 			var oldPos = _reader.BaseStream.Position;
-			_reader.BaseStream.Position += offset;
+			_reader.BaseStream.Position = Offset + offset;
 			var result = _reader.ReadUInt32();
 			_reader.BaseStream.Position = oldPos;
 			return result;
@@ -190,7 +190,7 @@ namespace SlimShader.DebugParser
 		public byte[] ReadBytes(string name, int count)
 		{
 			var result = _reader.ReadBytes(count);
-			var entry = AddEntry(name, (uint)result.Length + 1);
+			var entry = AddEntry(name, (uint)result.Length);
 			entry.Value = $"byte[{result.Length}] {FormatBytes(result)}";
 			entry.Type = "Byte[]";
 			return result;
@@ -206,31 +206,9 @@ namespace SlimShader.DebugParser
 				if ((i + 1) % 4 == 0 && i != 0 && i < data.Length - 1) sb.Append(" ");
 			}
 			sb.Append("), chr(");
-			for (int i = 0; i < data.Length; i++)
-			{
-				var c = (char)data[i];
-				if (char.IsControl(c) || char.IsWhiteSpace(c))
-				{
-					sb.Append(".");
-				}
-				else
-				{
-					sb.Append(c);
-				}
-			}
+			sb.Append(DebugUtil.ToReadable(data));
 			sb.Append(")");
 			return sb.ToString();
-		}
-		public static string CharToReadable(char c)
-		{
-			if (char.IsControl(c) || char.IsWhiteSpace(c))
-			{
-				return ".";
-			}
-			else
-			{
-				return c.ToString();
-			}
 		}
 		public string DumpHtml()
 		{

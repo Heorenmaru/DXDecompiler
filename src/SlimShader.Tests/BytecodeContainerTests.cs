@@ -184,7 +184,7 @@ namespace SlimShader.Tests
 			File.WriteAllText($"{OutputDir}/{relPath}.d.html", html);
 
 			// Assert.
-			Assert.That(!result.Contains("Unread Memory"));
+			Assert.That(!result.Contains("Unread Memory"), "Unread memory found");
 		}
 
 		/// <summary>

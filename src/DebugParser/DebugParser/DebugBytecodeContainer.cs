@@ -1,5 +1,6 @@
 ﻿using SlimShader.Chunks;
 using SlimShader.DebugParser.Rdef;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,7 +40,8 @@ namespace SlimShader.DebugParser
 				for (uint i = 0; i < Header.ChunkCount; i++)
 				{
 					uint chunkOffset = reader.ReadUInt32("chunkOffset");
-					var chunkReader = reader.CopyAtOffset("BytecodeChunk", reader, (int)chunkOffset);
+					var fourCC = DebugUtil.ToReadable(reader.PeakUInt32At((int)chunkOffset).ToFourCcString());
+					var chunkReader = reader.CopyAtOffset($"Chunk{fourCC}", reader, (int)chunkOffset);
 
 					var chunk = DebugBytecodeChunk.ParseChunk(chunkReader, this);
 					if (chunk != null)
@@ -63,7 +65,8 @@ namespace SlimShader.DebugParser
 				for (uint i = 0; i < Header.ChunkCount; i++)
 				{
 					uint chunkOffset = reader.ReadUInt32("chunkOffset");
-					var chunkReader = reader.CopyAtOffset("BytecodeChunk", reader, (int)chunkOffset);
+					var fourCC = DebugUtil.ToReadable(reader.PeakUInt32At((int)chunkOffset).ToFourCcString());
+					var chunkReader = reader.CopyAtOffset($"Chunk{fourCC}", reader, (int)chunkOffset);
 
 					var chunk = DebugBytecodeChunk.ParseChunk(chunkReader, this);
 					if (chunk != null)

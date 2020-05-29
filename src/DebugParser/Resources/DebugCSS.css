@@ -5,11 +5,19 @@
     overflow: auto;
     max-height: 100vh;
     padding: 0px 20px 0px 10px;
+    flex-shrink: 1;
 }
 #hexview {
     overflow: auto;
     max-height: 100vh;
     padding: 0px 20px 0px 20px;
+    flex-shrink: 0;
+}
+#detailview {
+    overflow: auto;
+    max-height: 100vh;
+    padding: 0px 20px 0px 10px;
+    flex-shrink: 1;
 }
 ul, #myUL {
     list-style-type: none;

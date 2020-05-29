@@ -1,7 +1,12 @@
 ﻿function addDetailLabel(ul, name, value){
+	var num = parseInt(value);
 	var li = document.createElement("ul");
 	ul.appendChild(li);
-	li.innerText = `${name}: ${value}`;
+	if(isNaN(num)){
+		li.innerText = `${name}: ${value}`;
+	} else {
+		li.innerText = `${name}: ${value} (0x${num.toString(16)})`;
+	}
 	return li;
 }
 function setDetailPanel(element, detailView){
@@ -26,7 +31,7 @@ function setDetailPanel(element, detailView){
 	}
 	addDetailLabel(ul, "Size", element.getAttribute("size"));
 	addDetailLabel(ul, "AbsStart", element.getAttribute("data-start"));
-	addDetailLabel(ul, "AbsStart", element.getAttribute("data-end"));
+	addDetailLabel(ul, "AbsEnd", element.getAttribute("data-end"));
 	addDetailLabel(ul, "RelStart", element.getAttribute("rel-start"));
 	addDetailLabel(ul, "RelEnd", element.getAttribute("rel-end"));
 	if(isNumeric){
