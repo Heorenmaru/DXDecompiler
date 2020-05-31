@@ -128,16 +128,17 @@ namespace SlimShader.DebugParser
 				}
 				if (entry is DebugBytecodeReader dr)
 				{
+					var size = dr.InheritSize ? dr.ReadCount : dr.Count;
 					label = new XElement("span", $"{dr.Name}",
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", dr.Offset),
-						new XAttribute("data-end", dr.Offset + dr.Count),
+						new XAttribute("data-end", dr.Offset + size),
 						new XAttribute("id", "member_" + entry.GetHashCode()),
 						new XAttribute("name", dr.Name),
 						new XAttribute("value", ""),
-						new XAttribute("size", dr.Count),
+						new XAttribute("size", size),
 						new XAttribute("rel-start", dr.Offset),
-						new XAttribute("rel-end", dr.Offset + dr.Count),
+						new XAttribute("rel-end", dr.Offset + size),
 						new XAttribute("type", "Container")
 						);
 				}

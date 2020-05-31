@@ -12,6 +12,8 @@ namespace SlimShader.DebugParser
 		private readonly byte[] _buffer;
 		public readonly int Offset;
 		public readonly int Count;
+		public int ReadCount;
+		public bool InheritSize;
 		public int Indent { get; set; }
 		private readonly BinaryReader _reader;
 		private int _parentOffset;
@@ -33,8 +35,8 @@ namespace SlimShader.DebugParser
 			Count = count;
 			_reader = new BinaryReader(new MemoryStream(buffer, index, count));
 		}
-		public DebugBytecodeReader(byte[] buffer, int index, int count, int parentIndex, int indent, string name, 
-			DebugBytecodeReader root)
+		public DebugBytecodeReader(byte[] buffer, int index, int count, int parentIndex, 
+			int indent, string name, DebugBytecodeReader root, bool inheritSize)
 		{
 			_buffer = buffer;
 			Offset = index;
@@ -44,6 +46,7 @@ namespace SlimShader.DebugParser
 			Root = root;
 			Indent = indent;
 			Count = count;
+			InheritSize = inheritSize;
 		}
 		DebugEntry AddEntry(string name, uint size)
 		{
@@ -55,6 +58,11 @@ namespace SlimShader.DebugParser
 				Size = size,
 				Indent = Indent
 			};
+			var currentReadCount = (int)(_reader.BaseStream.Position);
+			if (currentReadCount > ReadCount)
+			{
+				ReadCount = currentReadCount;
+			}
 			Root.Members.Add(result);
 			return result;
 		}
@@ -318,8 +326,9 @@ namespace SlimShader.DebugParser
 
 		public DebugBytecodeReader CopyAtOffset(string name, DebugBytecodeReader parent, int offset, int? count = null)
 		{
+			bool inheritOffset = count == null;
 			count = count ?? (int)(_reader.BaseStream.Length - offset);
-			var result = new DebugBytecodeReader(_buffer, Offset + offset, count.Value, Offset, parent.Indent + 1, name, Root);
+			var result = new DebugBytecodeReader(_buffer, Offset + offset, count.Value, Offset, parent.Indent + 1, name, Root, inheritOffset);
 			Root.Members.Add(result);
 			return result;
 		}

@@ -1,4 +1,5 @@
 ﻿using SlimShader.Chunks;
+using SlimShader.DebugParser.Chunks.Fx10;
 using SlimShader.DebugParser.Rdef;
 using SlimShader.Util;
 using System;
@@ -35,6 +36,12 @@ namespace SlimShader.DebugParser
 
 				var reader = new DebugBytecodeReader(rawBytes, 0, rawBytes.Length);
 				_reader = reader;
+				var magicNumber = BitConverter.ToUInt32(rawBytes, 0);
+				if (magicNumber == 0xFEFF2001)
+				{
+					Chunks.Add(DebugEffectChunk.Parse(reader, (uint)rawBytes.Length));
+					return;
+				}
 
 				Header = DebugBytecodeContainerHeader.Parse(reader);
 
@@ -61,7 +68,12 @@ namespace SlimShader.DebugParser
 				Chunks = new List<DebugBytecodeChunk>();
 
 				_reader = reader;
-
+				var magicNumber = reader.PeakUint32();
+				if (magicNumber == 0xFEFF2001)
+				{
+					Chunks.Add(DebugEffectChunk.Parse(reader, (uint)reader.Count));
+					return;
+				}
 				Header = DebugBytecodeContainerHeader.Parse(reader);
 
 				for (uint i = 0; i < Header.ChunkCount; i++)

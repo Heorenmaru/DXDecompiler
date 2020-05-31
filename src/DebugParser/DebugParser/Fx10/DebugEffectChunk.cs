@@ -101,6 +101,8 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 				0x4C : 0x60;
 			var footerOffset = (int)(result.Header.FooterOffset + bodyOffset);
 			var bodyReader = reader.CopyAtOffset("Body", reader, (int)bodyOffset);
+			var dummyReader = bodyReader.CopyAtCurrentPosition("DummyReader", bodyReader);
+			dummyReader.ReadUInt32("Zero");
 			var footerReader = reader.CopyAtOffset("Footer", reader, footerOffset);
 			for (int i = 0; i < header.ConstantBuffers; i++)
 			{
