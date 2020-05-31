@@ -1,5 +1,6 @@
 ﻿using SlimShader.Chunks;
 using SlimShader.DebugParser.Aon9;
+using SlimShader.DebugParser.Chunks.Fx10;
 using SlimShader.DebugParser.Icfe;
 using SlimShader.DebugParser.Libf;
 using SlimShader.DebugParser.Rdef;
@@ -41,6 +42,7 @@ namespace SlimShader.DebugParser
 			{ "LIBF".ToFourCc(), ChunkType.Libf },
 			{ "LIBH".ToFourCc(), ChunkType.Libh },
 			{ "LFS0".ToFourCc(), ChunkType.Lfs0 },
+			{ "FX10".ToFourCc(), ChunkType.Fx10 },
 		};
 
 		public DebugBytecodeContainer Container { get; private set; }
@@ -114,8 +116,11 @@ namespace SlimShader.DebugParser
 				case ChunkType.Libh:
 					chunk = DebugLibHeaderChunk.Parse(chunkContentReader, chunkSize);
 					break;
-					//case ChunkType.Lfs0:
-					//	chunk = DebugLibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
+				//case ChunkType.Lfs0:
+				//	chunk = DebugLibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
+				case ChunkType.Fx10:
+					chunk = DebugEffectChunk.Parse(chunkContentReader, chunkSize);
+					break;
 					//	break;
 					//				default:
 					//					throw new ParseException("Invalid chunk type: " + chunkType);

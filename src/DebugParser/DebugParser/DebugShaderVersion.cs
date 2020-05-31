@@ -80,5 +80,65 @@ namespace SlimShader.DebugParser
 				ProgramType = shaderType == 0xFFFF ? ProgramType.PixelShader : ProgramType.VertexShader
 			};
 		}
+
+		private static ProgramType ParseProgramType(ushort programTypeValue)
+		{
+			switch (programTypeValue)
+			{
+				case 0xFFFF:
+					return ProgramType.PixelShader;
+				case 0xFFFE:
+					return ProgramType.VertexShader;
+				case 0x4853:
+					return ProgramType.HullShader;
+				case 0x4753:
+					return ProgramType.GeometryShader;
+				case 0x4453:
+					return ProgramType.DomainShader;
+				case 0x4353:
+					return ProgramType.ComputeShader;
+				case 0x4C46:
+					return ProgramType.LibraryShader;
+				case 0xFEFF:
+					return ProgramType.EffectsShader;
+				default:
+					throw new ParseException(string.Format("Unknown program type: 0x{0:X}", programTypeValue));
+			}
+		}
+		public static DebugShaderVersion ParseFX(DebugBytecodeReader reader)
+		{
+			uint target = reader.ReadUInt16("Target");
+			var programTypeValue = reader.ReadUInt16("ProgramType");
+			ProgramType programType = ParseProgramType(programTypeValue);
+			byte majorVersion;
+			byte minorVersion;
+			switch (target)
+			{
+				case 0x1001:
+					majorVersion = 4;
+					minorVersion = 0;
+					break;
+				case 0x1011:
+					majorVersion = 4;
+					minorVersion = 1;
+					break;
+				case 0x2001:
+					majorVersion = 5;
+					minorVersion = 0;
+					break;
+				case 0x0901:
+					majorVersion = 2;
+					minorVersion = 0;
+					break;
+				default:
+					throw new ParseException(string.Format("Unknown program version: 0x{0:X}", target));
+			}
+			return new DebugShaderVersion
+			{
+				MajorVersion = majorVersion,
+				MinorVersion = minorVersion,
+				ProgramType = programType
+			};
+		}
 	}
 }

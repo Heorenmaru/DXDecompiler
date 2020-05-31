@@ -18,7 +18,7 @@ namespace SlimShader.DebugParser
 		{
 			var fourCc = reader.ReadUInt32("fourCC");
 			if (fourCc != "DXBC".ToFourCc())
-				throw new ParseException("Invalid FourCC");
+				throw new ParseException($"Invalid FourCC 0x{fourCc.ToString("X2")}");
 
 			var uniqueKey = new uint[4];
 			uniqueKey[0] = reader.ReadUInt32("uniqueKey1");
