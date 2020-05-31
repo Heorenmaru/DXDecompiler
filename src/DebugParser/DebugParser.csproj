@@ -107,6 +107,8 @@
     <Compile Include="DebugParser\IDumpable.cs" />
     <Compile Include="DebugParser\Libf\DebugLibfChunk.cs" />
     <Compile Include="DebugParser\Libf\DebugLibHeaderChunk.cs" />
+    <Compile Include="DebugParser\Libf\DebugLibraryParameterSignatureChunk.cs" />
+    <Compile Include="DebugParser\Libf\LibraryParameterDescription.cs" />
     <Compile Include="DebugParser\Rdef\DebugConstantBuffer.cs" />
     <Compile Include="DebugParser\Rdef\DebugResourceBinding.cs" />
     <Compile Include="DebugParser\Rdef\DebugResourceDefinitionChunk.cs" />

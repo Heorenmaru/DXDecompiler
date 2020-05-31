@@ -2,6 +2,7 @@
 using SlimShader.DebugParser.Aon9;
 using SlimShader.DebugParser.Chunks.Fx10;
 using SlimShader.DebugParser.Chunks.Fxlvm;
+using SlimShader.DebugParser.Chunks.Libf;
 using SlimShader.DebugParser.Icfe;
 using SlimShader.DebugParser.Libf;
 using SlimShader.DebugParser.Rdef;
@@ -120,9 +121,9 @@ namespace SlimShader.DebugParser
 				case ChunkType.Libh:
 					chunk = DebugLibHeaderChunk.Parse(chunkContentReader, chunkSize);
 					break;
-				//case ChunkType.Lfs0:
-				//	chunk = DebugLibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
-				//	break;
+				case ChunkType.Lfs0:
+					chunk = DebugLibraryParameterSignatureChunk.Parse(chunkContentReader, chunkSize);
+					break;
 				case ChunkType.Fx10:
 					chunk = DebugEffectChunk.Parse(chunkContentReader, chunkSize);
 					break;
