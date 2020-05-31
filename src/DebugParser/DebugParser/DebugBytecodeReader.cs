@@ -87,6 +87,14 @@ namespace SlimShader.DebugParser
 			_reader.BaseStream.Position = oldPos;
 			return result;
 		}
+		public uint PeakUInt32Ahead(int offset)
+		{
+			var oldPos = _reader.BaseStream.Position;
+			_reader.BaseStream.Position = _reader.BaseStream.Position + offset;
+			var result = _reader.ReadUInt32();
+			_reader.BaseStream.Position = oldPos;
+			return result;
+		}
 		public uint ReadUInt32(string name)
 		{
 			var result = _reader.ReadUInt32();

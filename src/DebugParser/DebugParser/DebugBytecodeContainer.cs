@@ -25,6 +25,7 @@ namespace SlimShader.DebugParser
 
 		DebugBytecodeReader _reader;
 		string Error = "";
+		public Exception Exception = null;
 		public DebugBytecodeContainer(byte[] rawBytes)
 		{
 			try
@@ -49,6 +50,7 @@ namespace SlimShader.DebugParser
 				}
 			} catch (Exception ex)
 			{
+				Exception = ex;
 				Error = ex.ToString();
 			}
 		}
@@ -75,6 +77,7 @@ namespace SlimShader.DebugParser
 			}
 			catch (Exception ex)
 			{
+				Exception = ex;
 				Error = ex.ToString();
 			}
 		}
@@ -82,20 +85,52 @@ namespace SlimShader.DebugParser
 		{
 			return new DebugBytecodeContainer(bytes);
 		}
+		public string ParseErrors {
+			get
+			{
+				var sb = new StringBuilder();
+				if (!string.IsNullOrEmpty(Error))
+				{
+					sb.AppendLine(Error);
+				}
+				var libraryChunks = Chunks.OfType<Libf.DebugLibfChunk>().ToList();
+				foreach (var chunk in libraryChunks)
+				{
+					if (!string.IsNullOrEmpty(chunk.LibraryContainer.Error))
+					{
+						var msg = $"Error in Library {libraryChunks.IndexOf(chunk)}\n" + chunk.LibraryContainer.Error;
+						sb.AppendLine(Error);
+					}
+				}
+				return sb.ToString();
+			}
+		}
+		public List<Exception> Exceptions
+		{
+			get
+			{
+				var result = new List<Exception>();
+				if(this.Exception != null)
+				{
+					result.Add(Exception);
+				}
+				var libraryChunks = Chunks.OfType<Libf.DebugLibfChunk>().ToList();
+				foreach (var chunk in libraryChunks)
+				{
+					if (chunk.LibraryContainer.Exception != null)
+					{
+						result.Add(Exception);
+					}
+				}
+				return result;
+			}
+		}
 		public string Dump()
 		{
 			var dump = _reader.DumpStructure();
-			if (!string.IsNullOrEmpty(Error))
+			if (!string.IsNullOrEmpty(ParseErrors))
 			{
-				dump += "\n" + Error;
-			}
-			var libraryChunks = Chunks.OfType<Libf.DebugLibfChunk>().ToList();
-			foreach (var chunk in libraryChunks)
-			{
-				if (!string.IsNullOrEmpty(chunk.LibraryContainer.Error))
-				{
-					dump += $"\nError in Library {libraryChunks.IndexOf(chunk)}\n" + chunk.LibraryContainer.Error;
-				}
+				dump += $"\n{ParseErrors}";
 			}
 			return dump;
 		}

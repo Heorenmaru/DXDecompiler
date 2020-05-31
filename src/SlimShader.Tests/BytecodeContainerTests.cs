@@ -184,6 +184,12 @@ namespace SlimShader.Tests
 			File.WriteAllText($"{OutputDir}/{relPath}.d.html", html);
 
 			// Assert.
+			if(shaderBytecode.Exceptions.Count > 0)
+			{
+				throw new Exception($"Found {shaderBytecode.Exceptions.Count} exception parsing",
+					shaderBytecode.Exceptions.First());
+			}
+			Assert.That(string.IsNullOrEmpty(shaderBytecode.ParseErrors), shaderBytecode.ParseErrors);
 			Assert.That(!result.Contains("Unread Memory"), "Unread memory found");
 		}
 

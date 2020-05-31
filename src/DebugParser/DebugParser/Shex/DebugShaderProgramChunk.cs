@@ -1,7 +1,6 @@
 ﻿using SlimShader.Chunks.Shex;
 using SlimShader.DebugParser.Shex.Tokens;
 using SlimShader.Util;
-using SlimShader.Chunks.Shex;
 using System;
 using System.Collections.Generic;
 
@@ -42,12 +41,13 @@ namespace SlimShader.DebugParser.Shex
 				if (opcodeHeader.OpcodeType == OpcodeType.CustomData)
 				{
 					//opcodeToken = DebugCustomDataToken.Parse(reader, opcodeToken0);
-					var length = reader.PeakUInt32At(4);
-					if(length == 0)
+					var customDataClass = opcodeToken0.DecodeValue<CustomDataClass>(11, 31);
+					var length = reader.PeakUInt32Ahead(4);
+					if (length == 0)
 					{
 						throw new Exception("Error parsing shader");
 					}
-					var data = reader.ReadBytes($"Opcode{opcodeIndex}({opcodeHeader.OpcodeType})", (int)length*4);
+					var data = reader.ReadBytes($"Opcode{opcodeIndex}({opcodeHeader.OpcodeType}-{customDataClass})", (int)length * 4);
 				}
 				else if (opcodeHeader.OpcodeType.IsDeclaration())
 				{
