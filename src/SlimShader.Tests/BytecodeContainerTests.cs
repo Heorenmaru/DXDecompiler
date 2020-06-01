@@ -176,20 +176,20 @@ namespace SlimShader.Tests
 			var binaryFileBytes = File.ReadAllBytes(file + ".o");
 
 			// Act.
-			var shaderBytecode = DebugParser.DebugBytecodeContainer.Parse(binaryFileBytes);
-			var result = shaderBytecode.Dump();
+			var bytecodeContainer = DebugParser.DebugBytecodeContainer.Parse(binaryFileBytes);
+			var result = bytecodeContainer.Dump();
 			File.WriteAllText($"{OutputDir}/{relPath}.d.txt", result);
 
-			var html = shaderBytecode.DumpHTML();
+			var html = bytecodeContainer.DumpHTML();
 			File.WriteAllText($"{OutputDir}/{relPath}.d.html", html);
 
 			// Assert.
-			if(shaderBytecode.Exceptions.Count > 0)
+			if(bytecodeContainer.Exceptions.Count > 0)
 			{
-				throw new Exception($"Found {shaderBytecode.Exceptions.Count} exception parsing",
-					shaderBytecode.Exceptions.First());
+				throw new Exception($"Found {bytecodeContainer.Exceptions.Count} exception parsing",
+					bytecodeContainer.Exceptions.First());
 			}
-			Assert.That(string.IsNullOrEmpty(shaderBytecode.ParseErrors), shaderBytecode.ParseErrors);
+			Assert.That(string.IsNullOrEmpty(bytecodeContainer.ParseErrors), bytecodeContainer.ParseErrors);
 			Assert.That(!result.Contains("Unread Memory"), "Unread memory found");
 		}
 
