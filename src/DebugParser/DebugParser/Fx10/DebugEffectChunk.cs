@@ -106,36 +106,50 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			var footerReader = reader.CopyAtOffset("Footer", reader, footerOffset);
 			for (int i = 0; i < header.ConstantBuffers; i++)
 			{
+				footerReader.AddIndent($"ConstantBuffer {i}");
 				result.LocalBuffers.Add(DebugEffectBuffer.Parse(bodyReader, footerReader, false));
+				footerReader.RemoveIndent();
 			}
 			for (int i = 0; i < header.ObjectCount; i++)
 			{
+				footerReader.AddIndent($"Variable {i}");
 				result.LocalVariables.Add(DebugEffectObjectVariable.Parse(bodyReader, footerReader, false));
+				footerReader.RemoveIndent();
 			}
 			for (int i = 0; i < header.SharedConstantBuffers; i++)
 			{
+				footerReader.AddIndent($"SharedConstantBuffer {i}");
 				result.SharedBuffers.Add(DebugEffectBuffer.Parse(bodyReader, footerReader, true));
+				footerReader.RemoveIndent();
 			}
 			for (int i = 0; i < header.SharedObjectCount; i++)
 			{
+				footerReader.AddIndent($"SharedVariable {i}");
 				result.SharedVariables.Add(DebugEffectObjectVariable.Parse(bodyReader, footerReader, true));
+				footerReader.RemoveIndent();
 			}
 			if (header.Version.MajorVersion >= 5)
 			{
 				for (int i = 0; i < header.InterfaceVariableCount; i++)
 				{
+					footerReader.AddIndent($"Interface {i}");
 					result.InterfaceVariables.Add(DebugEffectInterfaceVariable.Parse(bodyReader, footerReader));
+					footerReader.RemoveIndent();
 				}
 				for (int i = 0; i < header.GroupCount; i++)
 				{
+					footerReader.AddIndent($"Group {i}");
 					result.Groups.Add(DebugEffectGroup.Parse(bodyReader, footerReader, header.Version));
+					footerReader.RemoveIndent();
 				}
 			}
 			else
 			{
 				for (int i = 0; i < header.Techniques; i++)
 				{
+					footerReader.AddIndent($"Technique {i}");
 					result.Techniques.Add(DebugEffectTechnique.Parse(bodyReader, footerReader, header.Version));
+					footerReader.RemoveIndent();
 				}
 			}
 

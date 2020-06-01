@@ -32,11 +32,15 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			result.AnnotationCount = passReader.ReadUInt32("AnnotationCount");
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
+				passReader.AddIndent($"Annotation {i}");
 				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, passReader));
+				passReader.RemoveIndent();
 			}
 			for (int i = 0; i < result.ShaderCount; i++)
 			{
+				passReader.AddIndent($"Shader {i}");
 				result.Assignments.Add(DebugEffectAssignment.Parse(reader, passReader));
+				passReader.RemoveIndent();
 			}
 			return result;
 		}

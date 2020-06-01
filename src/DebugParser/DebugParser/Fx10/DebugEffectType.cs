@@ -115,7 +115,9 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 				result.MemberCount = typeReader.ReadUInt32("MemberCount");
 				for (int i = 0; i < result.MemberCount; i++)
 				{
+					typeReader.AddIndent($"Member {i}");
 					result.Members.Add(DebugEffectMember.Parse(reader, typeReader));
+					typeReader.RemoveIndent();
 				}
 			}
 			else if (result.EffectVariableType == EffectVariableType.Interface)

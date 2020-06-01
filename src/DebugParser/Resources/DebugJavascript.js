@@ -41,6 +41,18 @@ function setDetailPanel(element, detailView){
 		}
 	}
 }
+function isScrolledIntoView(el)
+{
+    var rect = el.getBoundingClientRect();
+    var elemTop = rect.top;
+    var elemBottom = rect.bottom;
+
+    // Only completely visible elements return true:
+    var isVisible = (elemTop >= 0) && (elemBottom <= window.innerHeight);
+    // Partially visible elements return true:
+    //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+    return isVisible;
+}
 function setDetailPanelUnusedMemory(element, detailView) {
 	var elements = [];
 	var sibling = element;
@@ -110,7 +122,9 @@ window.onload = function(){
 				highlighted[j].className = "";
 			}
 			highlighted = [];
-			bytes[dataStart].scrollIntoView();
+			if(!isScrolledIntoView(bytes[dataStart])){
+				bytes[dataStart].scrollIntoView();
+			}
 			for(var j = dataStart; j < dataEnd && j < bytes.length; j++){
 				bytes[j].className = "highlighted";
 				highlighted.push(bytes[j]);
@@ -127,7 +141,9 @@ window.onload = function(){
 				setDetailPanelUnusedMemory(this, detailView);
 				return;
 			}
-			member.scrollIntoView();
+			if(!isScrolledIntoView(member)){
+				member.scrollIntoView();
+			}
 			member.click();
 			var parent = member;
 			while(parent !== null && parent !== window){

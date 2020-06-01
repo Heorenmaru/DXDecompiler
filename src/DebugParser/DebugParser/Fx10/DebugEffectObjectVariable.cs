@@ -136,7 +136,9 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 					result.Assignments.Add(assignments);
 					for (int j = 0; j < assignmentCount; j++)
 					{
+						variableReader.AddIndent($"Assignment {i}");
 						assignments.Add(DebugEffectAssignment.Parse(reader, variableReader));
+						variableReader.RemoveIndent();
 					}
 				}
 			}
@@ -144,27 +146,35 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			{
 				for (int i = 0; i < result.ElementCount; i++)
 				{
+					variableReader.AddIndent($"GSSOInitializer {i}");
 					result.GSSOInitializers.Add(DebugEffectGSSOInitializer.Parse(reader, variableReader));
+					variableReader.RemoveIndent();
 				}
 			}
 			else if (IsShader5(result.Type))
 			{
 				for (int i = 0; i < result.ElementCount; i++)
 				{
+					variableReader.AddIndent($"ShaderData5 {i}");
 					result.ShaderData5.Add(DebugEffectShaderData5.Parse(reader, variableReader));
+					variableReader.RemoveIndent();
 				}
 			}
 			else if (IsShader(result.Type))
 			{
 				for (int i = 0; i < result.ElementCount; i++)
 				{
+					variableReader.AddIndent($"ShaderData {i}");
 					result.ShaderData.Add(DebugEffectShaderData.Parse(reader, variableReader));
+					variableReader.RemoveIndent();
 				}
 			}
 			result.AnnotationCount = variableReader.ReadUInt32("AnnotationCount");
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
+				variableReader.AddIndent($"Annotation {i}");
 				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, variableReader));
+				variableReader.RemoveIndent();
 			}
 			return result;
 		}

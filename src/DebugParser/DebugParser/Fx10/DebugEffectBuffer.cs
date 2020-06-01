@@ -41,7 +41,9 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			//Debug.Assert(result.Unknown0 == 0, $"EffectBuffer.Unknown0: {result.Unknown0}");
 			for (int i = 0; i < result.VariableCount; i++)
 			{
+				bufferReader.AddIndent($"BufferVariable {i}");
 				result.Variables.Add(DebugEffectNumericVariable.Parse(reader, bufferReader, isShared));
+				bufferReader.RemoveIndent();
 			}
 			return result;
 		}

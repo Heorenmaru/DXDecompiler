@@ -35,11 +35,15 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			}
 			for(int i = 0; i < result.TechniqueCount; i++)
 			{
+				groupReader.AddIndent($"Technique {i}");
 				result.Techniques.Add(DebugEffectTechnique.Parse(reader, groupReader, version));
+				groupReader.RemoveIndent();
 			}
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
+				groupReader.AddIndent($"Annotation {i}");
 				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, groupReader));
+				groupReader.RemoveIndent();
 			}
 			return result;
 		}
