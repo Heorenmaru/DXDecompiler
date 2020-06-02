@@ -33,6 +33,7 @@
 		Atan2 = 518,
 		Div = 520,
 		Bilt = 528,
+		UnknownFXLCToken = 529,
 		Bieq = 530,
 		Bine = 531,
 		Bult = 533,
