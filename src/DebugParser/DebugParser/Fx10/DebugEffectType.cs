@@ -60,7 +60,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			Members = new List<DebugEffectMember>();
 			InterfaceTypes = new List<DebugEffectType>();
 		}
-		public static DebugEffectType Parse(DebugBytecodeReader reader, DebugBytecodeReader typeReader)
+		public static DebugEffectType Parse(DebugBytecodeReader reader, DebugBytecodeReader typeReader, DebugShaderVersion version)
 		{
 			var result = new DebugEffectType();
 			var typeNameOffset = result.TypeNameOffset = typeReader.ReadUInt32("TypeNameOffset");
@@ -119,16 +119,19 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 				for (int i = 0; i < result.MemberCount; i++)
 				{
 					typeReader.AddIndent($"Member {i}");
-					result.Members.Add(DebugEffectMember.Parse(reader, typeReader));
+					result.Members.Add(DebugEffectMember.Parse(reader, typeReader, version));
 					typeReader.RemoveIndent();
 				}
-				result.BaseClassType = typeReader.ReadUInt32("BaseClassType");
-				result.InterfaceCount = typeReader.ReadUInt32("InterfaceCount");
-				for(int i = 0; i < result.InterfaceCount; i++)
+				if (version.MajorVersion == 5)
 				{
-					var interfaceOffset = typeReader.ReadUInt32($"InterfaceOffset{i}");
-					var interfaceReader = reader.CopyAtOffset($"Interface{i}", typeReader, (int)interfaceOffset);
-					result.InterfaceTypes.Add(DebugEffectType.Parse(reader, interfaceReader));
+					result.BaseClassType = typeReader.ReadUInt32("BaseClassType");
+					result.InterfaceCount = typeReader.ReadUInt32("InterfaceCount");
+					for (int i = 0; i < result.InterfaceCount; i++)
+					{
+						var interfaceOffset = typeReader.ReadUInt32($"InterfaceOffset{i}");
+						var interfaceReader = reader.CopyAtOffset($"Interface{i}", typeReader, (int)interfaceOffset);
+						result.InterfaceTypes.Add(DebugEffectType.Parse(reader, interfaceReader, version));
+					}
 				}
 			}
 			else if (result.EffectVariableType == EffectVariableType.Interface)

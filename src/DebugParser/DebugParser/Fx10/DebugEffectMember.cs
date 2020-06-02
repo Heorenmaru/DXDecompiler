@@ -29,7 +29,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 		public uint TypeOffset;
 		public uint NameOffset;
 		public uint SemanticNameOffset;
-		public static DebugEffectMember Parse(DebugBytecodeReader reader, DebugBytecodeReader memberReader)
+		public static DebugEffectMember Parse(DebugBytecodeReader reader, DebugBytecodeReader memberReader, DebugShaderVersion version)
 		{
 			var result = new DebugEffectMember();
 			var nameOffset = result.NameOffset = memberReader.ReadUInt32("NameOffset");
@@ -49,7 +49,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			result.BufferOffset = memberReader.ReadUInt32("BufferOffset");
 			result.TypeOffset = memberReader.ReadUInt32("TypeOffset");
 			var typeReader = reader.CopyAtOffset("TypeReader", memberReader, (int)result.TypeOffset);
-			result.Type = DebugEffectType.Parse(reader, typeReader);
+			result.Type = DebugEffectType.Parse(reader, typeReader, version);
 			return result;
 		}
 	}

@@ -39,7 +39,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			Annotations = new List<DebugEffectAnnotation>();
 		}
 		internal static DebugEffectNumericVariable Parse(DebugBytecodeReader reader, 
-			DebugBytecodeReader variableReader, bool isShared)
+			DebugBytecodeReader variableReader, DebugShaderVersion version, bool isShared)
 		{
 			var result = new DebugEffectNumericVariable();
 			var nameOffset = result.NameOffset = variableReader.ReadUInt32("NameOffset");
@@ -47,7 +47,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			result.Name = nameReader.ReadString("Name");
 			var typeOffset = result.TypeOffset = variableReader.ReadUInt32("TypeOffset");
 			var typeReader = reader.CopyAtOffset("TypeReader", variableReader, (int)typeOffset);
-			result.Type = DebugEffectType.Parse(reader, typeReader);
+			result.Type = DebugEffectType.Parse(reader, typeReader, version);
 			var semanticOffset = result.SemanticOffset = variableReader.ReadUInt32("SemeanticOffset");
 			if (semanticOffset != 0)
 			{
@@ -83,7 +83,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			for(int i = 0; i < result.AnnotationCount; i++)
 			{
 				variableReader.AddIndent($"Annotation {i}");
-				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, variableReader));
+				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, variableReader, version));
 				variableReader.RemoveIndent();
 			}
 			return result;

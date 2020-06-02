@@ -30,7 +30,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			DefaultNumericValue = new List<DebugNumber>();
 			DefaultStringValue = new List<string>();
 		}
-		public static DebugEffectAnnotation Parse(DebugBytecodeReader reader, DebugBytecodeReader annotationReader)
+		public static DebugEffectAnnotation Parse(DebugBytecodeReader reader, DebugBytecodeReader annotationReader, DebugShaderVersion version)
 		{
 			var result = new DebugEffectAnnotation();
 			var nameOffset = result.NameOffset = annotationReader.ReadUInt32("NameOffset");
@@ -38,7 +38,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			result.Name = nameReader.ReadString("Name");
 			var typeOffset = result.TypeOffset = annotationReader.ReadUInt32("TypeOffset");
 			var typeReader = reader.CopyAtOffset("TypeReader", annotationReader, (int)typeOffset);
-			result.Type = DebugEffectType.Parse(reader, typeReader);
+			result.Type = DebugEffectType.Parse(reader, typeReader, version);
 			//Note: Points to 27 and "foo" in Texture2D tex<int bla=27;string blu="foo";>;
 			/// Value format and stride depends on Type
 			var valueOffset = result.ValueOffset = annotationReader.ReadUInt32("ValueOffset");

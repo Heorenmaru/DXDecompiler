@@ -23,7 +23,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 		{
 			Variables = new List<DebugEffectNumericVariable>();
 		}
-		public static DebugEffectBuffer Parse(DebugBytecodeReader reader, DebugBytecodeReader bufferReader, bool isShared)
+		public static DebugEffectBuffer Parse(DebugBytecodeReader reader, DebugBytecodeReader bufferReader, DebugShaderVersion version, bool isShared)
 		{
 			var result = new DebugEffectBuffer();
 			var nameOffset = result.NameOffset = bufferReader.ReadUInt32("NameOffset");
@@ -42,7 +42,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			for (int i = 0; i < result.VariableCount; i++)
 			{
 				bufferReader.AddIndent($"BufferVariable {i}");
-				result.Variables.Add(DebugEffectNumericVariable.Parse(reader, bufferReader, isShared));
+				result.Variables.Add(DebugEffectNumericVariable.Parse(reader, bufferReader, version, isShared));
 				bufferReader.RemoveIndent();
 			}
 			return result;

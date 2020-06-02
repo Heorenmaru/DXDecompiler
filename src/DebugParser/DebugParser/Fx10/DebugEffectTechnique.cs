@@ -38,13 +38,13 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
 				techniqueReader.AddIndent("Annotation");
-				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, techniqueReader));
+				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, techniqueReader, version));
 				techniqueReader.RemoveIndent();
 			}
 			for (int i = 0; i < result.PassCount; i++)
 			{
 				techniqueReader.AddIndent($"Pass {i}");
-				result.Passes.Add(DebugEffectPass.Parse(reader, techniqueReader));
+				result.Passes.Add(DebugEffectPass.Parse(reader, techniqueReader, version));
 				techniqueReader.RemoveIndent();
 			}
 			return result;

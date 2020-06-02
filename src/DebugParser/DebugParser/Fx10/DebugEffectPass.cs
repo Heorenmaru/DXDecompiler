@@ -22,7 +22,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			Assignments = new List<DebugEffectAssignment>();
 			Annotations = new List<DebugEffectAnnotation>();
 		}
-		public static DebugEffectPass Parse(DebugBytecodeReader reader, DebugBytecodeReader passReader)
+		public static DebugEffectPass Parse(DebugBytecodeReader reader, DebugBytecodeReader passReader, DebugShaderVersion version)
 		{
 			var result = new DebugEffectPass();
 			var nameOffset = result.NameOffset = passReader.ReadUInt32("NameOffset");
@@ -33,7 +33,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
 				passReader.AddIndent($"Annotation {i}");
-				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, passReader));
+				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, passReader, version));
 				passReader.RemoveIndent();
 			}
 			for (int i = 0; i < result.ShaderCount; i++)

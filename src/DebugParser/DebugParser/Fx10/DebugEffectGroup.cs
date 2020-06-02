@@ -42,7 +42,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
 				groupReader.AddIndent($"Annotation {i}");
-				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, groupReader));
+				result.Annotations.Add(DebugEffectAnnotation.Parse(reader, groupReader, version));
 				groupReader.RemoveIndent();
 			}
 			return result;
