@@ -8,7 +8,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 	public class DebugEffectExpressionIndexAssignment : DebugEffectAssignment
 	{
 		public string ArrayName { get; private set; }
-		public BytecodeContainer Shader { get; private set; }
+		public DebugBytecodeContainer Shader { get; private set; }
 
 		public uint ShaderOffset;
 		public uint ShaderSize;
@@ -25,7 +25,7 @@ namespace SlimShader.DebugParser.Chunks.Fx10
 			var shaderSize = result.ShaderSize = shaderReader.ReadUInt32("ShaderSize");
 			if (shaderSize != 0)
 			{
-				result.Shader = BytecodeContainer.Parse(shaderReader.ReadBytes("Shader", (int)shaderSize));
+				result.Shader = DebugBytecodeContainer.Parse(shaderReader.CopyAtCurrentPosition("ExpressionIndexReader", shaderReader));
 			}
 			return result;
 		}

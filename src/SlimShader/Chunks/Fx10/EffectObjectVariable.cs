@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using SlimShader.Util;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			return false;
 		}
-		public static EffectObjectVariable Parse(BytecodeReader reader, BytecodeReader variableReader, bool isShared = false)
+		public static EffectObjectVariable Parse(BytecodeReader reader, BytecodeReader variableReader, ShaderVersion version, bool isShared = false)
 		{
 			var result = new EffectObjectVariable();
 			var nameOffset = result.NameOffset = variableReader.ReadUInt32();
@@ -98,7 +99,7 @@ namespace SlimShader.Chunks.Fx10
 			result.Name = nameReader.ReadString();
 			result.TypeOffset = variableReader.ReadUInt32();
 			var typeReader = reader.CopyAtOffset((int)result.TypeOffset);
-			result.Type = EffectType.Parse(reader, typeReader);
+			result.Type = EffectType.Parse(reader, typeReader, version);
 			var semanticOffset = result.SemanticOffset = variableReader.ReadUInt32();
 			if (semanticOffset != 0)
 			{
@@ -161,7 +162,7 @@ namespace SlimShader.Chunks.Fx10
 			result.AnnotationCount = variableReader.ReadUInt32();
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
-				result.Annotations.Add(EffectAnnotation.Parse(reader, variableReader));
+				result.Annotations.Add(EffectAnnotation.Parse(reader, variableReader, version));
 			}
 			return result;
 		}

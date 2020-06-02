@@ -11,7 +11,7 @@ namespace SlimShader.DebugParser
 {
 	public class DebugBytecodeContainer
 	{
-		private readonly byte[] _rawBytes;
+		private byte[] _rawBytes;
 
 		public byte[] RawBytes
 		{
@@ -32,11 +32,12 @@ namespace SlimShader.DebugParser
 			try
 			{
 				_rawBytes = rawBytes;
+				var reader = new DebugBytecodeReader(rawBytes, 0, rawBytes.Length);
+
 				Chunks = new List<DebugBytecodeChunk>();
 
-				var reader = new DebugBytecodeReader(rawBytes, 0, rawBytes.Length);
 				_reader = reader;
-				var magicNumber = BitConverter.ToUInt32(rawBytes, 0);
+				var magicNumber = reader.PeakUint32();
 				if (magicNumber == 0xFEFF2001)
 				{
 					Chunks.Add(DebugEffectChunk.Parse(reader, (uint)rawBytes.Length));
@@ -79,8 +80,8 @@ namespace SlimShader.DebugParser
 				for (uint i = 0; i < Header.ChunkCount; i++)
 				{
 					uint chunkOffset = reader.ReadUInt32("chunkOffset");
-					var fourCC = DebugUtil.ToReadable(reader.PeakUInt32At((int)chunkOffset).ToFourCcString());
-					var chunkReader = reader.CopyAtOffset($"Chunk{fourCC}", reader, (int)chunkOffset);
+					//var fourCC = DebugUtil.ToReadable(reader.PeakUInt32At((int)chunkOffset).ToFourCcString());
+					var chunkReader = reader.CopyAtOffset($"ChunkTODO", reader, (int)chunkOffset);
 
 					var chunk = DebugBytecodeChunk.ParseChunk(chunkReader, this);
 					if (chunk != null)
@@ -95,7 +96,14 @@ namespace SlimShader.DebugParser
 		}
 		public static DebugBytecodeContainer Parse(byte[] bytes)
 		{
-			return new DebugBytecodeContainer(bytes);
+			var reader = new DebugBytecodeReader(bytes, 0, bytes.Length);
+			var result = new DebugBytecodeContainer(bytes);
+			result._rawBytes = bytes;
+			return result;
+		}
+		public static DebugBytecodeContainer Parse(DebugBytecodeReader reader)
+		{
+			return new DebugBytecodeContainer(reader);
 		}
 		public string ParseErrors {
 			get

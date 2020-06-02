@@ -39,7 +39,7 @@ namespace SlimShader.Chunks.Fx10
 			}
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
-				result.Annotations.Add(EffectAnnotation.Parse(reader, groupReader));
+				result.Annotations.Add(EffectAnnotation.Parse(reader, groupReader, version));
 			}
 			return result;
 		}

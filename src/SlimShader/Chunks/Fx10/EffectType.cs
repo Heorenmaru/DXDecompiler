@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using SlimShader.Util;
 using System;
 using System.Collections.Generic;
@@ -60,7 +61,7 @@ namespace SlimShader.Chunks.Fx10
 			Members = new List<EffectMember>();
 			InterfaceTypes = new List<EffectType>();
 		}
-		public static EffectType Parse(BytecodeReader reader, BytecodeReader typeReader)
+		public static EffectType Parse(BytecodeReader reader, BytecodeReader typeReader, ShaderVersion version)
 		{
 			var result = new EffectType();
 			var typeNameOffset = result.TypeNameOffset = typeReader.ReadUInt32();
@@ -119,15 +120,18 @@ namespace SlimShader.Chunks.Fx10
 				result.MemberCount = typeReader.ReadUInt32();
 				for (int i = 0; i < result.MemberCount; i++)
 				{
-					result.Members.Add(EffectMember.Parse(reader, typeReader));
+					result.Members.Add(EffectMember.Parse(reader, typeReader, version));
 				}
-				result.BaseClassType = typeReader.ReadUInt32();
-				result.InterfaceCount = typeReader.ReadUInt32();
-				for (int i = 0; i < result.InterfaceCount; i++)
+				if (version.MajorVersion == 5)
 				{
-					var interfaceOffset = typeReader.ReadUInt32();
-					var interfaceReader = reader.CopyAtOffset((int)interfaceOffset);
-					result.InterfaceTypes.Add(EffectType.Parse(reader, interfaceReader));
+					result.BaseClassType = typeReader.ReadUInt32();
+					result.InterfaceCount = typeReader.ReadUInt32();
+					for (int i = 0; i < result.InterfaceCount; i++)
+					{
+						var interfaceOffset = typeReader.ReadUInt32();
+						var interfaceReader = reader.CopyAtOffset((int)interfaceOffset);
+						result.InterfaceTypes.Add(EffectType.Parse(reader, interfaceReader, version));
+					}
 				}
 			}
 			else if (result.EffectVariableType == EffectVariableType.Interface)

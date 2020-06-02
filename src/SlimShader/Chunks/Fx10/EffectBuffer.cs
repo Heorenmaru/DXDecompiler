@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using SlimShader.Util;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -23,7 +24,7 @@ namespace SlimShader.Chunks.Fx10
 		{
 			Variables = new List<EffectNumericVariable>();
 		}
-		public static EffectBuffer Parse(BytecodeReader reader, BytecodeReader bufferReader, bool isShared)
+		public static EffectBuffer Parse(BytecodeReader reader, BytecodeReader bufferReader, ShaderVersion version, bool isShared)
 		{
 			var result = new EffectBuffer();
 			var nameOffset = result.NameOffset = bufferReader.ReadUInt32();
@@ -41,7 +42,7 @@ namespace SlimShader.Chunks.Fx10
 			//Debug.Assert(result.Unknown0 == 0, $"EffectBuffer.Unknown0: {result.Unknown0}");
 			for (int i = 0; i < result.VariableCount; i++)
 			{
-				result.Variables.Add(EffectNumericVariable.Parse(reader, bufferReader, isShared));
+				result.Variables.Add(EffectNumericVariable.Parse(reader, bufferReader, version, isShared));
 			}
 			return result;
 		}

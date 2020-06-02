@@ -100,7 +100,7 @@
     <Compile Include="DebugParser\Fxlvm\DebugCtabChunk.cs" />
     <Compile Include="DebugParser\Fxlvm\DebugFxlcChunk.cs" />
     <Compile Include="DebugParser\Fxlvm\DebugFxlcOperand.cs" />
-    <Compile Include="DebugParser\Fxlvm\FxlcToken.cs" />
+    <Compile Include="DebugParser\Fxlvm\DebugFxlcToken.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
     <Compile Include="DebugParser\Icfe\DebugInterfacesChunk.cs" />

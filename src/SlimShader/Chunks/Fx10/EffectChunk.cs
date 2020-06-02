@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System.Collections.Generic;
 using System.Text;
 
@@ -102,27 +103,28 @@ namespace SlimShader.Chunks.Fx10
 			var footerOffset = (int)(result.Header.FooterOffset + bodyOffset);
 			var bodyReader = reader.CopyAtOffset((int)bodyOffset);
 			var footerReader = reader.CopyAtOffset(footerOffset);
+			var version = header.Version;
 			for (int i = 0; i < header.ConstantBuffers; i++)
 			{
-				result.LocalBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, false));
+				result.LocalBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, version, false));
 			}
 			for (int i = 0; i < header.ObjectCount; i++)
 			{
-				result.LocalVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, false));
+				result.LocalVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, version, false));
 			}
 			for (int i = 0; i < header.SharedConstantBuffers; i++)
 			{
-				result.SharedBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, true));
+				result.SharedBuffers.Add(EffectBuffer.Parse(bodyReader, footerReader, version, true));
 			}
 			for (int i = 0; i < header.SharedObjectCount; i++)
 			{
-				result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, true));
+				result.SharedVariables.Add(EffectObjectVariable.Parse(bodyReader, footerReader, version, true));
 			}
 			if (header.Version.MajorVersion >= 5)
 			{
 				for (int i = 0; i < header.InterfaceVariableCount; i++)
 				{
-					result.InterfaceVariables.Add(EffectInterfaceVariable.Parse(bodyReader, footerReader));
+					result.InterfaceVariables.Add(EffectInterfaceVariable.Parse(bodyReader, footerReader, version));
 				}
 				for (int i = 0; i < header.GroupCount; i++)
 				{

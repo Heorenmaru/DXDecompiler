@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace SlimShader.Chunks.Fx10
 			DefaultNumericValue = new List<Number>();
 			DefaultStringValue = new List<string>();
 		}
-		public static EffectAnnotation Parse(BytecodeReader reader, BytecodeReader annotationReader)
+		public static EffectAnnotation Parse(BytecodeReader reader, BytecodeReader annotationReader, ShaderVersion version)
 		{
 			var result = new EffectAnnotation();
 			var nameOffset = result.NameOffset = annotationReader.ReadUInt32();
@@ -37,7 +38,7 @@ namespace SlimShader.Chunks.Fx10
 			result.Name = nameReader.ReadString();
 			var typeOffset = result.TypeOffset = annotationReader.ReadUInt32();
 			var typeReader = reader.CopyAtOffset((int)typeOffset);
-			result.Type = EffectType.Parse(reader, typeReader);
+			result.Type = EffectType.Parse(reader, typeReader, version);
 			//Note: Points to 27 and "foo" in Texture2D tex<int bla=27;string blu="foo";>;
 			/// Value format and stride depends on Type
 			var valueOffset = result.ValueOffset = annotationReader.ReadUInt32();

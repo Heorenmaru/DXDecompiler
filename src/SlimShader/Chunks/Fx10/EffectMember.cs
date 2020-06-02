@@ -1,4 +1,5 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using SlimShader.Util;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace SlimShader.Chunks.Fx10
 		public uint TypeOffset;
 		public uint NameOffset;
 		public uint SemanticNameOffset;
-		public static EffectMember Parse(BytecodeReader reader, BytecodeReader memberReader)
+		public static EffectMember Parse(BytecodeReader reader, BytecodeReader memberReader, ShaderVersion version)
 		{
 			var result = new EffectMember();
 			var nameOffset = result.NameOffset = memberReader.ReadUInt32();
@@ -49,7 +50,7 @@ namespace SlimShader.Chunks.Fx10
 			result.BufferOffset = memberReader.ReadUInt32();
 			result.TypeOffset = memberReader.ReadUInt32();
 			var typeReader = reader.CopyAtOffset((int)result.TypeOffset);
-			result.Type = EffectType.Parse(reader, typeReader);
+			result.Type = EffectType.Parse(reader, typeReader, version);
 			return result;
 		}
 		public string Dump()

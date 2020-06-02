@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace SlimShader.Chunks.Fx10
 			Assignments = new List<EffectAssignment>();
 			Annotations = new List<EffectAnnotation>();
 		}
-		public static EffectPass Parse(BytecodeReader reader, BytecodeReader passReader)
+		public static EffectPass Parse(BytecodeReader reader, BytecodeReader passReader, ShaderVersion version)
 		{
 			var result = new EffectPass();
 			var nameOffset = result.NameOffset = passReader.ReadUInt32();
@@ -32,7 +33,7 @@ namespace SlimShader.Chunks.Fx10
 			result.AnnotationCount = passReader.ReadUInt32();
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
-				result.Annotations.Add(EffectAnnotation.Parse(reader, passReader));
+				result.Annotations.Add(EffectAnnotation.Parse(reader, passReader, version));
 			}
 			for (int i = 0; i < result.ShaderCount; i++)
 			{
