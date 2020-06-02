@@ -9,6 +9,7 @@ namespace DXDecompilerCmd
 	public enum DecompileMode
 	{
 		Decompile, 
-		Dissassemble
+		Dissassemble,
+		Debug
 	}
 }

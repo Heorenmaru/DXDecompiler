@@ -27,6 +27,9 @@ namespace SlimShader.Chunks.Fx10
 		public EffectNumericType NumericType { get; private set; }
 		public ShaderVariableClass VariableClass { get; private set; }
 		public List<EffectMember> Members { get; private set; }
+		public uint BaseClassType { get; private set; }
+		public uint InterfaceCount { get; private set; }
+		public List<EffectType> InterfaceTypes { get; private set; }
 
 		public uint TypeNameOffset;
 
@@ -55,6 +58,7 @@ namespace SlimShader.Chunks.Fx10
 		public EffectType()
 		{
 			Members = new List<EffectMember>();
+			InterfaceTypes = new List<EffectType>();
 		}
 		public static EffectType Parse(BytecodeReader reader, BytecodeReader typeReader)
 		{
@@ -117,6 +121,14 @@ namespace SlimShader.Chunks.Fx10
 				{
 					result.Members.Add(EffectMember.Parse(reader, typeReader));
 				}
+				result.BaseClassType = typeReader.ReadUInt32();
+				result.InterfaceCount = typeReader.ReadUInt32();
+				for (int i = 0; i < result.InterfaceCount; i++)
+				{
+					var interfaceOffset = typeReader.ReadUInt32();
+					var interfaceReader = reader.CopyAtOffset((int)interfaceOffset);
+					result.InterfaceTypes.Add(EffectType.Parse(reader, interfaceReader));
+				}
 			}
 			else if (result.EffectVariableType == EffectVariableType.Interface)
 			{
@@ -145,6 +157,15 @@ namespace SlimShader.Chunks.Fx10
 			foreach(var member in Members)
 			{
 				sb.Append(member.ToString());
+			}
+			if (EffectVariableType == EffectVariableType.Struct)
+			{
+				sb.AppendLine($"    BaseClassType: {BaseClassType} ({BaseClassType.ToString("X4")})");
+				sb.AppendLine($"    InterfaceCount: {InterfaceCount} ({InterfaceCount.ToString("X4")})");
+				foreach (var @interface in InterfaceTypes)
+				{
+					sb.AppendLine(@interface.Dump());
+				}
 			}
 			return sb.ToString();
 		}

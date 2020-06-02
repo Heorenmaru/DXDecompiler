@@ -83,6 +83,7 @@
     <Compile Include="DebugParser\Fx10\DebugEffectShaderData5.cs" />
     <Compile Include="DebugParser\Fx10\DebugEffectTechnique.cs" />
     <Compile Include="DebugParser\Fx10\DebugEffectType.cs" />
+    <Compile Include="DebugParser\Fx10\DebugUnknownObject.cs" />
     <Compile Include="DebugParser\Fx10\IDebugEffectVariable.cs" />
     <Compile Include="DebugParser\FX9\DebugAnnotation.cs" />
     <Compile Include="DebugParser\FX9\DebugAssignment.cs" />

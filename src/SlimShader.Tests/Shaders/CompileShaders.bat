@@ -104,6 +104,8 @@ CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_
 
 CALL CompileShader2.bat Internal/Effects EffectInterfaces.fx EffectInterfaces_5_FX fx_5_0 || GOTO :error
 
+CALL CompileShader2.bat Internal/Effects EffectInterfaces2.fx EffectInterfaces2_5_FX fx_5_0 || GOTO :error
+
 CALL CompileShader2.bat Internal/Effects StreamOutEffect.fx StreamOutEffect_5_FX fx_5_0 || GOTO :error
 
 CALL CompileShader2.bat Internal/Effects EffectsVersions.fx EffectsVersions_4_FX fx_4_0 || GOTO :error

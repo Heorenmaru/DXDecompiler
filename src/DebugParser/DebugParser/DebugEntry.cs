@@ -17,6 +17,7 @@ namespace SlimShader.DebugParser
 		{
 			this.formatHex = formatHex;
 		}
+		//Format absStart:AbsEnd[relStart:relEnd]
 		public string Dump()
 		{
 			var member = this;
@@ -37,7 +38,15 @@ namespace SlimShader.DebugParser
 					sb.Append($"{absIndex}:{absOffset}[{relIndex}:{relOffset}] - ");
 				}
 			}
-			sb.Append($"{member.Name}={member.Value}\n");
+			if (formatHex && uint.TryParse(member.Value, out uint intVal))
+			{
+				sb.Append($"{member.Name}=0x{intVal.ToString("X4")}\n");
+			}
+			else
+			{
+				sb.Append($"{member.Name}={member.Value}\n");
+			}
+			
 			return sb.ToString();
 		}
 		public string DumpInline()

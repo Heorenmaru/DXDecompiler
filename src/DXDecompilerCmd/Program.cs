@@ -1,4 +1,6 @@
 ﻿using SlimShader;
+using SlimShader.DebugParser;
+using SlimShader.DebugParser.FX9;
 using SlimShader.Decompiler;
 using SlimShader.Util;
 using System;
@@ -72,8 +74,11 @@ namespace DXDecompilerCmd
 						options.DestPath = args[i + 1];
 						i += 1;
 						break;
-					case "-d":
+					case "-a":
 						options.Mode = DecompileMode.Dissassemble;
+						break;
+					case "-d":
+						options.Mode = DecompileMode.Debug;
 						break;
 					default:
 						options.SourcePath = args[i];
@@ -98,6 +103,7 @@ namespace DXDecompilerCmd
 			var programType = GetProgramType(data);
 			using (var sw = GetStream(options))
 			{
+				sw.WriteLine(string.Join(" ", args));
 				if (programType == ProgramType.Unknown)
 				{
 					Console.Error.WriteLine($"Unable to identify shader object format");
@@ -110,10 +116,16 @@ namespace DXDecompilerCmd
 						var container = new BytecodeContainer(data);
 						sw.Write(container.ToString());
 					}
-					else
+					else if (options.Mode == DecompileMode.Decompile)
 					{
 						var hlsl = DXDecompiler.Decompile(data);
 						sw.Write(hlsl);
+					}
+					else if (options.Mode == DecompileMode.Debug)
+					{
+						var shaderBytecode = DebugBytecodeContainer.Parse(data);
+						var result = shaderBytecode.Dump();
+						sw.Write(result);
 					}
 				}
 				else if (programType == ProgramType.DX9)
@@ -123,14 +135,42 @@ namespace DXDecompilerCmd
 						var disasm = SlimShader.DX9Shader.AsmWriter.Disassemble(data);
 						sw.Write(disasm);
 					}
-					else
+					else if (options.Mode == DecompileMode.Decompile)
 					{
 						var hlsl = SlimShader.DX9Shader.HlslWriter.Decompile(data);
 						sw.Write(hlsl);
 					}
+					else if (options.Mode == DecompileMode.Debug)
+					{
+						if (data[2] == 255 && data[3] == 254)
+						{
+							var reader = new DebugBytecodeReader(data, 0, data.Length);
+							string error = "";
+							try
+							{
+								reader.ReadByte("minorVersion");
+								reader.ReadByte("majorVersion");
+								reader.ReadUInt16("shaderType");
+								DebugFx9Chunk.Parse(reader, (uint)(data.Length - 4));
+							}
+							catch (Exception ex)
+							{
+								error = ex.ToString();
+							}
+							var dump = reader.DumpStructure();
+							if (!string.IsNullOrEmpty(error))
+							{
+								dump += "\n" + error;
+							}
+							sw.Write(dump);
+						}
+						else
+						{
+							sw.Write("Format not supported");
+						}
+					}
 				}
 			}
-			
 		}
 	}
 }
