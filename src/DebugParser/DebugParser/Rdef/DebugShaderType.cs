@@ -69,7 +69,7 @@ namespace SlimShader.DebugParser.Rdef
 					for (int i = 0; i < result.NumberOfInterfaces; i++)
 					{
 						var interfaceTypeOffset = interfaceSectionReader.ReadUInt32($"UnkInterface{i}");
-						var interfaceReader = reader.CopyAtOffset("interfaceReader", typeReader, (int)interfaceTypeOffset);
+						var interfaceReader = reader.CopyAtOffset($"InterfaceReader {i}", typeReader, (int)interfaceTypeOffset);
 						result.Interfaces.Add(DebugShaderType.Parse(reader, interfaceReader,
 							target, indent + 4, i == 0, parentOffset));
 					}
@@ -85,10 +85,15 @@ namespace SlimShader.DebugParser.Rdef
 
 			if (memberCount > 0)
 			{
+
 				var memberReader = reader.CopyAtOffset("memberReader", typeReader, (int)memberOffset);
 				for (int i = 0; i < memberCount; i++)
+				{
+					memberReader.AddIndent($"Member {i}");
 					result.Members.Add(DebugShaderTypeMember.Parse(reader, memberReader, target, indent + 4, i == 0,
 						parentOffset));
+					memberReader.RemoveIndent();
+				}
 			}
 
 			return result;

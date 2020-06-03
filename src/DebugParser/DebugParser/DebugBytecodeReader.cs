@@ -90,7 +90,7 @@ namespace SlimShader.DebugParser
 		public uint PeakUInt32At(int offset)
 		{
 			var oldPos = _reader.BaseStream.Position;
-			_reader.BaseStream.Position = Offset + offset;
+			_reader.BaseStream.Position = offset;
 			var result = _reader.ReadUInt32();
 			_reader.BaseStream.Position = oldPos;
 			return result;

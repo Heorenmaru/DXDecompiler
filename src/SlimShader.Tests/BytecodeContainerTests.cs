@@ -178,6 +178,11 @@ namespace SlimShader.Tests
 			// Act.
 			var bytecodeContainer = DebugParser.DebugBytecodeContainer.Parse(binaryFileBytes);
 			var result = bytecodeContainer.Dump();
+			foreach(var exception in bytecodeContainer.Exceptions)
+			{
+				result += "\n" + exception.ToString();
+			}
+
 			File.WriteAllText($"{OutputDir}/{relPath}.d.txt", result);
 
 			var html = bytecodeContainer.DumpHTML();

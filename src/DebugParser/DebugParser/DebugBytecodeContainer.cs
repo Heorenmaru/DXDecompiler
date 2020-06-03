@@ -139,7 +139,7 @@ namespace SlimShader.DebugParser
 				{
 					if (chunk.LibraryContainer.Exception != null)
 					{
-						result.Add(Exception);
+						result.Add(chunk.LibraryContainer.Exception);
 					}
 				}
 				return result;

@@ -34,8 +34,11 @@ namespace SlimShader.DebugParser.Rdef
 
 			var variableReader = reader.CopyAtOffset("variableReader", constantBufferReader, (int)variableOffset);
 			for (int i = 0; i < variableCount; i++)
+			{
+				variableReader.AddIndent($"Variable {i}");
 				result.Variables.Add(DebugShaderVariable.Parse(reader, variableReader, target, i == 0));
-
+				variableReader.RemoveIndent();
+			}
 			result.Size = constantBufferReader.ReadUInt32("size");
 			result.Flags = (ConstantBufferFlags)constantBufferReader.ReadUInt32("Flags");
 			result.BufferType = (ConstantBufferType)constantBufferReader.ReadUInt32("BufferType");
