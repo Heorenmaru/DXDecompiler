@@ -33,6 +33,7 @@ namespace SlimShader.DebugParser.Rdef
 		{
 			uint nameOffset = variableReader.ReadUInt32("nameOffset");
 			var nameReader = reader.CopyAtOffset("nameReader", variableReader, (int)nameOffset);
+			var name = nameReader.ReadString("name");
 
 			var startOffset = variableReader.ReadUInt32("startOffset");
 			uint size = variableReader.ReadUInt32("size");
@@ -54,7 +55,7 @@ namespace SlimShader.DebugParser.Rdef
 					defaultValue.Add(new Number(defaultValueReader.ReadBytes($"defaultValue{i}", 4)));
 			}
 
-			var name = nameReader.ReadString("name");
+
 			var result = new DebugShaderVariable
 			{
 				DefaultValue = defaultValue,

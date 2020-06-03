@@ -23,13 +23,13 @@ namespace SlimShader.DebugParser.Rdef
 		{
 			uint nameOffset = constantBufferReader.ReadUInt32("nameOffset");
 			var nameReader = reader.CopyAtOffset("nameReader", constantBufferReader, (int)nameOffset);
-
+			var name = nameReader.ReadString("name");
 			uint variableCount = constantBufferReader.ReadUInt32("variableCount");
 			uint variableOffset = constantBufferReader.ReadUInt32("variableOffset");
 
 			var result = new DebugConstantBuffer
 			{
-				Name = nameReader.ReadString("name")
+				Name = name
 			};
 
 			var variableReader = reader.CopyAtOffset("variableReader", constantBufferReader, (int)variableOffset);

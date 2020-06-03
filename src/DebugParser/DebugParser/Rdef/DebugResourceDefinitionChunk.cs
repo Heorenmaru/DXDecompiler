@@ -3,6 +3,7 @@ using SlimShader.Chunks.Rdef;
 using SlimShader.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -21,7 +22,19 @@ namespace SlimShader.DebugParser.Rdef
 			ConstantBuffers = new List<DebugConstantBuffer>();
 			ResourceBindings = new List<DebugResourceBinding>();
 		}
-
+		static int CalculateResourceBindingStride(DebugShaderVersion version)
+		{
+			if(version.ProgramType == ProgramType.LibraryShader)
+			{
+				return 32;
+			} else if(version.MajorVersion == 5 && version.MinorVersion == 1)
+			{
+				return 40;
+			} else
+			{
+				return 32;
+			}
+		}
 		public static DebugResourceDefinitionChunk Parse(DebugBytecodeReader reader)
 		{
 			var headerReader = reader.CopyAtCurrentPosition("RDefHeader", reader);
@@ -58,18 +71,21 @@ namespace SlimShader.DebugParser.Rdef
 				}
 
 				var unkStride1 = headerReader.ReadUInt32("unkStride1"); // TODO
-
 				var constantBufferStride = headerReader.ReadUInt32("constantBufferStride");
-
 				var resourceBindingStride = headerReader.ReadUInt32("resourceBindingStride");
-
 				//Shader Variable Stride?
 				var unkStride2 = headerReader.ReadUInt32("unkStride2");
-
 				var unkStride3 = headerReader.ReadUInt32("unkStride3");
-
 				//Shader Type Member Stride?
 				var unkStride4 = headerReader.ReadUInt32("unkStride4");
+
+				Debug.Assert(unkStride1 == 60, $"unkStride1 is {unkStride1}");
+				Debug.Assert(constantBufferStride == 24, $"constantBufferStride is {constantBufferStride}");
+				Debug.Assert(resourceBindingStride == CalculateResourceBindingStride(target), 
+					$"resourceBindingStride is {resourceBindingStride}");
+				Debug.Assert(unkStride2 == 40, $"unkStride2 is {unkStride2}");
+				Debug.Assert(unkStride3 == 36, $"unkStride3 is {unkStride3}");
+				Debug.Assert(unkStride4 == 12, $"unkStride4 is {unkStride4}");
 
 				result.InterfaceSlotCount = headerReader.ReadUInt32("InterfaceSlotCount");
 			}

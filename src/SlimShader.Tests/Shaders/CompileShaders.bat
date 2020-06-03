@@ -132,6 +132,10 @@ CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_4_0 lib_4_0
 CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_4_1 lib_4_1 || GOTO :error
 CALL CompileShader2.bat Internal/Misc LibraryTest2.hlsl LibraryTest2_5_0 lib_5_0 || GOTO :error
 
+CALL CompileShader2.bat Internal/Misc LibraryTest3.hlsl LibraryTest3_4_0 lib_4_0 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest3.hlsl LibraryTest3_4_1 lib_4_1 || GOTO :error
+CALL CompileShader2.bat Internal/Misc LibraryTest3.hlsl LibraryTest3_5_0 lib_5_0 || GOTO :error
+
 Set UNITY_INCLUDES="%cd%\Unity\CGIncludes"
 CALL CompileShader.bat Unity fog_test.hlsl fog_test_Exp2_VS_25 vs_5_0 vert "/I%UNITY_INCLUDES%" /Gec "/DFOG_EXP2=1" "/DSHADER_TARGET=25" "/DUNITY_REVERSED_Z=1" || GOTO :error
 CALL CompileShader.bat Unity fog_test.hlsl fog_test_Exp2_PS_25 ps_5_0 frag "/I%UNITY_INCLUDES%" /Gec "/DFOG_EXP2=1" "/DSHADER_TARGET=25" "/DUNITY_REVERSED_Z=1" || GOTO :error

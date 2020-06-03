@@ -14,8 +14,3 @@ cbuffer $Globals
     cClass5 gAbstractInterface11;       // Offset:  176, size:    0
 }
 
-//
-// 1 local interface(s)
-//
-iInterface1 gAbstractInterface1;
-

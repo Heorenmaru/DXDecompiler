@@ -15,8 +15,8 @@ namespace SlimShader.DebugParser
 
 		internal static DebugShaderVersion ParseRdef(DebugBytecodeReader reader)
 		{
-			byte minorVersion = reader.ReadByte("majorVersion");
-			byte majorVersion = reader.ReadByte("minorVersion");
+			byte minorVersion = reader.ReadByte("minorVersion");
+			byte majorVersion = reader.ReadByte("majorVersion");
 			ushort programTypeValue = reader.ReadUInt16("programTypeValue");
 			ProgramType programType = (ProgramType)programTypeValue;
 			switch (programTypeValue)

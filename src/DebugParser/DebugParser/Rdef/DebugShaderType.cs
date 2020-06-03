@@ -1,5 +1,7 @@
-﻿using SlimShader.Chunks.Rdef;
+﻿using SlimShader.Chunks.Common;
+using SlimShader.Chunks.Rdef;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace SlimShader.DebugParser.Rdef
 {
@@ -94,6 +96,21 @@ namespace SlimShader.DebugParser.Rdef
 						parentOffset));
 					memberReader.RemoveIndent();
 				}
+			}
+
+			if(target.ProgramType == ProgramType.LibraryShader && target.MajorVersion == 4)
+			{
+				var unk1 = typeReader.ReadUInt32("Unk1");
+				var unk2 = typeReader.ReadUInt32("Unk2");
+				var unk3 = typeReader.ReadUInt32("Unk3");
+				var unk4 = typeReader.ReadUInt32("Unk4");
+				var typeNameOffset = typeReader.ReadUInt32("typeNameoffset");
+				var typeNameReader = reader.CopyAtOffset("TypeNameReader", typeReader, (int)typeNameOffset);
+				typeNameReader.ReadString("TypeName");
+				Debug.Assert(unk1 == 0, $"ShaderType.Unk1={unk1}");
+				Debug.Assert(unk2 == 0, $"ShaderType.Unk2={unk2}");
+				Debug.Assert(unk3 == 0, $"ShaderType.Unk3={unk3}");
+				Debug.Assert(unk4 == 0, $"ShaderType.Unk4={unk4}");
 			}
 
 			return result;
