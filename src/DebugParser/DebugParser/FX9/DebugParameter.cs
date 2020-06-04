@@ -55,10 +55,9 @@ namespace SlimShader.DebugParser.FX9
 				}
 
 			}
-			if (result.ParameterType == ParameterType.Texture)
+			if (result.ParameterClass == ParameterClass.Object)
 			{
-				var unk0 = variableReader.ReadUInt32("unk0");
-				Debug.Assert(unk0 == 0, "TextureParameter.unk0");
+				result.ElementCount = variableReader.ReadUInt32("ElementCount");
 			}
 			return result;
 		}
@@ -77,6 +76,8 @@ namespace SlimShader.DebugParser.FX9
 					return Rows * Columns * 4 * elementCount;
 				case ParameterClass.Struct:
 					return (uint)StructMembers.Sum(m => m.GetSize()) * elementCount;
+				case ParameterClass.Object:
+					return 4 * elementCount;
 				default:
 					return 0;
 			}

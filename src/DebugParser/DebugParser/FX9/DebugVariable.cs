@@ -23,18 +23,22 @@ namespace SlimShader.DebugParser.FX9
 			result.AnnotationCount = variableReader.ReadUInt32("AnnotationCount");
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
+				variableReader.AddIndent($"Annotation {i}");
 				result.Annotations.Add(DebugAnnotation.Parse(reader, variableReader));
+				variableReader.RemoveIndent();
 			}
 			var paramterReader = reader.CopyAtOffset("ParameterReader", variableReader, (int)result.ParameterOffset);
 			result.Parameter = DebugParameter.Parse(reader, paramterReader);
 
 			if (result.Parameter.ParameterType.IsSampler())
 			{
-				var stateReader = reader.CopyAtOffset("SamplerStateReader", variableReader, (int)result.ValueOffset);
-				var stateCount = stateReader.ReadUInt32("StateCount");
+				var assignmentReader = reader.CopyAtOffset("SamplerAssignmentReader", variableReader, (int)result.ValueOffset);
+				var stateCount = assignmentReader.ReadUInt32("AssignmentCount");
 				for (int i = 0; i < stateCount; i++)
 				{
-					result.SamplerStates.Add(DebugAssignment.Parse(reader, stateReader));
+					assignmentReader.AddIndent($"Assignment {i}");
+					result.SamplerStates.Add(DebugAssignment.Parse(reader, assignmentReader));
+					assignmentReader.RemoveIndent();
 				}
 			}
 			else

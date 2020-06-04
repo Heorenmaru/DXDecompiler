@@ -25,7 +25,7 @@ namespace SlimShader.DebugParser.FX9
 			var variableReader = reader.CopyAtOffset("AssignmentTypeReader", assignmentReader, (int)result.TypeOffset);
 			result.Parameter = DebugParameter.Parse(reader, variableReader);
 
-			var valueReader = reader.CopyAtCurrentPosition("ValueReader", assignmentReader, (int)result.ValueOffset);
+			var valueReader = reader.CopyAtOffset("ValueReader", assignmentReader, (int)result.ValueOffset);
 			result.Value = result.Parameter.ReadParameterValue(valueReader);
 			return result;
 		}

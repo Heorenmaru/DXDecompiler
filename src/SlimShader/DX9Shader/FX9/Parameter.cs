@@ -46,6 +46,10 @@ namespace SlimShader.DX9Shader.FX9
 					result.StructMembers.Add(Parameter.Parse(reader, variableReader));
 				}
 			}
+			if (result.ParameterClass == ParameterClass.Object)
+			{
+				result.ElementCount = variableReader.ReadUInt32();
+			}
 
 			var nameReader = reader.CopyAtOffset((int)result.NameOffset);
 			result.Name = nameReader.TryReadString();
@@ -59,6 +63,8 @@ namespace SlimShader.DX9Shader.FX9
 			var elementCount = Math.Max(1, ElementCount);
 			switch (ParameterClass)
 			{
+				case ParameterClass.Object:
+					return 4 * elementCount;
 				case ParameterClass.Scalar:
 					return 4 * elementCount;
 				case ParameterClass.Vector:
@@ -90,11 +96,16 @@ namespace SlimShader.DX9Shader.FX9
 			}
 			if(ParameterClass == ParameterClass.Struct)
 			{
+				sb.AppendLine($"    Parameter.ElementCount: {ElementCount} {ElementCount.ToString("X4")}");
 				sb.AppendLine($"    Parameter.StructMembers: {StructMemberCount} {StructMemberCount.ToString("X4")}");
 				foreach(var member in StructMembers)
 				{
 					sb.Append(member.Dump());
 				}
+			}
+			if (ParameterClass == ParameterClass.Object)
+			{
+				sb.AppendLine($"    Parameter.ElementCount: {ElementCount} {ElementCount.ToString("X4")}");
 			}
 			return sb.ToString();
 		}
