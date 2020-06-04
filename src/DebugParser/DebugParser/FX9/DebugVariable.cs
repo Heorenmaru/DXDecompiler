@@ -25,8 +25,8 @@ namespace SlimShader.DebugParser.FX9
 			{
 				result.Annotations.Add(DebugAnnotation.Parse(reader, variableReader));
 			}
-			var dataReader = reader.CopyAtOffset("VariableData", variableReader, (int)result.ParameterOffset);
-			result.Parameter = DebugParameter.Parse(reader, dataReader);
+			var paramterReader = reader.CopyAtOffset("ParameterReader", variableReader, (int)result.ParameterOffset);
+			result.Parameter = DebugParameter.Parse(reader, paramterReader);
 
 			if (result.Parameter.ParameterType.IsSampler())
 			{

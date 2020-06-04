@@ -1,6 +1,7 @@
 ﻿using SlimShader.DX9Shader;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SlimShader.DebugParser.FX9
@@ -53,6 +54,11 @@ namespace SlimShader.DebugParser.FX9
 					result.StructMembers.Add(DebugParameter.Parse(reader, variableReader));
 				}
 
+			}
+			if (result.ParameterType == ParameterType.Texture)
+			{
+				var unk0 = variableReader.ReadUInt32("unk0");
+				Debug.Assert(unk0 == 0, "TextureParameter.unk0");
 			}
 			return result;
 		}
