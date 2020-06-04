@@ -11,6 +11,8 @@ namespace SlimShader.DebugParser
 		public List<IDumpable> Members = new List<IDumpable>();
 		public uint AbsoluteIndex => Members.Count == 0 ? 0 : Members.First().AbsoluteIndex;
 		public uint RelativeIndex => Members.Count == 0 ? 0 : Members.First().RelativeIndex;
+		public string Value => "";
+		public string Type => "Indent";
 		public uint Size
 		{
 			get

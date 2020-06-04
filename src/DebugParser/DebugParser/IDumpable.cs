@@ -12,5 +12,7 @@ namespace SlimShader.DebugParser
 		uint AbsoluteIndex { get; }
 		uint RelativeIndex { get; }
 		uint Size { get; }
+		string Type { get;  }
+		string Value { get; }
 	}
 }

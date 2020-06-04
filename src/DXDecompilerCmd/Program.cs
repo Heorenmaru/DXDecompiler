@@ -80,6 +80,9 @@ namespace DXDecompilerCmd
 					case "-d":
 						options.Mode = DecompileMode.Debug;
 						break;
+					case "-h":
+						options.Mode = DecompileMode.DebugHtml;
+						break;
 					default:
 						options.SourcePath = args[i];
 						break;
@@ -103,7 +106,6 @@ namespace DXDecompilerCmd
 			var programType = GetProgramType(data);
 			using (var sw = GetStream(options))
 			{
-				sw.WriteLine(string.Join(" ", args));
 				if (programType == ProgramType.Unknown)
 				{
 					Console.Error.WriteLine($"Unable to identify shader object format");
@@ -123,8 +125,15 @@ namespace DXDecompilerCmd
 					}
 					else if (options.Mode == DecompileMode.Debug)
 					{
+						sw.WriteLine(string.Join(" ", args));
 						var shaderBytecode = DebugBytecodeContainer.Parse(data);
 						var result = shaderBytecode.Dump();
+						sw.Write(result);
+					}
+					else if (options.Mode == DecompileMode.DebugHtml)
+					{
+						var shaderBytecode = DebugBytecodeContainer.Parse(data);
+						var result = shaderBytecode.DumpHTML();
 						sw.Write(result);
 					}
 				}
@@ -142,6 +151,7 @@ namespace DXDecompilerCmd
 					}
 					else if (options.Mode == DecompileMode.Debug)
 					{
+						sw.WriteLine(string.Join(" ", args));
 						if (data[2] == 255 && data[3] == 254)
 						{
 							var reader = new DebugBytecodeReader(data, 0, data.Length);
@@ -158,6 +168,35 @@ namespace DXDecompilerCmd
 								error = ex.ToString();
 							}
 							var dump = reader.DumpStructure();
+							if (!string.IsNullOrEmpty(error))
+							{
+								dump += "\n" + error;
+							}
+							sw.Write(dump);
+						}
+						else
+						{
+							sw.Write("Format not supported");
+						}
+					}
+					else if (options.Mode == DecompileMode.DebugHtml)
+					{
+						if (data[2] == 255 && data[3] == 254)
+						{
+							var reader = new DebugBytecodeReader(data, 0, data.Length);
+							string error = "";
+							try
+							{
+								reader.ReadByte("minorVersion");
+								reader.ReadByte("majorVersion");
+								reader.ReadUInt16("shaderType");
+								DebugFx9Chunk.Parse(reader, (uint)(data.Length - 4));
+							}
+							catch (Exception ex)
+							{
+								error = ex.ToString();
+							}
+							var dump = reader.DumpHtml();
 							if (!string.IsNullOrEmpty(error))
 							{
 								dump += "\n" + error;

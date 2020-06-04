@@ -19,9 +19,12 @@ namespace SlimShader.DebugParser
 		public uint AbsoluteIndex => (uint)Offset;
 		public uint RelativeIndex => (uint)(Offset - _parentOffset);
 		public uint Size => (uint)(InheritSize ? ReadCount : Count);
+		public string Type => "Container";
+		public string Value => "";
 		private readonly BinaryReader _reader;
 		private int _parentOffset;
-		private List<IDumpable> Members = new List<IDumpable>();
+
+		public List<IDumpable> Members = new List<IDumpable>();
 		DebugBytecodeReader Root = null;
 		Stack<DebugIndent> Indents = new Stack<DebugIndent>();
 		public static bool DumpOffsets = true;

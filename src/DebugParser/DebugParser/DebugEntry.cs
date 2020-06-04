@@ -6,11 +6,11 @@ namespace SlimShader.DebugParser
 	public class DebugEntry : IDumpable
 	{
 		public string Name;
-		public string Value;
+		public string Value { get; set; }
 		public int Indent { get; set; }
 		public uint RelativeIndex { get; set; }
 		public uint AbsoluteIndex { get; set; }
-		public string Type;
+		public string Type { get; set; }
 		public uint Size { get; set; }
 		private bool formatHex;
 		public DebugEntry(bool formatHex = true)

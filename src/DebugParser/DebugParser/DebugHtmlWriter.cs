@@ -109,7 +109,7 @@ namespace SlimShader.DebugParser
 				XElement label = null;
 				if (entry is DebugEntry de)
 				{
-					var valueLength = 7;
+					var valueLength = 10;
 					var value = de.Value.Length > valueLength ?
 						(de.Value.Substring(0, valueLength - 3) + "...") :
 						de.Value;
@@ -142,13 +142,25 @@ namespace SlimShader.DebugParser
 				}
 				if (entry is DebugBytecodeReader dr)
 				{
-					label = new XElement("span", $"{dr.Name}",
+					var labelText = dr.Name;
+					var value = "";
+					if(dr.Members.Count == 1 && dr.Members.First().Type == "String")
+					{
+						var valueLength = 10;
+						var child = dr.Members.First();
+						var truncatedValue = child.Value.Length > valueLength ?
+							(child.Value.Substring(0, valueLength - 3) + "...") :
+							child.Value;
+						labelText += $"={truncatedValue}";
+						value = child.Value;
+					}
+					label = new XElement("span", $"{labelText}",
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", dr.AbsoluteIndex),
 						new XAttribute("data-end", dr.AbsoluteIndex + dr.Size),
 						new XAttribute("id", "member_" + entry.GetHashCode()),
 						new XAttribute("name", dr.Name),
-						new XAttribute("value", ""),
+						new XAttribute("value", value),
 						new XAttribute("size", dr.Size),
 						new XAttribute("rel-start", dr.RelativeIndex),
 						new XAttribute("rel-end", dr.RelativeIndex + dr.Size),
