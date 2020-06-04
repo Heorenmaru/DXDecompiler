@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace SlimShader.DebugParser
 {
@@ -6,6 +8,24 @@ namespace SlimShader.DebugParser
 	{
 		public string Name;
 		public int Indent { get; set; }
+		public List<IDumpable> Members = new List<IDumpable>();
+		public uint AbsoluteIndex => Members.Count == 0 ? 0 : Members.First().AbsoluteIndex;
+		public uint RelativeIndex => Members.Count == 0 ? 0 : Members.First().RelativeIndex;
+		public uint Size
+		{
+			get
+			{
+				if(Members.Count == 0)
+				{
+					return 0;
+				}
+				if(Members.Count == 1)
+				{
+					return Members.First().Size;
+				}
+				return Members.Max(m => m.AbsoluteIndex) - Members.Min(m => m.AbsoluteIndex);
+			}
+		}
 		public string Dump()
 		{
 			var member = this;

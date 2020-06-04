@@ -9,5 +9,8 @@ namespace SlimShader.DebugParser
 	{
 		string Dump();
 		int Indent { get; }
+		uint AbsoluteIndex { get; }
+		uint RelativeIndex { get; }
+		uint Size { get; }
 	}
 }

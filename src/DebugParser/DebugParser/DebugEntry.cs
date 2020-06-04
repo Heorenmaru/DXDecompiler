@@ -8,10 +8,10 @@ namespace SlimShader.DebugParser
 		public string Name;
 		public string Value;
 		public int Indent { get; set; }
-		public uint RelativeIndex;
-		public uint AbsoluteIndex;
+		public uint RelativeIndex { get; set; }
+		public uint AbsoluteIndex { get; set; }
 		public string Type;
-		public uint Size;
+		public uint Size { get; set; }
 		private bool formatHex;
 		public DebugEntry(bool formatHex = true)
 		{

@@ -18,7 +18,7 @@ namespace SlimShader.DebugParser
 			byte minorVersion = reader.ReadByte("minorVersion");
 			byte majorVersion = reader.ReadByte("majorVersion");
 			ushort programTypeValue = reader.ReadUInt16("programTypeValue");
-			ProgramType programType = (ProgramType)programTypeValue;
+			ProgramType programType;
 			switch (programTypeValue)
 			{
 				case 0xFFFF:

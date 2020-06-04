@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -24,7 +25,9 @@ namespace SlimShader.DebugParser
 		{
 			stringBuilder = new StringBuilder();
 			Write();
-			return stringBuilder.ToString();
+			var result = stringBuilder.ToString();
+			result = Regex.Replace(result, @"<\/span>\s+<span", @"</span><span", RegexOptions.Multiline);
+			return result;
 		}
 		private void Write()
 		{
@@ -124,21 +127,31 @@ namespace SlimShader.DebugParser
 						new XAttribute("type", de.Type));
 				}
 				if(entry is DebugIndent di){
-					label = new XElement("span", "Indent: " + di.Name);
+					label = new XElement("span", $"{di.Name}",
+						new XAttribute("class", "tree-label"),
+						new XAttribute("data-start", di.AbsoluteIndex),
+						new XAttribute("data-end", di.AbsoluteIndex + di.Size),
+						new XAttribute("id", "member_" + entry.GetHashCode()),
+						new XAttribute("name", di.Name),
+						new XAttribute("value", ""),
+						new XAttribute("size", di.Size),
+						new XAttribute("rel-start", di.RelativeIndex),
+						new XAttribute("rel-end", di.RelativeIndex + di.Size),
+						new XAttribute("type", "Indent")
+						);
 				}
 				if (entry is DebugBytecodeReader dr)
 				{
-					var size = dr.InheritSize ? dr.ReadCount : dr.Count;
 					label = new XElement("span", $"{dr.Name}",
 						new XAttribute("class", "tree-label"),
-						new XAttribute("data-start", dr.Offset),
-						new XAttribute("data-end", dr.Offset + size),
+						new XAttribute("data-start", dr.AbsoluteIndex),
+						new XAttribute("data-end", dr.AbsoluteIndex + dr.Size),
 						new XAttribute("id", "member_" + entry.GetHashCode()),
 						new XAttribute("name", dr.Name),
 						new XAttribute("value", ""),
-						new XAttribute("size", size),
-						new XAttribute("rel-start", dr.Offset),
-						new XAttribute("rel-end", dr.Offset + size),
+						new XAttribute("size", dr.Size),
+						new XAttribute("rel-start", dr.RelativeIndex),
+						new XAttribute("rel-end", dr.RelativeIndex + dr.Size),
 						new XAttribute("type", "Container")
 						);
 				}
@@ -173,38 +186,50 @@ namespace SlimShader.DebugParser
 		}
 		private void WriteHexView(XElement element)
 		{
+			var nbsp = "\u00A0";
 			var used = BuildUsedLookup();
 			for (int i = 0; i < buffer.Length; i += 16)
 			{
 				var row = new XElement("div",
 					new XAttribute("row", i / 16),
 					new XAttribute("class", "monospace"),
-					new XElement("span", i.ToString("X4") + ":"));
+					new XElement("span",  $"{i.ToString("X4")}:{nbsp}{nbsp}"));
 				element.Add(row);
 				for (int j = i; j < i + 16; j++)
 				{
 					
-					var text = j < buffer.Length ? buffer[j].ToString("X2") : "\u00A0\u00A0";
+					var text = j < buffer.Length ? buffer[j].ToString("X2") : $"{nbsp}{nbsp}";
 					var hexElement = new XElement("span", text,
 						new XAttribute("index", j.ToString()),
-						new XAttribute("id", "b" + j.ToString()));
+						new XAttribute("id", "b" + j.ToString()),
+						new XAttribute("class", "hex_byte"));
 					if (j < used.Length && used[j] == null)
 					{
-						hexElement.Add(new XAttribute("class", "unused"));
+						hexElement.Attribute("class").Value += " unused";
 					} else if(j < used.Length && used[j] != null)
 					{
 						hexElement.Add(new XAttribute("member", "member_" + used[j].GetHashCode()));
 					}
 					row.Add(hexElement);
+					if(j % 4 == 3 && j % 16 != 15)
+					{
+						row.Add(new XElement("span", nbsp));
+					}
 				}
-				var asciiText = "";
+				row.Add(new XElement("span", $"{nbsp}{nbsp}"));
 				for (int j = i; j < i + 16; j++)
 				{
-					asciiText += j < buffer.Length ? DebugUtil.CharToReadable((char)buffer[j]) : "\u00A0";
+					var asciiText = j < buffer.Length ? DebugUtil.CharToReadable((char)buffer[j]) : nbsp;
+					var asciiElement = new XElement("span", 
+							asciiText,
+							new XAttribute("id", "a" + j.ToString()),
+							new XAttribute("class", "hex_ascii"));
+					row.Add(asciiElement);
+					if (j < used.Length && used[j] == null)
+					{
+						asciiElement.Attribute("class").Value += " unused";
+					}
 				}
-				var asciiElement = new XElement("span", asciiText);
-				row.Add(asciiElement);
-
 			}
 		}
 		DebugEntry[] BuildUsedLookup()

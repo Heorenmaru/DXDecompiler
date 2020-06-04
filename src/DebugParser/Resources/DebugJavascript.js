@@ -11,14 +11,19 @@
 }
 function setDetailPanel(element, detailView){
 	const numberTypes = new Set(["UInt32", "Int32", "UInt16", "Int16", "Byte"]);
-	var isNumeric = numberTypes.has(element.getAttribute("type"));
+	var type = element.getAttribute("type");
+	var isNumeric = numberTypes.has(type);
 	var intValue = isNumeric ? parseInt(element.getAttribute("value")) : 0;
 	detailView.innerHTML = "";
 	var ul = document.createElement("ul");
 	detailView.appendChild(ul);
 	addDetailLabel(ul, "Name", element.getAttribute("name"));
 	addDetailLabel(ul, "Type", element.getAttribute("type"));
-	addDetailLabel(ul, "Value", element.getAttribute("value"));
+	if(type == "Byte[]") {
+		addDetailLabel(ul, "Value", `byte[${element.getAttribute("size")}]`);
+	} else {
+		addDetailLabel(ul, "Value", element.getAttribute("value"));
+	}
 	if(isNumeric){
 		var ascii = "";
 		for(var i = 0; i < 4; i++){
@@ -96,10 +101,10 @@ function setDetailPanelUnusedMemory(element, detailView) {
 window.onload = function(){
 	console.log("hello");
 	var detailView = document.getElementById("detailview");
-	var bytes = document.querySelectorAll("span[index]");
+	var bytes = document.getElementsByClassName("hex_byte");
+	var ascii = document.getElementsByClassName("hex_ascii");
 	var highlighted = [];
 	var toggler = document.getElementsByClassName("caret");
-	var highlightedMember = null;
 	for (var i = 0; i < toggler.length; i++)
 	{
 		toggler[i].addEventListener("click", function() {
@@ -111,23 +116,22 @@ window.onload = function(){
 	for (var i = 0; i < labels.length; i++)
 	{
 		labels[i].addEventListener("click", function() {
-			if(highlightedMember !== null){
-				highlightedMember.classList.remove('highlighted');
-			}
-			this.classList.add("highlighted");
-			highlightedMember = this;
-			var dataStart = parseInt(this.getAttribute("data-start"));
-			var dataEnd = parseInt(this.getAttribute("data-end"));
 			for(var j = 0; j < highlighted.length; j++){
-				highlighted[j].className = "";
+				highlighted[j].classList.remove("highlighted");
 			}
 			highlighted = [];
+			this.classList.add("highlighted");
+			highlighted.push(this);
+			var dataStart = parseInt(this.getAttribute("data-start"));
+			var dataEnd = parseInt(this.getAttribute("data-end"));
 			if(!isScrolledIntoView(bytes[dataStart])){
 				bytes[dataStart].scrollIntoView();
 			}
 			for(var j = dataStart; j < dataEnd && j < bytes.length; j++){
-				bytes[j].className = "highlighted";
+				bytes[j].classList.add("highlighted");
 				highlighted.push(bytes[j]);
+				ascii[j].classList.add("highlighted");
+				highlighted.push(ascii[j]);
 			}
 			setDetailPanel(this, detailView);
 		});
@@ -138,6 +142,9 @@ window.onload = function(){
 			var memberId = this.getAttribute("member");
 			var member = document.getElementById(memberId);
 			if (member === null) {
+				for(var j = 0; j < highlighted.length; j++){
+					highlighted[j].classList.remove("highlighted");
+				}
 				setDetailPanelUnusedMemory(this, detailView);
 				return;
 			}

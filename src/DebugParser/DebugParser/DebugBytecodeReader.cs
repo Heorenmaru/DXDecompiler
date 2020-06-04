@@ -14,11 +14,16 @@ namespace SlimShader.DebugParser
 		public readonly int Count;
 		public int ReadCount;
 		public bool InheritSize;
+		//IDumpable
 		public int Indent { get; set; }
+		public uint AbsoluteIndex => (uint)Offset;
+		public uint RelativeIndex => (uint)(Offset - _parentOffset);
+		public uint Size => (uint)(InheritSize ? ReadCount : Count);
 		private readonly BinaryReader _reader;
 		private int _parentOffset;
 		private List<IDumpable> Members = new List<IDumpable>();
 		DebugBytecodeReader Root = null;
+		Stack<DebugIndent> Indents = new Stack<DebugIndent>();
 		public static bool DumpOffsets = true;
 		public string Name;
 		public bool EndOfBuffer
@@ -63,6 +68,11 @@ namespace SlimShader.DebugParser
 			{
 				ReadCount = currentReadCount;
 			}
+			if(Indents.Count > 0)
+			{
+				Indents.Peek().Members.Add(result);
+			}
+			if(this != Root) Members.Add(result);
 			Root.Members.Add(result);
 			return result;
 		}
@@ -74,11 +84,14 @@ namespace SlimShader.DebugParser
 				Name = name,
 				Indent = Indent
 			};
+			Indents.Push(result);
+			if (this != Root) Members.Add(result);
 			Root.Members.Add(result);
 			Indent++;
 		}
 		internal void RemoveIndent()
 		{
+			Indents.Pop();
 			Indent--;
 		}
 		public uint PeakUint32()
