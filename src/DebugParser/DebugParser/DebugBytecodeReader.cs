@@ -188,7 +188,7 @@ namespace SlimShader.DebugParser
 
 		public string TryReadString(string name)
 		{
-			var length = _reader.ReadUInt32();
+			var length = ReadUInt32($"{name}Length");
 			string result = "";
 			var toRead = length == 0 ? 0 : length;
 			if(toRead % 4 != 0)
