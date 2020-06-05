@@ -6,6 +6,10 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
+	/*
+	 * 
+	 * 
+	 */ 
 	public class Variable
 	{
 		public uint DataOffset;

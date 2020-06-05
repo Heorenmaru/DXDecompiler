@@ -6,6 +6,13 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
+	/*
+	 * Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/techniques-and-passes
+	 * Syntax:
+	 * pass  [ id ]  [< annotation(s) >] 
+	 *    { state assignment(s) }
+	 * 
+	 */
 	public class Pass
 	{
 		public string Name { get; private set; }

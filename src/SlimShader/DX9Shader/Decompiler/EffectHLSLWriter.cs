@@ -1,4 +1,5 @@
 ﻿using SlimShader.DX9Shader.FX9;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,19 +41,93 @@ namespace SlimShader.DX9Shader
 			{
 				WriteTechnique(technique);
 			}
+			WriteLine("//Errors: {0} ",
+				EffectChunk.DebugError);
+			WriteLine("//Entries {0} Binary {1}({2}) Inline {3}({4})", 
+				EffectChunk.DataEntries.Count,
+				EffectChunk.UnknownCount,
+				EffectChunk.BinaryDataList.Count,
+				EffectChunk.InlineShaderCount,
+				EffectChunk.InlineShaders.Count);
+			WriteLine("");
+			for (int i = 0; i < EffectChunk.DataEntries.Count; i++)
+			{
+				WriteLine("//{0} {1}",
+					i, DataEntryToString((uint)i + 1));
+				if (EffectChunk.DataEntries[i].BinaryData != null)
+				{
+					var data = EffectChunk.DataEntries[i].BinaryData;
+					WriteLine("//BinaryData{0}: Index? {1} Size: {2} DataLength {3} Version: {4}",
+						i, data.Index, data.Size, data.Data.Length, data.Version);
+				}
+				if (EffectChunk.DataEntries[i].InlineShader != null)
+				{
+					var data = EffectChunk.DataEntries[i].InlineShader;
+					WriteLine("//InlineShader{0}: Unk1 {1} Unk2 {2} Unk3 {3} Index? {4}",
+						i - EffectChunk.UnknownCount, 
+						data.Unknown1.ToString("X8"),
+						data.Unknown2.ToString("X8"),
+						data.Unknown3.ToString("X8"), 
+						data.Index);
+					WriteLine("//                IsVariable: {0} Size {1} Name: {2} Version: {3}",
+							 data.IsVariable, data.ShaderSize, data.VariableName, data.Version);
+
+				}
+				WriteLine("");
+
+			}
+			/*
 			for (int i = 0; i < EffectChunk.BinaryDataList.Count; i++)
 			{
 				var data = EffectChunk.BinaryDataList[i];
-				WriteLine("// BinaryData{0}: Index? {1} Size: {2} ", i, data.Index, data.Size);
+				WriteLine("//{0} BinaryData{0}: Index? {1} Size: {2} ", 
+					dataCount++, i, data.Index, data.Size);
 			}
 			for (int i = 0; i < EffectChunk.InlineShaders.Count; i++)
 			{
 				var data = EffectChunk.InlineShaders[i];
-				WriteLine("// InlineShader{0}: Unk0 {1} Unk2 {2} Unk3 {3} Index? {4}", 
-					i, data.Unknown1.ToString("X8"), data.Unknown2.ToString("X8"), data.Unknown3.ToString("X8"), data.Index);
+				WriteLine("//{0} InlineShader{0}: Unk0 {1} Unk2 {2} Unk3 {3} Index? {4}",
+					dataCount++, i, data.Unknown1.ToString("X8"), data.Unknown2.ToString("X8"), 
+					data.Unknown3.ToString("X8"), data.Index);
 				WriteLine("//                IsVariable: {0} Size {1} Name: {2} Version: {3}", 
 						 data.IsVariable, data.ShaderSize, data.VariableName, data.Version);
+			}*/
+		}
+		public string DataEntryToString(uint index)
+		{
+			index = index - 1;
+			if(index >= EffectChunk.DataEntries.Count)
+			{
+				return $"Index out of range {index}";
 			}
+			var data = EffectChunk.DataEntries[(int)index];
+			if(data.BinaryData != null)
+			{
+				if(data.BinaryData.Data.Length == 0)
+				{
+					return $"Variable lookup {data.BinaryData.Index}";
+				} else if (data.BinaryData.IsShader)
+				{
+					return $"compile shader Index {data.BinaryData.Index} size {data.BinaryData.Size} data {data.BinaryData.Data.Length}";
+				} else
+				{
+					return data.BinaryData.DataPreview;
+				}
+			}
+			if (data.InlineShader != null)
+			{
+				if (!string.IsNullOrEmpty(data.InlineShader.VariableName))
+				{
+					return data.InlineShader.VariableName;
+				} if(!string.IsNullOrEmpty(data.InlineShader.Version))
+				{
+					return $"compile {data.InlineShader.Version} Shader()";
+				} else
+				{
+					return $"Unknown inline shader {data.Index}";
+				}
+			}
+			throw new ArgumentException();
 		}
 		public void WriteVariable(Variable variable)
 		{
@@ -73,13 +148,26 @@ namespace SlimShader.DX9Shader
 				foreach (var state in variable.SamplerStates)
 				{
 					WriteIndent();
-					WriteLine("{0} = {1};", state.Type, state.Value.Data[0]);
+					if (state.Type == StateType.Texture)
+					{
+						var data = DataEntryToString(state.Value.Data[0]);
+						WriteLine("{0} = {1}; // {2}", state.Type, data, state.Value.Data[0]);
+					}
+					else
+					{
+						WriteLine("{0} = {1};", state.Type, state.Value.Data[0]);
+					}
 				}
 				indent--;
 				WriteLine("};");
 			} else
 			{
-				if (variable.DefaultValue.All(d => d.UInt == 0))
+				if (param.ParameterType.IsObjectType())
+				{
+					var data = DataEntryToString(variable.DefaultValue[0].UInt);
+					WriteLine(" = {0} ; // {1}", data, variable.DefaultValue[0].UInt);
+				}
+				else if (variable.DefaultValue.All(d => d.UInt == 0))
 				{
 					WriteLine(";");
 				}
@@ -155,6 +243,11 @@ namespace SlimShader.DX9Shader
 			if(assignment.Value.Count > 1)
 			{
 				value = string.Format("{{ {0} }}", string.Join(", ", assignment.Value));
+			} else if(
+				assignment.Type == StateType.PixelShader ||
+				assignment.Type == StateType.VertexShader)
+			{
+				value = DataEntryToString(assignment.Value[0].UInt) + $" /* {assignment.Value[0].UInt} */";
 			} else
 			{
 				value = assignment.Value[0].ToString();

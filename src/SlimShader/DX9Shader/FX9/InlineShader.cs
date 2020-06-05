@@ -6,6 +6,9 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
+	/*
+	 * 
+	 */ 
 	public class InlineShader
 	{
 		public uint Unknown1;

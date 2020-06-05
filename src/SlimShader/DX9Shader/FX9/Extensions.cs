@@ -21,6 +21,18 @@ namespace SlimShader.DX9Shader.FX9
 					return false;
 			}
 		}
+		public static bool IsObjectType(this ParameterType type)
+		{
+			switch (type)
+			{
+				case ParameterType.Texture:
+				case ParameterType.PixelShader:
+				case ParameterType.VertexShader:
+					return true;
+				default:
+					return false;
+			}
+		}
 		public static bool RequiresIndex(this StateType type)
 		{
 			switch (type)

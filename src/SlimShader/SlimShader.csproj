@@ -220,6 +220,7 @@
     <Compile Include="DX9Shader\FX9\Annotation.cs" />
     <Compile Include="DX9Shader\FX9\AnnotationData.cs" />
     <Compile Include="DX9Shader\FX9\BinaryData.cs" />
+    <Compile Include="DX9Shader\FX9\DataEntry.cs" />
     <Compile Include="DX9Shader\FX9\DefaultValue.cs" />
     <Compile Include="DX9Shader\FX9\Extensions.cs" />
     <Compile Include="DX9Shader\FX9\Fx9Chunk.cs" />

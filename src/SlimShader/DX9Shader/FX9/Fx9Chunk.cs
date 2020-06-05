@@ -29,13 +29,14 @@ namespace SlimShader.DX9Shader.FX9
 		public List<Technique> Techniques = new List<Technique>();
 		public List<BinaryData> BinaryDataList = new List<BinaryData>();
 		public List<InlineShader> InlineShaders = new List<InlineShader>();
+		public List<DataEntry> DataEntries = new List<DataEntry>();
 		public uint length;
 		byte[] HeaderData;
 		byte[] BodyData;
 		byte[] FooterData;
 		byte[] Data;
 		uint FooterOffset;
-		string DebugError;
+		internal string DebugError;
 		public static Fx9Chunk Parse(BytecodeReader reader, uint length)
 		{
 			var result = new Fx9Chunk();
@@ -60,13 +61,27 @@ namespace SlimShader.DX9Shader.FX9
 				}
 				result.UnknownCount = footerReader.ReadUInt32();
 				result.InlineShaderCount = footerReader.ReadUInt32();
+				int dataIndex = 0;
 				for (int i = 0; i < result.UnknownCount; i++)
 				{
-					result.BinaryDataList.Add(BinaryData.Parse(bodyReader, footerReader));
+					var data = BinaryData.Parse(bodyReader, footerReader);
+					result.BinaryDataList.Add(data);
+					result.DataEntries.Add(new DataEntry()
+					{
+						BinaryData = data,
+						Index = dataIndex++
+					});
+
 				}
 				for (int i = 0; i < result.InlineShaderCount; i++)
 				{
-					result.InlineShaders.Add(InlineShader.Parse(bodyReader, footerReader));
+					var data = InlineShader.Parse(bodyReader, footerReader);
+					result.InlineShaders.Add(data);
+					result.DataEntries.Add(new DataEntry()
+					{
+						InlineShader = data,
+						Index = dataIndex++
+					});
 				}
 			} catch(Exception ex)
 			{

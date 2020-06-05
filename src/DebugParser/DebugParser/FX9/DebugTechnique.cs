@@ -18,11 +18,15 @@ namespace SlimShader.DebugParser.FX9
 			result.PassCount = techniqueReader.ReadUInt32("PassCount");
 			for (int i = 0; i < result.AnnotationCount; i++)
 			{
+				techniqueReader.AddIndent($"Annotation {i}");
 				result.Annotations.Add(DebugAnnotation.Parse(reader, techniqueReader));
+				techniqueReader.RemoveIndent();
 			}
 			for (int i = 0; i < result.PassCount; i++)
 			{
+				techniqueReader.AddIndent($"Pass {i}");
 				result.Passes.Add(DebugPass.Parse(reader, techniqueReader));
+				techniqueReader.RemoveIndent();
 			}
 			var nameReader = reader.CopyAtOffset("NameReader", techniqueReader, (int)result.NameOffset);
 			result.Name = nameReader.TryReadString("Name");

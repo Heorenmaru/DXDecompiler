@@ -5,6 +5,8 @@ CLS
 ECHO Compiling shaders...
 ECHO.
 
+CALL CompileShader2.bat Internal EffectTest.hlsl EffectTest fx_2_0 || GOTO :error
+
 CALL CompileShader.bat HLSLCrossCompiler/vs2 boolconst.hlsl boolconst vs_2_0 main || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 intrep.hlsl intrep vs_2_0 main || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 loop.hlsl loop vs_2_0 main || GOTO :error
