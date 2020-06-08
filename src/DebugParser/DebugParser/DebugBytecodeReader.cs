@@ -18,10 +18,22 @@ namespace SlimShader.DebugParser
 		public int Indent { get; set; }
 		public uint AbsoluteIndex => (uint)Offset;
 		public uint RelativeIndex => (uint)(Offset - _parentOffset);
-		public uint Size => (uint)(InheritSize ? ReadCount : Count);
+		//public uint Size => (uint)(InheritSize ? ReadCount : Count);
+		public uint Size {
+			get {
+				if (!InheritSize)
+				{
+					return (uint)Count;
+				}
+				if (Members.Count == 0) return 0;
+				if (Members.Count == 1) return Members.First().Size;
+				var last = Members.Last();
+				return last.AbsoluteIndex - AbsoluteIndex + last.Size;
+			}
+		}
 		public string Type => "Container";
 		public string Value => "";
-		private readonly BinaryReader _reader;
+		internal readonly BinaryReader _reader;
 		private int _parentOffset;
 
 		public List<IDumpable> Members = new List<IDumpable>();
@@ -221,8 +233,14 @@ namespace SlimShader.DebugParser
 			{
 				sb.Append(nextCharacter);
 			}
+			int paddingCount = 0;
+			while (!EndOfBuffer && _reader.ReadByte() == 0xAB)
+			{
+				paddingCount++;
+			}
+			_reader.BaseStream.Position -= 1;
 			var result = sb.ToString();
-			var entry = AddEntry(name, (uint)result.Length + 1);
+			var entry = AddEntry(name, (uint)(result.Length + 1 + paddingCount));
 			entry.Value = result;
 			entry.Type = "String";
 			return result;
@@ -346,6 +364,10 @@ namespace SlimShader.DebugParser
 			count = count ?? (int)(_reader.BaseStream.Length - offset);
 			var result = new DebugBytecodeReader(_buffer, Offset + offset, count.Value, Offset, parent.Indent + 1, name, Root, inheritOffset);
 			Root.Members.Add(result);
+			if (this != Root)
+			{
+				Members.Add(result);
+			}
 			return result;
 		}
 	}

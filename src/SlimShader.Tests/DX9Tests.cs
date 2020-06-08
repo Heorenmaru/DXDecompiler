@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SharpDX.D3DCompiler;
 using SlimShader.Chunks.Rdef;
 using SlimShader.Chunks.Xsgn;
+using SlimShader.DebugParser.DX9;
 using SlimShader.DebugParser.FX9;
 using SlimShader.Decompiler;
 using SlimShader.DX9Shader;
@@ -116,10 +117,29 @@ namespace SlimShader.Tests
 				Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
 			} else
 			{
-				return;
-			}
+				var reader = new DebugParser.DebugBytecodeReader(bytecode, 0, bytecode.Length);
+				string error = "";
+				try
+				{
+					var shaderModel = DebugShaderModel.Parse(reader);
+				}
+				catch (Exception ex)
+				{
+					error = ex.ToString();
+				}
+				var dump = reader.DumpStructure();
+				if (!string.IsNullOrEmpty(error))
+				{
+					dump += "\n" + error;
+				}
+				File.WriteAllText($"{file}.d.txt", dump);
 
-			
+				var dumpHtml = reader.DumpHtml();
+				File.WriteAllText($"{file}.d.html", dumpHtml);
+
+				Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
+				return;
+			}			
 
 			// Assert.
 		}

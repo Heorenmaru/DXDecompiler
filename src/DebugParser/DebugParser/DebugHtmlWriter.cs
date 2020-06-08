@@ -114,6 +114,7 @@ namespace SlimShader.DebugParser
 						(de.Value.Substring(0, valueLength - 3) + "...") :
 						de.Value;
 					var text = $"{de.Name}={value}";
+					var noteText = string.Join(";", de.ExtraNotes);
 					label = new XElement("span", text,
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", de.AbsoluteIndex),
@@ -124,7 +125,8 @@ namespace SlimShader.DebugParser
 						new XAttribute("size", de.Size),
 						new XAttribute("rel-start", de.RelativeIndex),
 						new XAttribute("rel-end", de.RelativeIndex + de.Size),
-						new XAttribute("type", de.Type));
+						new XAttribute("type", de.Type),
+						new XAttribute("notes", noteText));
 				}
 				if(entry is DebugIndent di){
 					label = new XElement("span", $"{di.Name}",
@@ -137,7 +139,8 @@ namespace SlimShader.DebugParser
 						new XAttribute("size", di.Size),
 						new XAttribute("rel-start", di.RelativeIndex),
 						new XAttribute("rel-end", di.RelativeIndex + di.Size),
-						new XAttribute("type", "Indent")
+						new XAttribute("type", "Indent"),
+						new XAttribute("notes", "")
 						);
 				}
 				if (entry is DebugBytecodeReader dr)
@@ -164,7 +167,8 @@ namespace SlimShader.DebugParser
 						new XAttribute("size", dr.Size),
 						new XAttribute("rel-start", dr.RelativeIndex),
 						new XAttribute("rel-end", dr.RelativeIndex + dr.Size),
-						new XAttribute("type", "Container")
+						new XAttribute("type", "Container"),
+						new XAttribute("notes", "")
 						);
 				}
 				var container = stack.Peek();

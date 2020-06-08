@@ -148,6 +148,11 @@
     <Compile Include="Decompiler\ConversionFlags.cs" />
     <Compile Include="DX9Shader\Asm\AsmWriter.cs" />
     <Compile Include="DX9Shader\Asm\EffectAsmWriter.cs" />
+    <Compile Include="DX9Shader\Bytecode\CliToken.cs" />
+    <Compile Include="DX9Shader\Bytecode\CommentType.cs" />
+    <Compile Include="DX9Shader\Bytecode\Declaration\ConstantTable.cs" />
+    <Compile Include="DX9Shader\Bytecode\Declaration\ConstantDeclration.cs" />
+    <Compile Include="DX9Shader\Bytecode\FxlcToken.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
     <Compile Include="DX9Shader\Decompiler\BytecodeParser.cs" />
@@ -219,12 +224,12 @@
     <Compile Include="DX9Shader\Converter\DXBCConverter.cs" />
     <Compile Include="DX9Shader\FX9\Annotation.cs" />
     <Compile Include="DX9Shader\FX9\AnnotationData.cs" />
-    <Compile Include="DX9Shader\FX9\BinaryData.cs" />
-    <Compile Include="DX9Shader\FX9\DataEntry.cs" />
+    <Compile Include="DX9Shader\FX9\StateBlobType.cs" />
+    <Compile Include="DX9Shader\FX9\VariableBlob.cs" />
     <Compile Include="DX9Shader\FX9\DefaultValue.cs" />
     <Compile Include="DX9Shader\FX9\Extensions.cs" />
     <Compile Include="DX9Shader\FX9\Fx9Chunk.cs" />
-    <Compile Include="DX9Shader\FX9\InlineShader.cs" />
+    <Compile Include="DX9Shader\FX9\StateBlob.cs" />
     <Compile Include="DX9Shader\FX9\Assignment.cs" />
     <Compile Include="DX9Shader\FX9\SamplerState.cs" />
     <Compile Include="DX9Shader\FX9\StateType.cs" />

@@ -33,6 +33,36 @@ namespace SlimShader.DX9Shader.FX9
 					return false;
 			}
 		}
+		public static bool HasVariableBlob(this ParameterType type)
+		{
+			switch (type)
+			{
+				case ParameterType.Texture:
+				case ParameterType.Texture1D:
+				case ParameterType.Texture2D:
+				case ParameterType.Texture3D:
+				case ParameterType.TextureCube:
+				case ParameterType.PixelShader:
+				case ParameterType.VertexShader:
+				case ParameterType.String:
+					return true;
+				default:
+					return false;
+			}
+		}
+		public static bool HasStateBlob(this StateType type)
+		{
+			switch (type)
+			{
+				case StateType.Texture:
+				case StateType.Sampler:
+				case StateType.VertexShader:
+				case StateType.PixelShader:
+					return true;
+				default:
+					return false;
+			}
+		}
 		public static bool RequiresIndex(this StateType type)
 		{
 			switch (type)
@@ -70,6 +100,7 @@ namespace SlimShader.DX9Shader.FX9
 				case StateType.LightTheta:
 				case StateType.LightPhi:
 				case StateType.LightEnable:
+				case StateType.Texture:
 				case StateType.AddressU:
 				case StateType.AddressV:
 				case StateType.AddressW:
@@ -80,6 +111,7 @@ namespace SlimShader.DX9Shader.FX9
 				case StateType.MipMapLodBias:
 				case StateType.MaxMipLevel:
 				case StateType.MaxAnisotropy:
+				case StateType.Sampler:
 					return true;
 				default:
 					return false;

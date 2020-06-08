@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using SlimShader.DX9Shader.Bytecode.Declaration;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;

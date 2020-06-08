@@ -12,7 +12,7 @@ namespace SlimShader.DebugParser.FX9
 		public ParameterClass ParameterClass { get; private set; }
 		public string Name { get; private set; }
 		public string Semantic { get; private set; }
-		public uint ElementCount { get; private set; }
+		public uint Elements { get; private set; }
 		public uint Rows { get; private set; }
 		public uint Columns { get; private set; }
 		public uint StructMemberCount { get; private set; }
@@ -41,13 +41,13 @@ namespace SlimShader.DebugParser.FX9
 				result.ParameterClass == ParameterClass.MatrixRows ||
 				result.ParameterClass == ParameterClass.MatrixColumns)
 			{
-				result.ElementCount = variableReader.ReadUInt32("ElementCount");
+				result.Elements = variableReader.ReadUInt32("ElementCount");
 				result.Rows = variableReader.ReadUInt32("Rows");
 				result.Columns = variableReader.ReadUInt32("Columns");
 			}
 			if (result.ParameterClass == ParameterClass.Struct)
 			{
-				result.ElementCount = variableReader.ReadUInt32("ElementCount");
+				result.Elements = variableReader.ReadUInt32("ElementCount");
 				result.StructMemberCount = variableReader.ReadUInt32("StructMemberCount");
 				for (int i = 0; i < result.StructMemberCount; i++)
 				{
@@ -57,14 +57,14 @@ namespace SlimShader.DebugParser.FX9
 			}
 			if (result.ParameterClass == ParameterClass.Object)
 			{
-				result.ElementCount = variableReader.ReadUInt32("ElementCount");
+				result.Elements = variableReader.ReadUInt32("Elements");
 			}
 			return result;
 		}
 
 		public uint GetSize()
 		{
-			var elementCount = Math.Max(1, ElementCount);
+			var elementCount = Math.Max(1, Elements);
 			switch (ParameterClass)
 			{
 				case ParameterClass.Scalar:

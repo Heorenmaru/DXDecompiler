@@ -130,6 +130,9 @@ namespace SlimShader.DX9Shader.FX9
 			sb.Append(indent);
 			switch (ParameterClass)
 			{
+				case ParameterClass.Scalar:
+					sb.Append(ParameterType.ToString().ToLower());
+					break;
 				case ParameterClass.Vector:
 					sb.Append(ParameterType.ToString().ToLower());
 					sb.Append(Rows);

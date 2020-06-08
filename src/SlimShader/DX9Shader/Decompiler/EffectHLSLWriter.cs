@@ -12,6 +12,7 @@ namespace SlimShader.DX9Shader
 		Fx9Chunk EffectChunk;
 		StreamWriter writer;
 		int indent = 0;
+		Dictionary<object, string> ShaderNames = new Dictionary<object, string>();
 		public EffectHLSLWriter(Fx9Chunk effectChunk)
 		{
 			EffectChunk = effectChunk;
@@ -30,104 +31,142 @@ namespace SlimShader.DX9Shader
 				}
 			}
 		}
+		void BuildNameLookup()
+		{
+			int shaderCount = 0;
+			foreach(var blob in EffectChunk.VariableBlobs)
+			{
+				if(blob.IsShader) ShaderNames[blob] = $"Shader{shaderCount++}";
+			}
+			foreach (var blob in EffectChunk.StateBlobs)
+			{
+				if (blob.BlobType == StateBlobType.Shader &&  
+					(blob.ShaderType == ShaderType.Vertex ||
+					blob.ShaderType == ShaderType.Pixel)) ShaderNames[blob] = $"Shader{shaderCount++}";
+			}
+
+		}
 		public void Write(Stream stream)
 		{
 			writer = new StreamWriter(stream);
-			foreach(var variable in EffectChunk.Variables)
+			BuildNameLookup();
+			foreach (var variable in EffectChunk.Variables)
 			{
 				WriteVariable(variable);
+			}
+			foreach(var blob in EffectChunk.StateBlobs)
+			{
+				if(blob.BlobType == StateBlobType.Shader && 
+					(blob.ShaderType == ShaderType.Pixel || blob.ShaderType == ShaderType.Vertex))
+				{
+					WriteShader(blob);
+				}
 			}
 			foreach (var technique in EffectChunk.Techniques)
 			{
 				WriteTechnique(technique);
 			}
-			WriteLine("//Errors: {0} ",
-				EffectChunk.DebugError);
-			WriteLine("//Entries {0} Binary {1}({2}) Inline {3}({4})", 
-				EffectChunk.DataEntries.Count,
-				EffectChunk.UnknownCount,
-				EffectChunk.BinaryDataList.Count,
-				EffectChunk.InlineShaderCount,
-				EffectChunk.InlineShaders.Count);
+			WriteLine("//Entries Binary {0}({1}) Inline {2}({3})", 
+				EffectChunk.VariableBlobCount,
+				EffectChunk.VariableBlobs.Count,
+				EffectChunk.StateBlobCount,
+				EffectChunk.StateBlobs.Count);
 			WriteLine("");
-			for (int i = 0; i < EffectChunk.DataEntries.Count; i++)
+			for (int i = 0; i < EffectChunk.VariableBlobs.Count; i++)
 			{
-				WriteLine("//{0} {1}",
-					i, DataEntryToString((uint)i + 1));
-				if (EffectChunk.DataEntries[i].BinaryData != null)
-				{
-					var data = EffectChunk.DataEntries[i].BinaryData;
-					WriteLine("//BinaryData{0}: Index? {1} Size: {2} DataLength {3} Version: {4}",
-						i, data.Index, data.Size, data.Data.Length, data.Version);
-				}
-				if (EffectChunk.DataEntries[i].InlineShader != null)
-				{
-					var data = EffectChunk.DataEntries[i].InlineShader;
-					WriteLine("//InlineShader{0}: Unk1 {1} Unk2 {2} Unk3 {3} Index? {4}",
-						i - EffectChunk.UnknownCount, 
-						data.Unknown1.ToString("X8"),
-						data.Unknown2.ToString("X8"),
-						data.Unknown3.ToString("X8"), 
-						data.Index);
-					WriteLine("//                IsVariable: {0} Size {1} Name: {2} Version: {3}",
-							 data.IsVariable, data.ShaderSize, data.VariableName, data.Version);
-
-				}
-				WriteLine("");
-
+				var data = EffectChunk.VariableBlobs[i];
+				WriteLine("//VariableBlob {0}: Index {1} Size: {2} DataLength {3} Version: {4}",
+					i, data.Index, data.Size, data.Data.Length, data.Version);
 			}
-			/*
-			for (int i = 0; i < EffectChunk.BinaryDataList.Count; i++)
+			for (int i = 0; i < EffectChunk.StateBlobs.Count; i++)
 			{
-				var data = EffectChunk.BinaryDataList[i];
-				WriteLine("//{0} BinaryData{0}: Index? {1} Size: {2} ", 
-					dataCount++, i, data.Index, data.Size);
+				var data = EffectChunk.StateBlobs[i];
+				WriteLine("//StateBlob {0}: TechniqueIndex {1} StateIndex {2} SamplerIndex {3}",
+					i, 
+					data.TechniqueIndex.ToString("X4"),
+					data.PassIndex.ToString("X4"),
+					data.SamplerStateIndex.ToString("X4"));
+				WriteLine("//             AssignmentIndex {0} BlobType: {1} Size {2} Name: {3} Version: {4}",
+							data.AssignmentIndex.ToString("X4"), data.BlobType, data.BlobSize, data.VariableName, data.VersionString);
 			}
-			for (int i = 0; i < EffectChunk.InlineShaders.Count; i++)
-			{
-				var data = EffectChunk.InlineShaders[i];
-				WriteLine("//{0} InlineShader{0}: Unk0 {1} Unk2 {2} Unk3 {3} Index? {4}",
-					dataCount++, i, data.Unknown1.ToString("X8"), data.Unknown2.ToString("X8"), 
-					data.Unknown3.ToString("X8"), data.Index);
-				WriteLine("//                IsVariable: {0} Size {1} Name: {2} Version: {3}", 
-						 data.IsVariable, data.ShaderSize, data.VariableName, data.Version);
-			}*/
 		}
-		public string DataEntryToString(uint index)
+		void WriteShader(StateBlob blob)
 		{
-			index = index - 1;
-			if(index >= EffectChunk.DataEntries.Count)
+			WriteLine($"// {ShaderNames[blob]}");
+			var funcName = ShaderNames[blob];
+			var text = HlslWriter.Decompile(blob.Shader);
+			text = text.Replace("main()", $"{funcName}()");
+			WriteLine(text);
+		}
+		public string StateBlobToString(Assignment key)
+		{
+			if (!EffectChunk.StateBlobLookup.ContainsKey(key))
 			{
-				return $"Index out of range {index}";
+				return $"Key not found";
 			}
-			var data = EffectChunk.DataEntries[(int)index];
-			if(data.BinaryData != null)
+			var data = EffectChunk.StateBlobLookup[key];
+			if(data == null)
 			{
-				if(data.BinaryData.Data.Length == 0)
+				return "Blob is NULL";
+			}
+			if (data.BlobType == StateBlobType.Shader)
+			{
+				if(data.ShaderType == ShaderType.Tx)
 				{
-					return $"Variable lookup {data.BinaryData.Index}";
-				} else if (data.BinaryData.IsShader)
+					return $"ExpressionShader";
+				}
+				if (string.IsNullOrEmpty(data.VersionString))
 				{
-					return $"compile shader Index {data.BinaryData.Index} size {data.BinaryData.Size} data {data.BinaryData.Data.Length}";
-				} else
+					return "NULL";
+				}
+				else
 				{
-					return data.BinaryData.DataPreview;
+					var funcName = ShaderNames[data];
+					return $"compile {data.VersionString} {funcName}";
 				}
 			}
-			if (data.InlineShader != null)
+			if (data.BlobType == StateBlobType.Variable)
 			{
-				if (!string.IsNullOrEmpty(data.InlineShader.VariableName))
+				if (string.IsNullOrEmpty(data.VariableName))
 				{
-					return data.InlineShader.VariableName;
-				} if(!string.IsNullOrEmpty(data.InlineShader.Version))
-				{
-					return $"compile {data.InlineShader.Version} Shader()";
+					return "NULL";
 				} else
 				{
-					return $"Unknown inline shader {data.Index}";
+					return $"<{data.VariableName}>";
 				}
+			}
+			if (data.BlobType == StateBlobType.IndexShader)
+			{
+				return $"{data.VariableName}[TODO]";
 			}
 			throw new ArgumentException();
+		}
+		public string VariableBlobToString(FX9.Parameter key)
+		{
+			if (!EffectChunk.VariableBlobLookup.ContainsKey(key))
+			{
+				return $"Key not found";
+			}
+			var data = EffectChunk.VariableBlobLookup[key];
+			if (data == null)
+			{
+				return "Blob is NULL";
+			}
+			if (data.Data.Length == 0)
+			{
+				return "";
+			}
+			else if (data.IsShader)
+			{
+				return $"compile {data.Version}";
+			}
+			else if(key.ParameterType == ParameterType.String)
+			{
+				return $"\"{data.Value}\"";
+			} else
+			{
+				return $"<{data.Value}>";
+			}
 		}
 		public void WriteVariable(Variable variable)
 		{
@@ -142,30 +181,64 @@ namespace SlimShader.DX9Shader
 			if(param.ParameterType.IsSampler())
 			{
 				WriteLine(" =");
-				WriteLine("sampler_state");
-				WriteLine("{");
-				indent++;
-				foreach (var state in variable.SamplerStates)
+				if(variable.SamplerStates.Count > 1)
 				{
+					WriteLine("{");
+					indent++;
+				}
+				for(int i = 0; i < variable.SamplerStates.Count; i++) {
+					var state = variable.SamplerStates[i];
 					WriteIndent();
-					if (state.Type == StateType.Texture)
+					WriteLine("sampler_state");
+					WriteIndent();
+					WriteLine("{");
+					indent++;
+					foreach (var assignment in state.Assignments)
 					{
-						var data = DataEntryToString(state.Value.Data[0]);
-						WriteLine("{0} = {1}; // {2}", state.Type, data, state.Value.Data[0]);
+						WriteIndent();
+						if (assignment.Type == StateType.Texture)
+						{
+							var data = StateBlobToString(assignment);
+							WriteLine("{0} = <{1}>; // {2}", assignment.Type, data, assignment.Value[0].UInt);
+						}
+						else
+						{
+							WriteLine("{0} = {1};", assignment.Type, assignment.Value[0].UInt);
+						}
+					}
+					indent--;
+					WriteIndent();
+					Write("}");
+					if (variable.SamplerStates.Count == 1)
+					{
+						WriteLine(";");
+					} else if(i < variable.SamplerStates.Count - 1)
+					{
+						WriteLine(",");
+					} else
+					{
+						WriteLine();
+					}
+				}
+				if (variable.SamplerStates.Count > 1)
+				{
+					indent--;
+					WriteIndent();
+					WriteLine("};");
+				}
+			} else
+			{
+				if (param.ParameterType.HasVariableBlob())
+				{
+					var data = VariableBlobToString(variable.Parameter);
+					if (string.IsNullOrEmpty(data))
+					{
+						WriteLine("; // {0}", variable.DefaultValue[0].UInt);
 					}
 					else
 					{
-						WriteLine("{0} = {1};", state.Type, state.Value.Data[0]);
+						WriteLine(" = {0}; // {1}", data, variable.DefaultValue[0].UInt);
 					}
-				}
-				indent--;
-				WriteLine("};");
-			} else
-			{
-				if (param.ParameterType.IsObjectType())
-				{
-					var data = DataEntryToString(variable.DefaultValue[0].UInt);
-					WriteLine(" = {0} ; // {1}", data, variable.DefaultValue[0].UInt);
 				}
 				else if (variable.DefaultValue.All(d => d.UInt == 0))
 				{
@@ -185,7 +258,16 @@ namespace SlimShader.DX9Shader
 			{
 				var annotation = annotations[i];
 				var value = string.Join(", ", annotation.Value);
-				Write("{0} {1} = {2};", annotation.Parameter.GetTypeName(), annotation.Parameter.Name, value);
+				if (annotation.Parameter.ParameterType.HasVariableBlob())
+				{
+					Write("{0} {1} = {2};", 
+						annotation.Parameter.GetTypeName(), 
+						annotation.Parameter.Name, 
+						VariableBlobToString(annotation.Parameter));
+				} else
+				{
+					Write("{0} {1} = {2};", annotation.Parameter.GetTypeName(), annotation.Parameter.Name, value);
+				}
 				if (i < annotations.Count - 1) Write(" ");
 			}
 			Write(">");
@@ -243,11 +325,9 @@ namespace SlimShader.DX9Shader
 			if(assignment.Value.Count > 1)
 			{
 				value = string.Format("{{ {0} }}", string.Join(", ", assignment.Value));
-			} else if(
-				assignment.Type == StateType.PixelShader ||
-				assignment.Type == StateType.VertexShader)
+			} else if(EffectChunk.StateBlobLookup.ContainsKey(assignment))
 			{
-				value = DataEntryToString(assignment.Value[0].UInt) + $" /* {assignment.Value[0].UInt} */";
+				value = StateBlobToString(assignment) + $" /* {assignment.Value[0].UInt} */";
 			} else
 			{
 				value = assignment.Value[0].ToString();

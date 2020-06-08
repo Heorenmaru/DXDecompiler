@@ -5,7 +5,13 @@ CLS
 ECHO Compiling shaders...
 ECHO.
 
-CALL CompileShader2.bat Internal EffectTest.hlsl EffectTest fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_Test.fx Effect_Test_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_EmbedAssembly.fx Effect_EmbedAssembly_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_SamplerArray.fx Effect_SamplerArray_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_ShaderArray.fx Effect_ShaderArray_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_StateBlock.fx Effect_StateBlock_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_Expression.fx Effect_Expression_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_Structs.fx Effect_Structs_FX fx_2_0 || GOTO :error
 
 CALL CompileShader.bat HLSLCrossCompiler/vs2 boolconst.hlsl boolconst vs_2_0 main || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 intrep.hlsl intrep vs_2_0 main || GOTO :error

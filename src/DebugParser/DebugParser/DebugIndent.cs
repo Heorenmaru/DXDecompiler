@@ -25,7 +25,9 @@ namespace SlimShader.DebugParser
 				{
 					return Members.First().Size;
 				}
-				return Members.Max(m => m.AbsoluteIndex) - Members.Min(m => m.AbsoluteIndex);
+				var first = Members.First();
+				var last = Members.Last();
+				return last.AbsoluteIndex - first.AbsoluteIndex + last.Size;
 			}
 		}
 		public string Dump()

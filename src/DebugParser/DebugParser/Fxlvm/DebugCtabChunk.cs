@@ -1,4 +1,5 @@
 ﻿using SlimShader.DX9Shader;
+using SlimShader.DX9Shader.Bytecode.Declaration;
 using SlimShader.Util;
 using System.Collections.Generic;
 using System.Linq;

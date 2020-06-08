@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SlimShader.DebugParser.FX9
 {
 	public class DebugFx9Chunk
 	{
-		const int headerLength = 4;
 		public uint VariableCount;
 		public uint TechniqueCount;
 		public uint PassCount;
 		public uint ShaderCount;
-		public uint BinaryDataCount;
-		public uint InlineShaderCount;
+		public uint VariableBlobCount;
+		public uint StateBloblCount;
 
 		List<DebugVariable> Variables = new List<DebugVariable>();
 		List<DebugTechnique> Techniques = new List<DebugTechnique>();
-		List<DebugBinaryData> BinaryDataList = new List<DebugBinaryData>();
-		List<DebugInlineShader> InlineShaders = new List<DebugInlineShader>();
-
+		List<DebugBinaryData> VariableBlobs = new List<DebugBinaryData>();
+		List<DebugStateBlob> StateBlobs = new List<DebugStateBlob>();
 		public static DebugFx9Chunk Parse(DebugBytecodeReader reader, uint length)
 		{
 			var result = new DebugFx9Chunk();
@@ -46,18 +41,18 @@ namespace SlimShader.DebugParser.FX9
 				footerReader.RemoveIndent();
 			}
 
-			result.BinaryDataCount = footerReader.ReadUInt32("BinaryDataCount");
-			result.InlineShaderCount = footerReader.ReadUInt32("InlineShaderCount");
-			for (int i = 0; i < result.BinaryDataCount; i++)
+			result.VariableBlobCount = footerReader.ReadUInt32("VariableBlobCount");
+			result.StateBloblCount = footerReader.ReadUInt32("StateBlobCount");
+			for (int i = 0; i < result.VariableBlobCount; i++)
 			{
-				footerReader.AddIndent($"BinaryData {i}");
-				result.BinaryDataList.Add(DebugBinaryData.Parse(bodyReader, footerReader));
+				footerReader.AddIndent($"VariableBlob {i}");
+				result.VariableBlobs.Add(DebugBinaryData.Parse(bodyReader, footerReader));
 				footerReader.RemoveIndent();
 			}
-			for (int i = 0; i < result.InlineShaderCount; i++)
+			for (int i = 0; i < result.StateBloblCount; i++)
 			{
-				footerReader.AddIndent($"InlineShader {i}");
-				result.InlineShaders.Add(DebugInlineShader.Parse(bodyReader, footerReader));
+				footerReader.AddIndent($"StateBlob {i}");
+				result.StateBlobs.Add(DebugStateBlob.Parse(bodyReader, footerReader));
 				footerReader.RemoveIndent();
 			}
 			return result;

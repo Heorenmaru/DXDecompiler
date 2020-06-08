@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SlimShader.DX9Shader.Bytecode.Declaration;
+using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -426,8 +428,14 @@ namespace SlimShader.DX9Shader
 			{
 				foreach (ConstantDeclaration declaration in _registers.ConstantDeclarations)
 				{
-					string typeName = GetConstantTypeName(declaration);
-					WriteLine("{0} {1};", typeName, declaration.Name);
+					try
+					{
+						string typeName = GetConstantTypeName(declaration);
+						WriteLine("{0} {1};", typeName, declaration.Name);
+					} catch(Exception ex)
+					{
+						WriteLine("{0} {1};", $"Error", declaration.Name);;
+					}
 				}
 
 				WriteLine();

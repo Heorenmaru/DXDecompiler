@@ -82,10 +82,42 @@
     <Compile Include="AssertTraceListener.cs" />
     <Compile Include="DX10Util\Extension.cs" />
     <Compile Include="DX9Tests.cs" />
-    <Content Include="ShadersDX9\Internal\EffectTest.asm">
+    <Content Include="ShadersDX9\Internal\Effect_EmbedAssembly.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="ShadersDX9\Internal\EffectTest.hlsl">
+    <Content Include="ShadersDX9\Internal\Effect_EmbedAssembly_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_Expression.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_Expression_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_SamplerArray.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_SamplerArray_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_ShaderArray.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_ShaderArray_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_StateBlock.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_StateBlock_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_Structs.fx" />
+    <Content Include="ShadersDX9\Internal\Effect_Structs_FX.asm" />
+    <Content Include="ShadersDX9\Internal\Effect_Test.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_Test_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ShadersDX9\Sdk\Direct3D\BasicHLSL\BasicHLSL_FX.asm">
@@ -1015,7 +1047,23 @@
     <None Include="ShadersDX9\HLSLDecompiler\vs_vector4_matrix44_multiply.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ShadersDX9\Internal\EffectTest.o">
+    <None Include="ShadersDX9\Internal\Effect_EmbedAssembly_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Internal\Effect_Expression_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Internal\Effect_SamplerArray_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Internal\Effect_ShaderArray_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Internal\Effect_StateBlock_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Internal\Effect_Structs_FX.o" />
+    <None Include="ShadersDX9\Internal\Effect_Test_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Sdk\Direct3D\AntiAlias\AntiAlias_ColorPS.o">

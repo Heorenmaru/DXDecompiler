@@ -6,29 +6,12 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
-	public class BinaryData
+	public class VariableBlob
 	{
 		public uint Index;
 		public uint Size;
 		public byte[] Data;
-		public string DataPreview
-		{
-			get
-			{
-				string dataPreview = "";
-				/*for (int i = 0; i < Data.Length && i < 8 * 4; i += 4)
-				{
-					var val = BitConverter.ToUInt32(Data, i);
-					dataPreview += val.ToString("X4") + " ";
-				}*/
-				for (int i = 0; i < Data.Length; i++)
-				{
-					var val = (char)Data[i];
-					dataPreview += val;
-				}
-				return dataPreview;
-			}
-		}
+		public string Value = "";
 		public bool IsShader => Data.Length >= 4 && Data[0] == 0 && Data[1] == 2;
 		public string Version
 		{
@@ -41,17 +24,39 @@ namespace SlimShader.DX9Shader.FX9
 				var minor = Data[0];
 				var major = Data[1];
 				var type = (ShaderType)BitConverter.ToUInt16(Data, 2);
-				return $"{type}_{major}_{minor}";
+				switch (type) {
+					case ShaderType.Pixel:
+						return $"ps_{major}_{minor}";
+					case ShaderType.Vertex:
+						return $"vs_{major}_{minor}";
+					case ShaderType.Fx:
+						return $"fx_{major}_{minor}";
+					case ShaderType.Tx:
+						return $"tx_{major}_{minor}";
+					default:
+						return "unknown_version";
+				}
 			}
 		}
-		public static BinaryData Parse(BytecodeReader reader, BytecodeReader dataReader)
+		public static VariableBlob Parse(BytecodeReader reader, BytecodeReader dataReader)
 		{
-			var result = new BinaryData();
+			var result = new VariableBlob();
 			result.Index = dataReader.ReadUInt32();
 			result.Size = dataReader.ReadUInt32();
 			var toRead = result.Size + (result.Size % 4 == 0 ? 0 : 4 - result.Size % 4);
 			result.Data = dataReader.ReadBytes((int)toRead);
-			
+			if (!result.IsShader)
+			{
+				if (result.Size == 0)
+				{
+					result.Value = "";
+				}
+				else
+				{
+					result.Value = Encoding.UTF8.GetString(result.Data, 0, (int)(result.Size - 1));
+				}
+			}
+
 			return result;
 		}
 		public string Dump()
@@ -60,7 +65,7 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    BinaryData.Index: {Index} {Index.ToString("X4")}");
 			sb.AppendLine($"    BinaryData.Size: {Size} {Size.ToString("X4")}");
 			sb.AppendLine($"    BinaryData.DataSize: {Data.Length} {Data.Length.ToString("X4")}");
-			sb.AppendLine($"    BinaryData.Data: {DataPreview}");
+			sb.AppendLine($"    BinaryData.Data: {Value}");
 			return sb.ToString();
 		}
 	}

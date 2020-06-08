@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace SlimShader.DebugParser
@@ -12,10 +14,15 @@ namespace SlimShader.DebugParser
 		public uint AbsoluteIndex { get; set; }
 		public string Type { get; set; }
 		public uint Size { get; set; }
+		public List<string> ExtraNotes = new List<string>();
 		private bool formatHex;
 		public DebugEntry(bool formatHex = true)
 		{
 			this.formatHex = formatHex;
+		}
+		public void AddNote(string key, string value)
+		{
+			ExtraNotes.Add($"{key}: {value}");
 		}
 		//Format absStart:AbsEnd[relStart:relEnd]
 		public string Dump()

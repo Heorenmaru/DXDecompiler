@@ -1,5 +1,6 @@
 ﻿using SlimShader;
 using SlimShader.DebugParser;
+using SlimShader.DebugParser.DX9;
 using SlimShader.DebugParser.FX9;
 using SlimShader.Decompiler;
 using SlimShader.Util;
@@ -152,7 +153,8 @@ namespace DXDecompilerCmd
 					else if (options.Mode == DecompileMode.Debug)
 					{
 						sw.WriteLine(string.Join(" ", args));
-						if (data[2] == 255 && data[3] == 254)
+						var shaderType = (SlimShader.DX9Shader.ShaderType)BitConverter.ToUInt16(data, 2);
+						if (shaderType == SlimShader.DX9Shader.ShaderType.Fx)
 						{
 							var reader = new DebugBytecodeReader(data, 0, data.Length);
 							string error = "";
@@ -176,12 +178,28 @@ namespace DXDecompilerCmd
 						}
 						else
 						{
-							sw.Write("Format not supported");
+							var reader = new DebugBytecodeReader(data, 0, data.Length);
+							string error = "";
+							try
+							{
+								DebugShaderModel.Parse(reader);
+							}
+							catch (Exception ex)
+							{
+								error = ex.ToString();
+							}
+							var dump = reader.DumpStructure();
+							if (!string.IsNullOrEmpty(error))
+							{
+								dump += "\n" + error;
+							}
+							sw.Write(dump);
 						}
 					}
 					else if (options.Mode == DecompileMode.DebugHtml)
 					{
-						if (data[2] == 255 && data[3] == 254)
+						var shaderType = (SlimShader.DX9Shader.ShaderType)BitConverter.ToUInt16(data, 2);
+						if (shaderType == SlimShader.DX9Shader.ShaderType.Fx)
 						{
 							var reader = new DebugBytecodeReader(data, 0, data.Length);
 							string error = "";
@@ -205,7 +223,22 @@ namespace DXDecompilerCmd
 						}
 						else
 						{
-							sw.Write("Format not supported");
+							var reader = new DebugBytecodeReader(data, 0, data.Length);
+							string error = "";
+							try
+							{
+								DebugShaderModel.Parse(reader);
+							}
+							catch (Exception ex)
+							{
+								error = ex.ToString();
+							}
+							var dump = reader.DumpHtml();
+							if (!string.IsNullOrEmpty(error))
+							{
+								dump += "\n" + error;
+							}
+							sw.Write(dump);
 						}
 					}
 				}

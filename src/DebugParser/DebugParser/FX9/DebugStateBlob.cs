@@ -1,4 +1,8 @@
-﻿using System.Diagnostics;
+﻿using SlimShader.DebugParser.DX9;
+using SlimShader.DX9Shader;
+using SlimShader.DX9Shader.FX9;
+using System.Diagnostics;
+using System.Text;
 
 namespace SlimShader.DebugParser.FX9
 {
@@ -101,40 +105,48 @@ result:
 	}
 //How does the pass entry reference the inline shader entry?
  */
-	public class DebugInlineShader
+	public class DebugStateBlob
 	{
-		public uint Unknown1;
-		public uint Unknown2;
-		public uint Unknown3;
-		public uint Index;
-		public uint IsVariable;
+		public uint TechniqueIndex;
+		public uint PassIndex;
+		public uint SamplerStateIndex;
+		public uint AssignmentIndex;
+		public StateBlobType BlobType;
 		public uint ShaderSize;
 		public string VariableName { get; private set; }
 		public byte[] Data = new byte[0];
-		public static DebugInlineShader Parse(DebugBytecodeReader reader, DebugBytecodeReader shaderReader)
+		public DebugShaderModel Shader;
+		public static DebugStateBlob Parse(DebugBytecodeReader reader, DebugBytecodeReader blobReader)
 		{
-			var result = new DebugInlineShader();
-			result.Unknown1 = shaderReader.ReadUInt32("Unknown1");
-			result.Unknown2 = shaderReader.ReadUInt32("Unknown2");
-			result.Unknown3 = shaderReader.ReadUInt32("Unknown3");
-			result.Index = shaderReader.ReadUInt32("Index?");
-			result.IsVariable = shaderReader.ReadUInt32("IsVariable");
-			var dataReader = shaderReader.CopyAtCurrentPosition("Data", shaderReader);
-			result.ShaderSize = shaderReader.ReadUInt32("ShaderSize");
-			var toRead = result.ShaderSize + (result.ShaderSize % 4 == 0 ? 0 : 4 - result.ShaderSize % 4);
-			result.Data = shaderReader.ReadBytes("RawData", (int)toRead);
-			if (result.IsVariable == 1)
+			var result = new DebugStateBlob();
+			result.TechniqueIndex = blobReader.ReadUInt32("TechniqueIndex");
+			result.PassIndex = blobReader.ReadUInt32("PassIndex");
+			result.SamplerStateIndex = blobReader.ReadUInt32("SamplerStateIndex");
+			result.AssignmentIndex = blobReader.ReadUInt32("AssignmentIndex");
+			result.BlobType = blobReader.ReadEnum32< StateBlobType>("BlobType");
+			if (result.BlobType == StateBlobType.Shader)
 			{
-				result.VariableName = dataReader.TryReadString("VariableName");
+				result.ShaderSize = blobReader.ReadUInt32("BlobSize");
+				var startPosition = blobReader._reader.BaseStream.Position;
+				var shaderReader = blobReader.CopyAtCurrentPosition("ShaderReader", blobReader);
+				result.Shader = DebugShaderModel.Parse(shaderReader);
+				blobReader._reader.BaseStream.Position = startPosition + result.ShaderSize;
 			}
-			else
+			if (result.BlobType == StateBlobType.Variable)
 			{
-				result.VariableName = "";
+				result.VariableName = blobReader.TryReadString("VariableName");
 			}
-			//Debug.Assert(result.Unknown1 == 0, $"InlineShader.Unknown1={result.Unknown1}");
-			//Debug.Assert(result.Unknown2 == 0, $"InlineShader.Unknown2={result.Unknown2}");
-			Debug.Assert(result.Unknown3 == uint.MaxValue || result.Unknown3 == 0,
-				$"InlineShader.Unknown3={result.Unknown3}");
+			else if(result.BlobType == StateBlobType.IndexShader)
+			{
+				result.ShaderSize = blobReader.ReadUInt32("BlobSize");
+				var startPosition = blobReader._reader.BaseStream.Position;
+				var variableSize = blobReader.ReadUInt32("VariableNameSize");
+				var variableData = blobReader.ReadBytes("VariableData", (int)variableSize);
+				result.VariableName = Encoding.UTF8.GetString(variableData, 0, variableData.Length - 1);
+				var shaderReader = blobReader.CopyAtCurrentPosition("ShaderReader", blobReader);
+				result.Shader = DebugShaderModel.Parse(shaderReader);
+				blobReader._reader.BaseStream.Position = startPosition + result.ShaderSize;
+			}
 			return result;
 		}
 	}

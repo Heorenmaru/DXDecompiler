@@ -57,6 +57,12 @@
     <Compile Include="DebugParser\DebugNumber.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
     <Compile Include="DebugParser\DebugUtil.cs" />
+    <Compile Include="DebugParser\DX9\DebugClit.cs" />
+    <Compile Include="DebugParser\DX9\DebugConstantDeclaration.cs" />
+    <Compile Include="DebugParser\DX9\DebugConstantType.cs" />
+    <Compile Include="DebugParser\DX9\DebugShaderModel.cs" />
+    <Compile Include="DebugParser\DX9\DebugToken.cs" />
+    <Compile Include="DebugParser\DX9\FxlcChunk.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectAssignment.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectConstantAssignment.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectConstantIndexAssignment.cs" />
@@ -88,9 +94,10 @@
     <Compile Include="DebugParser\FX9\DataEntry.cs" />
     <Compile Include="DebugParser\FX9\DebugAnnotation.cs" />
     <Compile Include="DebugParser\FX9\DebugAssignment.cs" />
-    <Compile Include="DebugParser\FX9\DebugBinaryData.cs" />
+    <Compile Include="DebugParser\FX9\DebugSamplerState.cs" />
+    <Compile Include="DebugParser\FX9\DebugVariableBlob.cs" />
     <Compile Include="DebugParser\FX9\DebugFx9Chunk.cs" />
-    <Compile Include="DebugParser\FX9\DebugInlineShader.cs" />
+    <Compile Include="DebugParser\FX9\DebugStateBlob.cs" />
     <Compile Include="DebugParser\FX9\DebugParameter.cs" />
     <Compile Include="DebugParser\FX9\DebugPass.cs" />
     <Compile Include="DebugParser\FX9\DebugTechnique.cs" />
@@ -102,6 +109,7 @@
     <Compile Include="DebugParser\Fxlvm\DebugFxlcChunk.cs" />
     <Compile Include="DebugParser\Fxlvm\DebugFxlcOperand.cs" />
     <Compile Include="DebugParser\Fxlvm\DebugFxlcToken.cs" />
+    <Compile Include="DebugParser\DX9\DebugConstantTable.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
     <Compile Include="DebugParser\Icfe\DebugInterfacesChunk.cs" />

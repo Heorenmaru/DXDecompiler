@@ -14,11 +14,9 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 		public uint ArrayIndex { get; private set; }
 
 		private uint ComponentCount;
-		private DebugBytecodeContainer Container;
-		public static DebugFxlcOperand Parse(DebugBytecodeReader reader, DebugBytecodeContainer container, uint componentCount)
+		public static DebugFxlcOperand Parse(DebugBytecodeReader reader, uint componentCount)
 		{
 			var result = new DebugFxlcOperand() {
-				Container = container,
 				ComponentCount = componentCount,
 				IsArray = reader.ReadUInt32("IsArray"),
 				OpType = (FxlcOperandType)reader.ReadUInt32("OpType"),

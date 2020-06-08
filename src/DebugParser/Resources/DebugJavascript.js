@@ -19,8 +19,14 @@ function setDetailPanel(element, detailView){
 	detailView.appendChild(ul);
 	addDetailLabel(ul, "Name", element.getAttribute("name"));
 	addDetailLabel(ul, "Type", element.getAttribute("type"));
-	if(type == "Byte[]") {
-		addDetailLabel(ul, "Value", `byte[${element.getAttribute("size")}]`);
+	if (type === "Byte[]") {
+		isNumeric = true;
+		var index = parseInt(element.getAttribute("data-start"));
+		for (var i = 0; i < 4; i++) {
+			var b = document.getElementById(`b${index + i}`);
+			intValue += parseInt(b.textContent, 16) << i * 8;
+		}
+		addDetailLabel(ul, "Value", intValue.toString());
 	} else {
 		addDetailLabel(ul, "Value", element.getAttribute("value"));
 	}
@@ -43,6 +49,14 @@ function setDetailPanel(element, detailView){
 		offset.onclick = function(){
 			var hexByte = document.getElementById("b" + intValue);
 			hexByte.click();
+		}
+	}
+	var notesText = element.getAttribute("notes");
+	var notes = notesText.split(";");
+	for (var note of notes) {
+		var pair = note.split(": ");
+		if (pair.length === 2) {
+			addDetailLabel(ul, pair[0], pair[1]);
 		}
 	}
 }

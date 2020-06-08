@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SlimShader.DX9Shader.Bytecode.Declaration;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace SlimShader.DX9Shader
 
 		private void Load(ShaderModel shader)
 		{
-			ConstantDeclarations = shader.ParseConstantTable().ConstantDeclarations;
+			ConstantDeclarations = shader.ConstantTable.ConstantDeclarations;
 			foreach (var constantDeclaration in ConstantDeclarations)
 			{
 				RegisterType registerType;
@@ -185,7 +186,9 @@ namespace SlimShader.DX9Shader
 					if (decl == null)
 					{
 						// Constant register not found in def statements nor the constant table
-						throw new NotImplementedException();
+						//TODO:
+						return $"Error {registerType}{registerNumber}";
+						//throw new NotImplementedException();
 					}
 
 					if (decl.ParameterClass == ParameterClass.MatrixRows)

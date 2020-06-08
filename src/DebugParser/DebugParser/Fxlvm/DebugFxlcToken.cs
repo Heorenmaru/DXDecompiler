@@ -42,10 +42,10 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 			{
 				var componentCount = i == 0 && singleFirstComponent == 1 ?
 					1 : tokenComponentCount;
-				result.Operands.Add(DebugFxlcOperand.Parse(reader, container, componentCount));
+				result.Operands.Add(DebugFxlcOperand.Parse(reader, componentCount));
 			}
 			// destination operand
-			result.Operands.Insert(0, DebugFxlcOperand.Parse(reader, container, tokenComponentCount));
+			result.Operands.Insert(0, DebugFxlcOperand.Parse(reader, tokenComponentCount));
 			return result;
 		}
 	}

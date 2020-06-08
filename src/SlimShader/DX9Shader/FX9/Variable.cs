@@ -1,15 +1,13 @@
 ﻿using SlimShader.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace SlimShader.DX9Shader.FX9
 {
 	/*
-	 * 
-	 * 
-	 */ 
+	 * Refer https://docs.microsoft.com/en-us/windows/win32/direct3d9/parameters
+	 */
 	public class Variable
 	{
 		public uint DataOffset;
@@ -35,11 +33,11 @@ namespace SlimShader.DX9Shader.FX9
 			result.Parameter = Parameter.Parse(reader, dataReader);
 			if (result.Parameter.ParameterType.IsSampler())
 			{
-				var stateReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
-				var stateCount = stateReader.ReadUInt32();
-				for(int i = 0; i < stateCount; i++)
+				var elementCount = result.Parameter.ElementCount > 0 ? result.Parameter.ElementCount : 1;
+				var samplerStateReader = reader.CopyAtOffset((int)result.DefaultValueOffset);
+				for (int i = 0; i < elementCount; i++)
 				{
-					result.SamplerStates.Add(SamplerState.Parse(reader, stateReader));
+					result.SamplerStates.Add(SamplerState.Parse(reader, samplerStateReader));
 				}
 			}
 			else
