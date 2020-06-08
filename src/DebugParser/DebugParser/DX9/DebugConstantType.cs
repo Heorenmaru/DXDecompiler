@@ -24,9 +24,17 @@ namespace DebugParser.DebugParser.DX9
 			result.Elements = typeReader.ReadUInt16("Elements");
 			result.MemberCount = typeReader.ReadUInt16("Members");
 			var memberInfoOffset = typeReader.ReadUInt32("MemberInfoOffset");
-			if (result.MemberCount > 0) {
-				var memberInfoReader = reader.CopyAtOffset("MemberInfoReader", typeReader, (int)memberInfoOffset);
-				result.Members.Add(DebugConstantType.Parse(reader, memberInfoReader));
+			if (memberInfoOffset != 0) {
+				var memberInfoReader = reader.CopyAtOffset("MemberReader", typeReader, (int)memberInfoOffset);
+				for (int i = 0; i < result.MemberCount; i++)
+				{
+					var nameOffset = memberInfoReader.ReadUInt32($"Member{i}NameOffset");
+					var nameReader = reader.CopyAtOffset($"Member{i}NameReader", memberInfoReader, (int)nameOffset);
+					nameReader.ReadString("Name");
+					var typeOffset = memberInfoReader.ReadUInt32($"Member{i}TypeOffset");
+					var memberTypeReader = reader.CopyAtOffset($"Member{i}TypeReader", memberInfoReader, (int)typeOffset);
+					result.Members.Add(DebugConstantType.Parse(reader, memberTypeReader));
+				}
 			}
 			return result;
 		}

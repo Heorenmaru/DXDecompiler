@@ -150,8 +150,10 @@
     <Compile Include="DX9Shader\Asm\EffectAsmWriter.cs" />
     <Compile Include="DX9Shader\Bytecode\CliToken.cs" />
     <Compile Include="DX9Shader\Bytecode\CommentType.cs" />
+    <Compile Include="DX9Shader\Bytecode\Declaration\ConstantMember.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantTable.cs" />
-    <Compile Include="DX9Shader\Bytecode\Declaration\ConstantDeclration.cs" />
+    <Compile Include="DX9Shader\Bytecode\Declaration\ConstantDeclaration.cs" />
+    <Compile Include="DX9Shader\Bytecode\Declaration\ConstantType.cs" />
     <Compile Include="DX9Shader\Bytecode\FxlcToken.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />

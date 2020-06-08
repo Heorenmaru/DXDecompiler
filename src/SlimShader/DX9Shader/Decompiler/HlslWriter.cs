@@ -1,7 +1,6 @@
 ﻿using SlimShader.DX9Shader.Bytecode.Declaration;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,7 +13,7 @@ namespace SlimShader.DX9Shader
 		private readonly bool _doAstAnalysis;
 
 		StreamWriter hlslWriter;
-		string indent = "";
+		int indent = 0;
 
 		public RegisterState _registers;
 
@@ -51,17 +50,28 @@ namespace SlimShader.DX9Shader
 		{
 			hlslWriter.WriteLine();
 		}
-
+		void WriteIndent()
+		{
+			if(indent > 0) hlslWriter.Write(new string('\t', indent));
+		}
 		void WriteLine(string value)
 		{
-			hlslWriter.Write(indent);
+			WriteIndent();
 			hlslWriter.WriteLine(value);
 		}
 
 		void WriteLine(string format, params object[] args)
 		{
-			hlslWriter.Write(indent);
+			WriteIndent();
 			hlslWriter.WriteLine(format, args);
+		}
+		void Write(string format)
+		{
+			hlslWriter.Write(format);
+		}
+		void Write(string format, params object[] args)
+		{
+			hlslWriter.Write(format, args);
 		}
 
 		private string GetDestinationName(Token instruction)
@@ -74,33 +84,21 @@ namespace SlimShader.DX9Shader
 			return _registers.GetSourceName(instruction, srcIndex);
 		}
 
-		private static string GetConstantTypeName(ConstantDeclaration declaration)
+		private static string GetConstantTypeName(ConstantType type)
 		{
-			switch (declaration.ParameterClass)
+			switch (type.ParameterClass)
 			{
 				case ParameterClass.Scalar:
-					return declaration.ParameterType.ToString().ToLower();
+					return type.ParameterType.GetDescription();
 				case ParameterClass.Vector:
-					if (declaration.ParameterType == ParameterType.Float)
-					{
-						return "float" + declaration.Columns;
-					}
-					else
-					{
-						throw new NotImplementedException();
-					}
+					return type.ParameterType.GetDescription() + type.Columns;
+				case ParameterClass.Struct:
+					return "struct";
 				case ParameterClass.MatrixColumns:
 				case ParameterClass.MatrixRows:
-					if (declaration.ParameterType == ParameterType.Float)
-					{
-						return $"float{declaration.Rows}x{declaration.Columns}";
-					}
-					else
-					{
-						throw new NotImplementedException();
-					}
+					return $"{type.ParameterType.GetDescription()}{type.Rows}x{type.Columns}";
 				case ParameterClass.Object:
-					switch (declaration.ParameterType)
+					switch (type.ParameterType)
 					{
 						case ParameterType.Sampler1D:
 						case ParameterType.Sampler2D:
@@ -145,12 +143,12 @@ namespace SlimShader.DX9Shader
 						GetSourceName(instruction, 1), GetSourceName(instruction, 2));
 					break;
 				case Opcode.Else:
-					indent = indent.Substring(0, indent.Length - 1);
+					indent--;
 					WriteLine("} else {");
-					indent += "\t";
+					indent++;
 					break;
 				case Opcode.Endif:
-					indent = indent.Substring(0, indent.Length - 1);
+					indent--;
 					WriteLine("}");
 					break;
 				case Opcode.Exp:
@@ -161,7 +159,7 @@ namespace SlimShader.DX9Shader
 					break;
 				case Opcode.If:
 					WriteLine("if ({0}) {{", GetSourceName(instruction, 0));
-					indent += "\t";
+					indent++;
 					break;
 				case Opcode.IfC:
 					if ((IfComparison)instruction.Modifier == IfComparison.GE &&
@@ -208,7 +206,7 @@ namespace SlimShader.DX9Shader
 						}
 						WriteLine("if ({0} {2} {1}) {{", GetSourceName(instruction, 0), GetSourceName(instruction, 1), ifComparison);
 					}
-					indent += "\t";
+					indent++;
 					break;
 				case Opcode.Log:
 					WriteLine("{0} = log2({1});", GetDestinationName(instruction), GetSourceName(instruction, 1));
@@ -379,7 +377,7 @@ namespace SlimShader.DX9Shader
 			string methodSemantic = GetMethodSemantic();
 			WriteLine("{0} main({1}){2}", methodReturnType, methodParameters, methodSemantic);
 			WriteLine("{");
-			indent = "\t";
+			indent++;
 
 			if (_registers.MethodOutputRegisters.Count > 1)
 			{
@@ -417,7 +415,7 @@ namespace SlimShader.DX9Shader
 				}
 				
 			}
-			indent = "";
+			indent--;
 			WriteLine("}");
 			hlslWriter.Flush();
 		}
@@ -428,31 +426,59 @@ namespace SlimShader.DX9Shader
 			{
 				foreach (ConstantDeclaration declaration in _registers.ConstantDeclarations)
 				{
-					try
-					{
-						string typeName = GetConstantTypeName(declaration);
-						WriteLine("{0} {1};", typeName, declaration.Name);
-					} catch(Exception ex)
-					{
-						WriteLine("{0} {1};", $"Error", declaration.Name);;
-					}
+					Write(declaration);
 				}
-
-				WriteLine();
 			}
 		}
-
+		private void Write(ConstantDeclaration declaration)
+		{
+			Write(declaration.Type, declaration.Name);
+			if (!declaration.DefaultValue.All(v => v == 0))
+			{
+				Write(" = {{ {0} }}", string.Join(", ", declaration.DefaultValue));
+			}
+			WriteLine(";");
+			WriteLine();
+		}
+		private void Write(ConstantType type, string name, bool isStructMember = false)
+		{
+			string typeName = GetConstantTypeName(type);
+			WriteIndent();
+			Write("{0}", typeName);
+			if (type.ParameterClass == ParameterClass.Struct)
+			{
+				WriteLine("");
+				WriteLine("{");
+				indent++;
+				foreach (var member in type.Members)
+				{
+					Write(member.Type, member.Name, true);
+				}
+				indent--;
+				WriteIndent();
+				Write("}");
+			}
+			Write(" {0}", name);
+			if (type.Elements > 1)
+			{
+				Write("[{0}]", type.Elements);
+			}
+			if (isStructMember)
+			{
+				Write(";\n");
+			}
+		}
 		private void WriteInputStructureDeclaration()
 		{
 			var inputStructType = _shader.Type == ShaderType.Pixel ? "PS_IN" : "VS_IN";
 			WriteLine($"struct {inputStructType}");
 			WriteLine("{");
-			indent = "\t";
+			indent++;
 			foreach (var input in _registers.MethodInputRegisters.Values)
 			{
 				WriteLine($"{input.TypeName} {input.Name} : {input.Semantic};");
 			}
-			indent = "";
+			indent--;
 			WriteLine("};");
 			WriteLine();
 		}
@@ -462,13 +488,13 @@ namespace SlimShader.DX9Shader
 			var outputStructType = _shader.Type == ShaderType.Pixel ? "PS_OUT" : "VS_OUT";
 			WriteLine($"struct {outputStructType}");
 			WriteLine("{");
-			indent = "\t";
+			indent++;
 			foreach (var output in _registers.MethodOutputRegisters.Values)
 			{
 				WriteLine($"// {output.RegisterKey} {Operand.GetParamRegisterName(output.RegisterKey.Type, output.RegisterKey.Number)}");
 				WriteLine($"{output.TypeName} {output.Name} : {output.Semantic};");
 			}
-			indent = "";
+			indent--;
 			WriteLine("};");
 			WriteLine();
 		}

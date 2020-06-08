@@ -138,7 +138,7 @@ namespace SlimShader.DX9Shader
 
 			string registerName = GetRegisterName(registerKey);
 			registerName = registerName ?? instruction.GetParamRegisterName(destIndex);
-			int registerLength = GetRegisterFullLength(registerKey);
+			var registerLength = GetRegisterFullLength(registerKey);
 			string writeMaskName = instruction.GetDestinationWriteMaskName(registerLength, true);
 
 			return string.Format("{0}{1}", registerName, writeMaskName);
@@ -211,7 +211,7 @@ namespace SlimShader.DX9Shader
 			return ApplyModifier(instruction.GetSourceModifier(srcIndex), sourceRegisterName);
 		}
 
-		public int GetRegisterFullLength(RegisterKey registerKey)
+		public uint GetRegisterFullLength(RegisterKey registerKey)
 		{
 			if (registerKey.Type == RegisterType.Const)
 			{

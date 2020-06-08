@@ -9,7 +9,7 @@ namespace SlimShader.DebugParser.FX9
 		public uint PassCount;
 		public uint ShaderCount;
 		public uint VariableBlobCount;
-		public uint StateBloblCount;
+		public uint StateBlobCount;
 
 		List<DebugVariable> Variables = new List<DebugVariable>();
 		List<DebugTechnique> Techniques = new List<DebugTechnique>();
@@ -42,14 +42,14 @@ namespace SlimShader.DebugParser.FX9
 			}
 
 			result.VariableBlobCount = footerReader.ReadUInt32("VariableBlobCount");
-			result.StateBloblCount = footerReader.ReadUInt32("StateBlobCount");
+			result.StateBlobCount = footerReader.ReadUInt32("StateBlobCount");
 			for (int i = 0; i < result.VariableBlobCount; i++)
 			{
 				footerReader.AddIndent($"VariableBlob {i}");
 				result.VariableBlobs.Add(DebugBinaryData.Parse(bodyReader, footerReader));
 				footerReader.RemoveIndent();
 			}
-			for (int i = 0; i < result.StateBloblCount; i++)
+			for (int i = 0; i < result.StateBlobCount; i++)
 			{
 				footerReader.AddIndent($"StateBlob {i}");
 				result.StateBlobs.Add(DebugStateBlob.Parse(bodyReader, footerReader));
