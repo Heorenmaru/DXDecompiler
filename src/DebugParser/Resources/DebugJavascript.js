@@ -9,6 +9,30 @@
 	}
 	return li;
 }
+function getAllSiblings(elem, filter) {
+    var sibs = [];
+    elem = elem.parentNode.firstChild;
+    do {
+        if (elem.nodeType === 3) continue; // text node
+        if (!filter || filter(elem)) sibs.push(elem);
+    } while (elem = elem.nextSibling)
+    return sibs;
+}
+function getChildrenTreeLabels(element){
+	var treeItem = element.parentElement;
+	var siblings = getAllSiblings(treeItem, (ele) => ele.tagName == "UL");
+	if(siblings.length === 0) {
+		return [];
+	}
+	var listItems = siblings[0].children;
+	var result = [];
+	for(var i = 0; i < listItems.length; i++){
+		var treeItem = listItems[i].children[0];
+		var treeLabel = treeItem.getElementsByClassName("tree-label")[0];
+		result.push(treeLabel);
+	}
+	return result;
+}
 function setDetailPanel(element, detailView){
 	const numberTypes = new Set(["UInt32", "Int32", "UInt16", "Int16", "Byte"]);
 	var type = element.getAttribute("type");
@@ -112,68 +136,96 @@ function setDetailPanelUnusedMemory(element, detailView) {
 	hexByte.click();
 	}
 }
+class Manager {
+	constructor() {
+		this.detailView = document.getElementById("detailview");
+		this.bytes = document.getElementsByClassName("hex_byte");
+		this.ascii = document.getElementsByClassName("hex_ascii");
+		this.highlighted = [];
+		this.toggler = document.getElementsByClassName("caret");
+		this.labels = document.getElementsByClassName("tree-label");
+		this.highlightClasses = [];
+		for(var i = 0; i < 6; i++){
+			this.highlightClasses.push(`highlighted_${i}`);
+		}
+		for (var i = 0; i < this.toggler.length; i++)
+		{
+			this.toggler[i].addEventListener("click", this.onTogglerClick.bind(this, this.toggler[i]));
+		}
+		for (var i = 0; i < this.labels.length; i++)
+		{
+			this.labels[i].addEventListener("click", this.onLabelClick.bind(this, this.labels[i]));
+		}
+			for (var i = 0; i < this.bytes.length; i++)
+		{
+			this.bytes[i].addEventListener("click", this.onByteClick.bind(this, this.bytes[i]));
+		}
+	}
+	onTogglerClick(element, evt){
+		element.parentElement.parentElement.querySelector(".nested").classList.toggle("active");
+		element.classList.toggle("caret-down");
+	}
+	onLabelClick(element, evt){
+		this.clearHighlighted();
+		element.classList.add("highlighted");
+		this.highlighted.push([element, "highlighted"]);
+		var dataStart = parseInt(element.getAttribute("data-start"));
+		var dataEnd = parseInt(element.getAttribute("data-end"));
+		if(!isScrolledIntoView(this.bytes[dataStart])){
+			this.bytes[dataStart].scrollIntoView();
+		}
+		var children = getChildrenTreeLabels(element);
+		if(children.length != 0) {
+			for(var i = 0; i < children.length; i++){
+				var treeLabel = children[i];
+				var itemStart = parseInt(treeLabel.getAttribute("data-start"));
+				var itemEnd = parseInt(treeLabel.getAttribute("data-end"));
+				var classIndex = i % this.highlightClasses.length;
+				this.highlightByteRange(itemStart, itemEnd, this.highlightClasses[classIndex]);
+			}
+		} else {
+			this.highlightByteRange(dataStart, dataEnd, "highlighted");
+		}
+		setDetailPanel(element, this.detailView);
+	}
+	onByteClick(element, evt){
+		var memberId = element.getAttribute("member");
+		var member = document.getElementById(memberId);
+		if (member === null) {
+			this.clearHighlighted();
+			setDetailPanelUnusedMemory(element, detailView);
+			return;
+		}
+		if(!isScrolledIntoView(member)){
+			member.scrollIntoView();
+		}
+		member.click();
+		var parent = member;
+		while(parent !== null && parent !== window){
+			if(parent.classList.contains("nested") && !parent.classList.contains("active")){
+				parent.classList.toggle("active");
+				parent.previousElementSibling.firstElementChild.classList.toggle("caret-down");
+			}
+			parent = parent.parentElement;
+		}
+	}
+	highlightByteRange(start, end, className){
+		for(var j = start; j < end && j < this.bytes.length; j++){
+			this.bytes[j].classList.add(className);
+			this.highlighted.push([this.bytes[j], className]);
+			this.ascii[j].classList.add(className);
+			this.highlighted.push([this.ascii[j], className]);
+		}
+	}
+	clearHighlighted(){
+		for(var i = 0; i < this.highlighted.length; i++){
+			let pair = this.highlighted[i];
+			pair[0].classList.remove(pair[1]);
+		}
+		this.highlighted = [];
+	}
+}
 window.onload = function(){
 	console.log("hello");
-	var detailView = document.getElementById("detailview");
-	var bytes = document.getElementsByClassName("hex_byte");
-	var ascii = document.getElementsByClassName("hex_ascii");
-	var highlighted = [];
-	var toggler = document.getElementsByClassName("caret");
-	for (var i = 0; i < toggler.length; i++)
-	{
-		toggler[i].addEventListener("click", function() {
-			this.parentElement.parentElement.querySelector(".nested").classList.toggle("active");
-			this.classList.toggle("caret-down");
-		});
-	}
-	var labels = document.getElementsByClassName("tree-label");
-	for (var i = 0; i < labels.length; i++)
-	{
-		labels[i].addEventListener("click", function() {
-			for(var j = 0; j < highlighted.length; j++){
-				highlighted[j].classList.remove("highlighted");
-			}
-			highlighted = [];
-			this.classList.add("highlighted");
-			highlighted.push(this);
-			var dataStart = parseInt(this.getAttribute("data-start"));
-			var dataEnd = parseInt(this.getAttribute("data-end"));
-			if(!isScrolledIntoView(bytes[dataStart])){
-				bytes[dataStart].scrollIntoView();
-			}
-			for(var j = dataStart; j < dataEnd && j < bytes.length; j++){
-				bytes[j].classList.add("highlighted");
-				highlighted.push(bytes[j]);
-				ascii[j].classList.add("highlighted");
-				highlighted.push(ascii[j]);
-			}
-			setDetailPanel(this, detailView);
-		});
-	}
-	for (var i = 0; i < bytes.length; i++)
-	{
-		bytes[i].addEventListener("click", function() {
-			var memberId = this.getAttribute("member");
-			var member = document.getElementById(memberId);
-			if (member === null) {
-				for(var j = 0; j < highlighted.length; j++){
-					highlighted[j].classList.remove("highlighted");
-				}
-				setDetailPanelUnusedMemory(this, detailView);
-				return;
-			}
-			if(!isScrolledIntoView(member)){
-				member.scrollIntoView();
-			}
-			member.click();
-			var parent = member;
-			while(parent !== null && parent !== window){
-				if(parent.classList.contains("nested") && !parent.classList.contains("active")){
-					parent.classList.toggle("active");
-					parent.previousElementSibling.firstElementChild.classList.toggle("caret-down");
-				}
-				parent = parent.parentElement;
-			}
-		});
-	}
+	var manager = new Manager();
 }

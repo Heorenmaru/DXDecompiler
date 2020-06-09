@@ -6,11 +6,13 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.Bytecode
 {
-	public class FxlcToken
+	public class PresToken
 	{
-		public static FxlcToken Parse(BytecodeReader reader)
+		public ShaderModel Shader;
+		public static PresToken Parse(BytecodeReader reader)
 		{
-			var result = new FxlcToken();
+			var result = new PresToken();
+			result.Shader = ShaderModel.Parse(reader);
 			return result;
 		}
 	}

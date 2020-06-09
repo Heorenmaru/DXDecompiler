@@ -52,5 +52,20 @@ namespace SlimShader.Util
 			}
 			return sb.ToString();
 		}
+		public static string BytesToAscii(byte[] data)
+		{
+			var sb = new StringBuilder();
+			foreach(var b in data)
+			{
+				if(b >= 32 && b <= 126)
+				{
+					sb.Append((char)b);
+				} else
+				{
+					sb.Append((char)219);
+				}
+			}
+			return sb.ToString();
+		}
 	}
 }

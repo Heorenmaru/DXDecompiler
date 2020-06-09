@@ -129,7 +129,7 @@ namespace SlimShader.DebugParser
 						new XAttribute("notes", noteText));
 				}
 				if(entry is DebugIndent di){
-					label = new XElement("span", $"{di.Name}",
+					label = new XElement("span", di.Name,
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", di.AbsoluteIndex),
 						new XAttribute("data-end", di.AbsoluteIndex + di.Size),

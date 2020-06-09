@@ -1,4 +1,5 @@
 ﻿using SlimShader.DX9Shader.Bytecode.Declaration;
+using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -292,6 +293,13 @@ namespace SlimShader.DX9Shader
 						GetSourceName(instruction, 1), GetSourceName(instruction, 2));
 					break;
 				case Opcode.Comment:
+					{
+						byte[] bytes = new byte[instruction.Data.Length * sizeof(uint)];
+						Buffer.BlockCopy(instruction.Data, 0, bytes, 0, bytes.Length);
+						var ascii = FormatUtil.BytesToAscii(bytes);
+						WriteLine($"// Comment: {ascii}");
+						break;
+					}
 				case Opcode.End:
 					break;
 			}
@@ -357,11 +365,21 @@ namespace SlimShader.DX9Shader
 		public void Write(Stream stream)
 		{
 			hlslWriter = new StreamWriter(stream);
-
+			if (_shader.Type == ShaderType.Tx)
+			{
+				Write($"// Writing expression");
+				WriteExpression(_shader);
+				hlslWriter.Flush();
+				return;
+			}
 			_registers = new RegisterState(_shader);
 
 			WriteConstantDeclarations();
 
+			if (_shader.Pres != null)
+			{
+				WriteExpression(_shader.Pres.Shader);
+			}
 			if (_registers.MethodInputRegisters.Count > 1)
 			{
 				WriteInputStructureDeclaration();
@@ -581,9 +599,15 @@ namespace SlimShader.DX9Shader
 			{
 				WriteInstruction(instruction);
 			}
-
 			WriteLine();
-
+		}
+		private void WriteExpression(ShaderModel shader)
+		{
+			WriteLine($"// {shader.Type}_{shader.MajorVersion}_{shader.MinorVersion}");
+			foreach(var token in shader.Fxlc.Tokens)
+			{
+				WriteLine($"// {token.Type}");
+			}
 		}
 	}
 }

@@ -57,6 +57,33 @@ ul, #myUL {
     background-color: #cc2c2c;
     color: white;
 }
+:root {
+    --highlight-count: 6;
+}
+.highlighted_0 {
+    background-color: hsl(0,100%,40%);
+    color: white;
+}
+.highlighted_1 {
+    background-color: hsl(60,90%,30%);
+    color: white;
+}
+.highlighted_2 {
+    background-color: hsl(120,100%,35%);
+    color: white;
+}
+.highlighted_3 {
+    background-color: hsl(180, 100%,35%);
+    color: white;
+}
+.highlighted_4 {
+    background-color: hsl(240,100%,50%);
+    color: white;
+}
+.highlighted_5 {
+    background-color: hsl(300,100%,40%);
+    color: white;
+}
 .unused {
     background-color: darkgray;
     color: white;

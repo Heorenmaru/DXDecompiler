@@ -89,6 +89,23 @@ namespace SlimShader.DX9Shader
 				WriteLine("//             AssignmentIndex {0} BlobType: {1} Size {2} Name: {3} Version: {4}",
 							data.AssignmentIndex.ToString("X4"), data.BlobType, data.BlobSize, data.VariableName, data.VersionString);
 			}
+
+			for (int i = 0; i < EffectChunk.StateBlobs.Count; i++)
+			{
+				var data = EffectChunk.StateBlobs[i];
+				if (data.BlobType == StateBlobType.Variable) continue;
+				if (data.Shader.Type != ShaderType.Tx) continue;
+				WriteLine("// Expression, StateBlob {0}: ", i);
+				try
+				{
+					var text = HlslWriter.Decompile(data.Shader);
+					WriteLine(text);
+				} catch(Exception ex)
+				{
+					WriteLine(ex.ToString());
+				}
+				WriteLine("Fin");
+			}
 		}
 		void WriteShader(StateBlob blob)
 		{

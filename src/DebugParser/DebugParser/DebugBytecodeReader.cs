@@ -368,6 +368,10 @@ namespace SlimShader.DebugParser
 			{
 				Members.Add(result);
 			}
+			if(Indents.Count > 0)
+			{
+				Indents.Peek().Members.Add(result);
+			}
 			return result;
 		}
 	}

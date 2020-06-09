@@ -31,7 +31,9 @@ namespace SlimShader.DX9Shader
 		{
 			{ "CTAB".ToFourCc(), CommentType.CTAB },
 			{ "CLIT".ToFourCc(), CommentType.CLIT },
-			{ "FXLC".ToFourCc(), CommentType.FXLC }
+			{ "FXLC".ToFourCc(), CommentType.FXLC },
+			{ "PRES".ToFourCc(), CommentType.PRES },
+			//{ "PRSI".ToFourCc(), CommentType.PRSI }
 		};
 		public int MajorVersion { get; private set; }
 		public int MinorVersion { get; private set; }
@@ -39,8 +41,9 @@ namespace SlimShader.DX9Shader
 		public Fx9Chunk EffectChunk { get; set; }
 		public IList<Token> Tokens { get; private set; }
 		public ConstantTable ConstantTable { get; private set; }
-		public FxlcToken Fxlc { get; set; }
+		public Fxlc Fxlc { get; set; }
 		public CliToken Cli { get; set; }
+		public PresToken Pres { get; set; }
 		public IEnumerable<InstructionToken> Instructions => Tokens.OfType<InstructionToken>();
 
 		public ShaderModel(int majorVersion, int minorVersion, ShaderType type)
@@ -100,7 +103,10 @@ namespace SlimShader.DX9Shader
 							Cli = CliToken.Parse(commentReader);
 							return null;
 						case CommentType.FXLC:
-							Fxlc = FxlcToken.Parse(commentReader);
+							Fxlc = Fxlc.Parse(commentReader);
+							return null;
+						case CommentType.PRES:
+							Pres = PresToken.Parse(commentReader);
 							return null;
 					}
 				}

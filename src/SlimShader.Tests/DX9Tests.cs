@@ -113,7 +113,10 @@ namespace SlimShader.Tests
 
 				var dumpHtml = reader.DumpHtml();
 				File.WriteAllText($"{file}.d.html", dumpHtml);
-
+				if (!string.IsNullOrEmpty(error))
+				{
+					Assert.That(false, error);
+				}
 				Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
 			} else
 			{
@@ -136,7 +139,10 @@ namespace SlimShader.Tests
 
 				var dumpHtml = reader.DumpHtml();
 				File.WriteAllText($"{file}.d.html", dumpHtml);
-
+				if (!string.IsNullOrEmpty(error))
+				{
+					Assert.That(false, error);
+				}
 				Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
 				return;
 			}			

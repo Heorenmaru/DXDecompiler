@@ -57,13 +57,15 @@
     <Compile Include="DebugParser\DebugNumber.cs" />
     <Compile Include="DebugParser\DebugShaderVersion.cs" />
     <Compile Include="DebugParser\DebugUtil.cs" />
-    <Compile Include="DebugParser\DX9\DebugClit.cs" />
+    <Compile Include="DebugParser\DX9\DebugCliToken.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantDeclaration.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantStructMember.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantType.cs" />
+    <Compile Include="DebugParser\DX9\DebugPresToken.cs" />
+    <Compile Include="DebugParser\DX9\DebugPrsiToken.cs" />
     <Compile Include="DebugParser\DX9\DebugShaderModel.cs" />
     <Compile Include="DebugParser\DX9\DebugToken.cs" />
-    <Compile Include="DebugParser\DX9\FxlcChunk.cs" />
+    <Compile Include="DebugParser\DX9\DebugFxlc.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectAssignment.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectConstantAssignment.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectConstantIndexAssignment.cs" />

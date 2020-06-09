@@ -154,8 +154,9 @@
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantTable.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantDeclaration.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantType.cs" />
-    <Compile Include="DX9Shader\Bytecode\FxlcToken.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlc.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
+    <Compile Include="DX9Shader\Bytecode\PresToken.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
     <Compile Include="DX9Shader\Decompiler\BytecodeParser.cs" />
     <Compile Include="DX9Shader\Bytecode\CommentToken.cs" />

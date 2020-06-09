@@ -6,6 +6,8 @@ namespace SlimShader.DX9Shader.Bytecode
 		CTAB,
 		CLIT,
 		FXLC,
+		PRES,
+		PRSI,
 		Comment
 	}
 }
