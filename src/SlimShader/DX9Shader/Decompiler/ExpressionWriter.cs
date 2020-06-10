@@ -54,6 +54,11 @@ namespace SlimShader.DX9Shader.Decompiler
 			WriteLine("return expr;");
 			indent--;
 			WriteLine("}");
+
+			if(Shader.Pres != null)
+			{
+				Write("Have Pres");
+			}
 		}
 
 		void Write(FxlcToken token)

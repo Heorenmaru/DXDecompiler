@@ -72,46 +72,6 @@ namespace SlimShader.DX9Shader
 			{
 				WriteTechnique(technique);
 			}
-			WriteLine("//Entries Binary {0}({1}) Inline {2}({3})", 
-				EffectChunk.VariableBlobCount,
-				EffectChunk.VariableBlobs.Count,
-				EffectChunk.StateBlobCount,
-				EffectChunk.StateBlobs.Count);
-			WriteLine("");
-			for (int i = 0; i < EffectChunk.VariableBlobs.Count; i++)
-			{
-				var data = EffectChunk.VariableBlobs[i];
-				WriteLine("//VariableBlob {0}: Index {1} Size: {2} DataLength {3} Version: {4}",
-					i, data.Index, data.Size, data.Data.Length, data.Version);
-			}
-			for (int i = 0; i < EffectChunk.StateBlobs.Count; i++)
-			{
-				var data = EffectChunk.StateBlobs[i];
-				WriteLine("//StateBlob {0}: TechniqueIndex {1} StateIndex {2} SamplerIndex {3}",
-					i, 
-					data.TechniqueIndex.ToString("X4"),
-					data.PassIndex.ToString("X4"),
-					data.SamplerStateIndex.ToString("X4"));
-				WriteLine("//             AssignmentIndex {0} BlobType: {1} Size {2} Name: {3} Version: {4}",
-							data.AssignmentIndex.ToString("X4"), data.BlobType, data.BlobSize, data.VariableName, data.VersionString);
-			}
-
-			for (int i = 0; i < EffectChunk.StateBlobs.Count; i++)
-			{
-				var data = EffectChunk.StateBlobs[i];
-				if (data.BlobType == StateBlobType.Variable) continue;
-				if (data.Shader.Type != ShaderType.Tx) continue;
-				WriteLine("// Expression, StateBlob {0}: ", i);
-				try
-				{
-					var text = HlslWriter.Decompile(data.Shader);
-					WriteLine(text);
-				} catch(Exception ex)
-				{
-					WriteLine(ex.ToString());
-				}
-				WriteLine("Fin");
-			}
 		}
 		void WriteShader(StateBlob blob)
 		{
@@ -120,7 +80,7 @@ namespace SlimShader.DX9Shader
 			var text = "";
 			if (blob.Shader.Type == ShaderType.Tx)
 			{
-				text = ExpressionHLSLWriter.Decompile(blob.Shader);
+				text = ExpressionHLSLWriter.Decompile(blob.Shader, funcName);
 			}
 			else
 			{
@@ -144,7 +104,8 @@ namespace SlimShader.DX9Shader
 			{
 				if(data.ShaderType == ShaderType.Tx)
 				{
-					return $"ExpressionShader";
+					var funcName = ShaderNames[data];
+					return $"{funcName}";
 				}
 				if (string.IsNullOrEmpty(data.VersionString))
 				{
@@ -153,7 +114,7 @@ namespace SlimShader.DX9Shader
 				else
 				{
 					var funcName = ShaderNames[data];
-					return $"compile {data.VersionString} {funcName}";
+					return $"compile {data.VersionString} {funcName}()";
 				}
 			}
 			if (data.BlobType == StateBlobType.Variable)
@@ -168,7 +129,8 @@ namespace SlimShader.DX9Shader
 			}
 			if (data.BlobType == StateBlobType.IndexShader)
 			{
-				return $"{data.VariableName}[TODO]";
+				var funcName = ShaderNames[data];
+				return $"{data.VariableName}[{funcName}()]";
 			}
 			throw new ArgumentException();
 		}
@@ -189,7 +151,8 @@ namespace SlimShader.DX9Shader
 			}
 			else if (data.IsShader)
 			{
-				return $"compile {data.Version}";
+				var funcName = ShaderNames[data];
+				return $"compile {data.Version} {funcName}()";
 			}
 			else if(key.ParameterType == ParameterType.String)
 			{
@@ -358,12 +321,17 @@ namespace SlimShader.DX9Shader
 				value = string.Format("{{ {0} }}", string.Join(", ", assignment.Value));
 			} else if(EffectChunk.StateBlobLookup.ContainsKey(assignment))
 			{
-				value = StateBlobToString(assignment) + $" /* {assignment.Value[0].UInt} */";
+				value = StateBlobToString(assignment);
 			} else
 			{
 				value = assignment.Value[0].ToString();
 			}
-			WriteLine("{0}{1} = {2};", assignment.Type.ToString(), index, value);
+			Write("{0}{1} = {2};", assignment.Type.ToString(), index, value);
+			if (EffectChunk.StateBlobLookup.ContainsKey(assignment))
+			{
+				Write(" // {0}", assignment.Value[0].UInt);
+			}
+			WriteLine();
 		}
 		public void WriteIndent()
 		{

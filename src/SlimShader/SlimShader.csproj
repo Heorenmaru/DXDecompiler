@@ -161,6 +161,7 @@
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcTokenType.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\PresToken.cs" />
+    <Compile Include="DX9Shader\Bytecode\PrsiToken.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
     <Compile Include="DX9Shader\Decompiler\BytecodeParser.cs" />
     <Compile Include="DX9Shader\Bytecode\CommentToken.cs" />

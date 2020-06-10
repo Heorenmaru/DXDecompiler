@@ -90,62 +90,44 @@ namespace SlimShader.Tests
 			// Act.
 			var bytecode = File.ReadAllBytes(file + ".o");
 			
-			if(bytecode[2] == 255 && bytecode[3] == 254)
+			var reader = new DebugParser.DebugBytecodeReader(bytecode, 0, bytecode.Length);
+			string error = "";
+			try
 			{
-				var reader = new DebugParser.DebugBytecodeReader(bytecode, 0, bytecode.Length);
-				string error = "";
-				try
+				if (bytecode[2] == 255 && bytecode[3] == 254)
 				{
 					reader.ReadByte("minorVersion");
 					reader.ReadByte("majorVersion");
 					reader.ReadUInt16("shaderType");
 					DebugFx9Chunk.Parse(reader, (uint)(bytecode.Length - 4));
-				} catch(Exception ex)
-				{
-					error = ex.ToString();
-				}
-				var dump = reader.DumpStructure();
-				if (!string.IsNullOrEmpty(error))
-				{
-					dump += "\n" + error;
-				}
-				File.WriteAllText($"{file}.d.txt", dump);
-
-				var dumpHtml = reader.DumpHtml();
-				File.WriteAllText($"{file}.d.html", dumpHtml);
-				if (!string.IsNullOrEmpty(error))
-				{
-					Assert.That(false, error);
-				}
-				Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
-			} else
-			{
-				var reader = new DebugParser.DebugBytecodeReader(bytecode, 0, bytecode.Length);
-				string error = "";
-				try
+				} else
 				{
 					var shaderModel = DebugShaderModel.Parse(reader);
 				}
-				catch (Exception ex)
-				{
-					error = ex.ToString();
-				}
-				var dump = reader.DumpStructure();
-				if (!string.IsNullOrEmpty(error))
-				{
-					dump += "\n" + error;
-				}
-				File.WriteAllText($"{file}.d.txt", dump);
+			} catch(Exception ex)
+			{
+				error = ex.ToString();
+			}
+			var dump = reader.DumpStructure();
+			if (!string.IsNullOrEmpty(error))
+			{
+				dump += "\n" + error;
+			}
+			File.WriteAllText($"{file}.d.txt", dump);
+			var dumpHtml = "";
+			try
+			{
+				dumpHtml = reader.DumpHtml();
+			} catch(Exception ex)
+			{
 
-				var dumpHtml = reader.DumpHtml();
-				File.WriteAllText($"{file}.d.html", dumpHtml);
-				if (!string.IsNullOrEmpty(error))
-				{
-					Assert.That(false, error);
-				}
-				Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
-				return;
-			}			
+			}
+			File.WriteAllText($"{file}.d.html", dumpHtml);
+			if (!string.IsNullOrEmpty(error))
+			{
+				Assert.That(false, error);
+			}
+			//Assert.That(!dump.Contains("Unread Memory"), "Unread memory found");
 
 			// Assert.
 		}

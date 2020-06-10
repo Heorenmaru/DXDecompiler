@@ -34,7 +34,7 @@ namespace SlimShader.DX9Shader
 			{ "CLIT".ToFourCc(), CommentType.CLIT },
 			{ "FXLC".ToFourCc(), CommentType.FXLC },
 			{ "PRES".ToFourCc(), CommentType.PRES },
-			//{ "PRSI".ToFourCc(), CommentType.PRSI }
+			{ "PRSI".ToFourCc(), CommentType.PRSI }
 		};
 		public int MajorVersion { get; private set; }
 		public int MinorVersion { get; private set; }
@@ -45,6 +45,7 @@ namespace SlimShader.DX9Shader
 		public FxlcChunk Fxlc { get; set; }
 		public CliToken Cli { get; set; }
 		public PresToken Pres { get; set; }
+		public PrsiToken Prsi { get; set; }
 		public IEnumerable<InstructionToken> Instructions => Tokens.OfType<InstructionToken>();
 
 		public ShaderModel(int majorVersion, int minorVersion, ShaderType type)
@@ -108,6 +109,9 @@ namespace SlimShader.DX9Shader
 							return null;
 						case CommentType.PRES:
 							Pres = PresToken.Parse(commentReader);
+							return null;
+						case CommentType.PRSI:
+							Prsi = PrsiToken.Parse(commentReader, (uint)size);
 							return null;
 					}
 				}

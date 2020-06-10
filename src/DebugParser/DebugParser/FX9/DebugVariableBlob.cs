@@ -17,12 +17,16 @@ namespace SlimShader.DebugParser.FX9
 			var startPosition = blobReader._reader.BaseStream.Position;
 			var header = blobReader.PeakUint32();
 			var shaderType = (ShaderType)(header >> 16);
-			if(shaderType == ShaderType.Pixel || shaderType == ShaderType.Vertex)
+			var paddedSize = result.Size + (result.Size % 4 == 0 ? 0 : 4 - result.Size % 4);
+			if (shaderType == ShaderType.Pixel || shaderType == ShaderType.Vertex || shaderType == ShaderType.Tx)
 			{
 				var shaderReader = blobReader.CopyAtCurrentPosition("ShaderReader", blobReader);
 				result.Shader = DebugShaderModel.Parse(shaderReader);
+			} else if(result.Size > 0)
+			{
+				blobReader.ReadBytes("Value", (int)paddedSize);
 			}
-			blobReader._reader.BaseStream.Position = startPosition + result.Size;
+			blobReader._reader.BaseStream.Position = startPosition + paddedSize;
 			return result;
 		}
 	}

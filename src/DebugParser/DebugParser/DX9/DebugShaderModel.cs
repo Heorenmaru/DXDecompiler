@@ -85,7 +85,7 @@ namespace SlimShader.DebugParser.DX9
 					Pres = DebugPresToken.Parse(reader);
 					break;
 				case CommentType.PRSI:
-					Prsi = DebugPrsiToken.Parse(reader);
+					Prsi = DebugPrsiToken.Parse(reader, (uint)size);
 					break;
 				default:
 					return false;
