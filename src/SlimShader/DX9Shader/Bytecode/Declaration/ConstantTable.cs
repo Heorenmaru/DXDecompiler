@@ -1,5 +1,7 @@
 ﻿using SlimShader.Util;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SlimShader.DX9Shader.Bytecode.Declaration
 {
@@ -48,6 +50,17 @@ namespace SlimShader.DX9Shader.Bytecode.Declaration
 			var creatorReader = ctabReader.CopyAtOffset(creatorOffset);
 			var creatorString = creatorReader.ReadString();
 			return result;
+		}
+
+		public string GetVariable(uint elementIndex)
+		{
+			var decl = ConstantDeclarations
+				.FirstOrDefault((v) => v.RegisterIndex == elementIndex);
+			if (decl == null)
+			{
+				return string.Format("var{0}", elementIndex);
+			}
+			return decl.Name;
 		}
 	}
 }

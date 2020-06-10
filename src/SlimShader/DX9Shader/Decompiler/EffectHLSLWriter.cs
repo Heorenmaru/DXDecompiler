@@ -1,4 +1,5 @@
-﻿using SlimShader.DX9Shader.FX9;
+﻿using SlimShader.DX9Shader.Decompiler;
+using SlimShader.DX9Shader.FX9;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,13 +37,18 @@ namespace SlimShader.DX9Shader
 			int shaderCount = 0;
 			foreach(var blob in EffectChunk.VariableBlobs)
 			{
-				if(blob.IsShader) ShaderNames[blob] = $"Shader{shaderCount++}";
+				if (blob.IsShader)
+				{
+					ShaderNames[blob] = $"Shader{shaderCount++}";
+				}
 			}
 			foreach (var blob in EffectChunk.StateBlobs)
 			{
-				if (blob.BlobType == StateBlobType.Shader &&  
-					(blob.ShaderType == ShaderType.Vertex ||
-					blob.ShaderType == ShaderType.Pixel)) ShaderNames[blob] = $"Shader{shaderCount++}";
+				if (blob.BlobType == StateBlobType.Shader || 
+					blob.BlobType == StateBlobType.IndexShader)
+				{
+					ShaderNames[blob] = $"Shader{shaderCount++}";
+				}
 			}
 
 		}
@@ -56,8 +62,8 @@ namespace SlimShader.DX9Shader
 			}
 			foreach(var blob in EffectChunk.StateBlobs)
 			{
-				if(blob.BlobType == StateBlobType.Shader && 
-					(blob.ShaderType == ShaderType.Pixel || blob.ShaderType == ShaderType.Vertex))
+				if(blob.BlobType == StateBlobType.Shader ||
+					blob.BlobType == StateBlobType.IndexShader)
 				{
 					WriteShader(blob);
 				}
@@ -111,8 +117,16 @@ namespace SlimShader.DX9Shader
 		{
 			WriteLine($"// {ShaderNames[blob]}");
 			var funcName = ShaderNames[blob];
-			var text = HlslWriter.Decompile(blob.Shader);
-			text = text.Replace("main()", $"{funcName}()");
+			var text = "";
+			if (blob.Shader.Type == ShaderType.Tx)
+			{
+				text = ExpressionHLSLWriter.Decompile(blob.Shader);
+			}
+			else
+			{
+				text = HlslWriter.Decompile(blob.Shader);
+				text = text.Replace("main()", $"{funcName}()");
+			}
 			WriteLine(text);
 		}
 		public string StateBlobToString(Assignment key)

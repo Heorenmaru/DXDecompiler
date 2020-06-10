@@ -96,8 +96,9 @@ namespace SlimShader.DX9Shader
 				case ParameterClass.Struct:
 					return "struct";
 				case ParameterClass.MatrixColumns:
+					return $"column_major {type.ParameterType.GetDescription()}{type.Rows}x{type.Columns}";
 				case ParameterClass.MatrixRows:
-					return $"{type.ParameterType.GetDescription()}{type.Rows}x{type.Columns}";
+					return $"row_major {type.ParameterType.GetDescription()}{type.Rows}x{type.Columns}";
 				case ParameterClass.Object:
 					switch (type.ParameterType)
 					{
@@ -606,7 +607,7 @@ namespace SlimShader.DX9Shader
 			WriteLine($"// {shader.Type}_{shader.MajorVersion}_{shader.MinorVersion}");
 			foreach(var token in shader.Fxlc.Tokens)
 			{
-				WriteLine($"// {token.Type}");
+				WriteLine($"// {token.ToString(shader.ConstantTable, shader.Cli)}");
 			}
 		}
 	}

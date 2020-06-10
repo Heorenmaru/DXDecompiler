@@ -6,6 +6,7 @@ using SlimShader.DX9Shader.FX9;
 using SlimShader.Util;
 using SlimShader.DX9Shader.Bytecode;
 using SlimShader.DX9Shader.Bytecode.Declaration;
+using SlimShader.DX9Shader.Bytecode.Fxlvm;
 
 namespace SlimShader.DX9Shader
 {
@@ -41,7 +42,7 @@ namespace SlimShader.DX9Shader
 		public Fx9Chunk EffectChunk { get; set; }
 		public IList<Token> Tokens { get; private set; }
 		public ConstantTable ConstantTable { get; private set; }
-		public Fxlc Fxlc { get; set; }
+		public FxlcChunk Fxlc { get; set; }
 		public CliToken Cli { get; set; }
 		public PresToken Pres { get; set; }
 		public IEnumerable<InstructionToken> Instructions => Tokens.OfType<InstructionToken>();
@@ -103,7 +104,7 @@ namespace SlimShader.DX9Shader
 							Cli = CliToken.Parse(commentReader);
 							return null;
 						case CommentType.FXLC:
-							Fxlc = Fxlc.Parse(commentReader);
+							Fxlc = FxlcChunk.Parse(commentReader);
 							return null;
 						case CommentType.PRES:
 							Pres = PresToken.Parse(commentReader);

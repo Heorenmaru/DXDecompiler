@@ -1,4 +1,5 @@
-﻿using SlimShader.Util;
+﻿using System;
+using SlimShader.Util;
 
 namespace SlimShader.DX9Shader.Bytecode
 {
@@ -8,6 +9,11 @@ namespace SlimShader.DX9Shader.Bytecode
 		{
 			var result = new CliToken();
 			return result;
+		}
+
+		internal string GetLiteral(uint elementIndex, uint componentCount)
+		{
+			return "?";
 		}
 	}
 }

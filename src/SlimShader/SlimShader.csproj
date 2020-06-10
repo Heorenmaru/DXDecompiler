@@ -154,7 +154,11 @@
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantTable.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantDeclaration.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantType.cs" />
-    <Compile Include="DX9Shader\Bytecode\Fxlc.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcChunk.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOperand.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOperandType.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcToken.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcTokenType.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\PresToken.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
@@ -175,6 +179,7 @@
     <Compile Include="DX9Shader\Bytecode\InstructionVerifier.cs" />
     <Compile Include="DX9Shader\Bytecode\Opcode.cs" />
     <Compile Include="DX9Shader\Decompiler\EffectHLSLWriter.cs" />
+    <Compile Include="DX9Shader\Decompiler\ExpressionWriter.cs" />
     <Compile Include="DX9Shader\Decompiler\RegisterKey.cs" />
     <Compile Include="DX9Shader\Bytecode\RegisterType.cs" />
     <Compile Include="DX9Shader\Bytecode\ResultModifier.cs" />
