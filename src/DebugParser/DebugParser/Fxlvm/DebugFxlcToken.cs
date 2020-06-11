@@ -3,6 +3,7 @@ using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 
 namespace SlimShader.DebugParser.Chunks.Fxlvm
@@ -34,6 +35,11 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 
 			Debug.Assert(token.DecodeValue(3, 19) == 0,
 				$"Unexpected data in FxlcToken bits 3-19 {token.DecodeValue(3, 19)}");
+
+			var info = reader.Members.Last();
+			info.AddNote("Token", result.Type.ToString());
+			info.AddNote("TokenComponentCount", tokenComponentCount.ToString());
+			info.AddNote("SingleFirstComponent", singleFirstComponent.ToString());
 
 			var operandCount = result.OperandCount = reader.ReadUInt32("OperandCount");
 			for(int i = 0; i < operandCount; i++)

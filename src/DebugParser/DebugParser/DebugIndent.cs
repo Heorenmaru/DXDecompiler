@@ -39,5 +39,10 @@ namespace SlimShader.DebugParser
 			sb.Append($"Indent: {Name}\n");
 			return sb.ToString();
 		}
+
+		public void AddNote(string key, string value)
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

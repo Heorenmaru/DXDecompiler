@@ -63,7 +63,7 @@ namespace SlimShader.DebugParser.DX9
 			}
 			var instructionToken = reader.ReadUInt32("Token");
 			var startPosition = reader._reader.BaseStream.Position;
-			var entry = reader.Members.OfType<DebugEntry>().Last();
+			var entry = reader.Members.Last();
 			Opcode opcode = (Opcode)(instructionToken & 0xffff);
 			entry.AddNote("TokenOpcode", opcode.ToString());
 			var size = (int)((instructionToken >> 16) & 0x7FFF);
@@ -107,7 +107,7 @@ namespace SlimShader.DebugParser.DX9
 			{
 				size = (int)((instructionToken >> 24) & 0x0f);
 			}
-			var entry = reader.Members.OfType<DebugEntry>().Last();
+			var entry = reader.Members.Last();
 			entry.AddNote("TokenOpcode", opcode.ToString());
 			entry.AddNote("TokenSize", size.ToString());
 			DebugToken token = new DebugToken();

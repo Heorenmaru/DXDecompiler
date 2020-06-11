@@ -374,5 +374,10 @@ namespace SlimShader.DebugParser
 			}
 			return result;
 		}
+
+		public void AddNote(string key, string value)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
