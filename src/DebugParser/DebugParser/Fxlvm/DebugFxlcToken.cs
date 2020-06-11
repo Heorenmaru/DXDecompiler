@@ -20,13 +20,11 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 			Operands = new List<DebugFxlcOperand>();
 		}
 
-		public static DebugFxlcToken Parse(DebugBytecodeReader reader, DebugBytecodeContainer container)
+		public static DebugFxlcToken Parse(DebugBytecodeReader reader)
 		{
 			var result = new DebugFxlcToken();
-			var token = reader.PeakUint32();
-			var type = (FxlcTokenType)token.DecodeValue(20, 30);
 
-			result.Token0 = reader.ReadUInt32($"Token0({type})");
+			var token = reader.ReadUInt32($"Token");
 			var tokenComponentCount = token.DecodeValue(0, 2);
 			result.Type = (FxlcTokenType)token.DecodeValue(20, 30);
 			var singleFirstComponent = token.DecodeValue(31, 31);

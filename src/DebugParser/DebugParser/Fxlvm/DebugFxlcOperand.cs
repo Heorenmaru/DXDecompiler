@@ -19,7 +19,7 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 			var result = new DebugFxlcOperand() {
 				ComponentCount = componentCount,
 				IsArray = reader.ReadUInt32("IsArray"),
-				OpType = (FxlcOperandType)reader.ReadUInt32("OpType"),
+				OpType = reader.ReadEnum32<FxlcOperandType>("OpType"),
 				OpIndex = reader.ReadUInt32("OpIndex"),
 			};
 			Debug.Assert(Enum.IsDefined(typeof(FxlcOperandType), result.OpType),

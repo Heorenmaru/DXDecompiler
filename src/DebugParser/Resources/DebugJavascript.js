@@ -156,9 +156,13 @@ class Manager {
 		{
 			this.labels[i].addEventListener("click", this.onLabelClick.bind(this, this.labels[i]));
 		}
-			for (var i = 0; i < this.bytes.length; i++)
+		for (var i = 0; i < this.bytes.length; i++)
 		{
 			this.bytes[i].addEventListener("click", this.onByteClick.bind(this, this.bytes[i]));
+		}
+		for (var i = 0; i < this.ascii.length; i++)
+		{
+			this.ascii[i].addEventListener("click", this.onByteClick.bind(this, this.ascii[i]));
 		}
 	}
 	onTogglerClick(element, evt){
@@ -193,7 +197,7 @@ class Manager {
 		var member = document.getElementById(memberId);
 		if (member === null) {
 			this.clearHighlighted();
-			setDetailPanelUnusedMemory(element, detailView);
+			setDetailPanelUnusedMemory(element, this.detailView);
 			return;
 		}
 		if(!isScrolledIntoView(member)){

@@ -216,8 +216,8 @@ namespace SlimShader.DebugParser
 					
 					var text = j < buffer.Length ? buffer[j].ToString("X2") : $"{nbsp}{nbsp}";
 					var hexElement = new XElement("span", text,
-						new XAttribute("index", j.ToString()),
 						new XAttribute("id", "b" + j.ToString()),
+						new XAttribute("index", j.ToString()),
 						new XAttribute("class", "hex_byte"));
 					if (j < used.Length && used[j] == null)
 					{
@@ -239,11 +239,16 @@ namespace SlimShader.DebugParser
 					var asciiElement = new XElement("span", 
 							asciiText,
 							new XAttribute("id", "a" + j.ToString()),
+							new XAttribute("index", j.ToString()),
 							new XAttribute("class", "hex_ascii"));
 					row.Add(asciiElement);
 					if (j < used.Length && used[j] == null)
 					{
 						asciiElement.Attribute("class").Value += " unused";
+					}
+					else if (j < used.Length && used[j] != null)
+					{
+						asciiElement.Add(new XAttribute("member", "member_" + used[j].GetHashCode()));
 					}
 				}
 			}

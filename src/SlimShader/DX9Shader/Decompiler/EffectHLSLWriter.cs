@@ -75,7 +75,8 @@ namespace SlimShader.DX9Shader
 		}
 		void WriteShader(StateBlob blob)
 		{
-			WriteLine($"// {ShaderNames[blob]}");
+			var shader = blob.Shader;
+			WriteLine($"// {ShaderNames[blob]} {shader.Type}_{shader.MajorVersion}_{shader.MinorVersion} Has PRES {shader.Pres != null}");
 			var funcName = ShaderNames[blob];
 			var text = "";
 			if (blob.Shader.Type == ShaderType.Tx)
@@ -85,7 +86,7 @@ namespace SlimShader.DX9Shader
 			else
 			{
 				text = HlslWriter.Decompile(blob.Shader);
-				text = text.Replace("main()", $"{funcName}()");
+				text = text.Replace("main(", $"{funcName}(");
 			}
 			WriteLine(text);
 		}

@@ -1,4 +1,6 @@
 ﻿using SlimShader.DebugParser.Chunks.Fxlvm;
+using SlimShader.DX9Shader.Bytecode.Fxlvm;
+using SlimShader.Util;
 using System.Collections.Generic;
 
 namespace SlimShader.DebugParser.DX9
@@ -12,7 +14,11 @@ namespace SlimShader.DebugParser.DX9
 			var tokenCount = reader.ReadUInt32("TokenCount");
 			for (int i = 0; i < tokenCount; i++)
 			{
-				result.Tokens.Add(DebugFxlcToken.Parse(reader, null));
+				var token = reader.PeakUint32();
+				var type = (FxlcTokenType)token.DecodeValue(20, 30);
+				reader.AddIndent($"Token{i}({type})");
+				result.Tokens.Add(DebugFxlcToken.Parse(reader));
+				reader.RemoveIndent();
 			}
 			return result;
 		}

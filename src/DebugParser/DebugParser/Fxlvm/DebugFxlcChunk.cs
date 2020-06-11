@@ -16,7 +16,7 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 			var tokenCount = chunkReader.ReadUInt32("TokenCount");
 			for (int i = 0; i < tokenCount; i++)
 			{
-				result.Tokens.Add(DebugFxlcToken.Parse(chunkReader, container));
+				result.Tokens.Add(DebugFxlcToken.Parse(chunkReader));
 			}
 			return result;
 		}
