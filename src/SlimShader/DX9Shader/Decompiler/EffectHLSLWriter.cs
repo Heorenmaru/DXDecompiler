@@ -146,11 +146,7 @@ namespace SlimShader.DX9Shader
 			{
 				return "Blob is NULL";
 			}
-			if (data.Data.Length == 0)
-			{
-				return "";
-			}
-			else if (data.IsShader)
+			if (data.IsShader)
 			{
 				var funcName = ShaderNames[data];
 				return $"compile {data.Version} {funcName}()";

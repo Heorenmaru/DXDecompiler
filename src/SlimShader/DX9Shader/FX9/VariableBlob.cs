@@ -10,9 +10,9 @@ namespace SlimShader.DX9Shader.FX9
 	{
 		public uint Index;
 		public uint Size;
-		public byte[] Data;
 		public string Value = "";
-		public bool IsShader => Data.Length >= 4 && Data[0] == 0 && Data[1] == 2;
+		public bool IsShader => Shader != null;
+		public ShaderModel Shader;
 		public string Version
 		{
 			get
@@ -21,9 +21,9 @@ namespace SlimShader.DX9Shader.FX9
 				{
 					return "";
 				}
-				var minor = Data[0];
-				var major = Data[1];
-				var type = (ShaderType)BitConverter.ToUInt16(Data, 2);
+				var type = Shader.Type;
+				var major = Shader.MajorVersion;
+				var minor = Shader.MinorVersion;
 				switch (type) {
 					case ShaderType.Pixel:
 						return $"ps_{major}_{minor}";
@@ -38,14 +38,30 @@ namespace SlimShader.DX9Shader.FX9
 				}
 			}
 		}
+		static bool _IsShader(byte[] data)
+		{
+			if (data.Length < 4) return false;
+			var type = (ShaderType)BitConverter.ToUInt16(data, 2);
+			switch (type)
+			{
+				case ShaderType.Fx:
+				case ShaderType.Pixel:
+				case ShaderType.Tx:
+				case ShaderType.Vertex:
+					return true;
+				default:
+					return false;
+			}
+		}
 		public static VariableBlob Parse(BytecodeReader reader, BytecodeReader dataReader)
 		{
 			var result = new VariableBlob();
 			result.Index = dataReader.ReadUInt32();
 			result.Size = dataReader.ReadUInt32();
-			var toRead = result.Size + (result.Size % 4 == 0 ? 0 : 4 - result.Size % 4);
-			result.Data = dataReader.ReadBytes((int)toRead);
-			if (!result.IsShader)
+			var paddedSize = result.Size + (result.Size % 4 == 0 ? 0 : 4 - result.Size % 4);
+			var shaderReader = dataReader.CopyAtCurrentPosition();
+			var data = dataReader.ReadBytes((int)paddedSize);
+			if (!_IsShader(data))
 			{
 				if (result.Size == 0)
 				{
@@ -53,10 +69,12 @@ namespace SlimShader.DX9Shader.FX9
 				}
 				else
 				{
-					result.Value = Encoding.UTF8.GetString(result.Data, 0, (int)(result.Size - 1));
+					result.Value = Encoding.UTF8.GetString(data, 0, (int)(result.Size - 1));
 				}
+			} else
+			{
+				result.Shader = ShaderModel.Parse(shaderReader);
 			}
-
 			return result;
 		}
 		public string Dump()
@@ -64,7 +82,6 @@ namespace SlimShader.DX9Shader.FX9
 			var sb = new StringBuilder();
 			sb.AppendLine($"    BinaryData.Index: {Index} {Index.ToString("X4")}");
 			sb.AppendLine($"    BinaryData.Size: {Size} {Size.ToString("X4")}");
-			sb.AppendLine($"    BinaryData.DataSize: {Data.Length} {Data.Length.ToString("X4")}");
 			sb.AppendLine($"    BinaryData.Data: {Value}");
 			return sb.ToString();
 		}

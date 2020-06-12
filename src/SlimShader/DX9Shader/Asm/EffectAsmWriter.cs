@@ -31,6 +31,14 @@ namespace SlimShader.DX9Shader
 		public void Write(Stream stream)
 		{
 			asmWriter = new StreamWriter(stream);
+			foreach (var variable in EffectChunk.Variables)
+			{
+				if(variable.Parameter.ParameterType == ParameterType.PixelShader ||
+					variable.Parameter.ParameterType == ParameterType.VertexShader)
+				{
+					WriteShaderVariable(variable);
+				}
+			}
 			WriteLine("//listing of all techniques and passes with embedded asm listings");
 			WriteLine();
 			foreach(var technique in EffectChunk.Techniques)
@@ -45,6 +53,30 @@ namespace SlimShader.DX9Shader
 				indent--;
 				WriteLine("}");
 				WriteLine("");
+			}
+			asmWriter.Flush();
+		}
+		public void WriteShaderVariable(Variable variable) 
+		{
+			var blob = this.EffectChunk.VariableBlobLookup[variable.Parameter];
+			if (blob.Shader == null)
+			{
+				WriteIndent();
+				WriteLine("{0} {1} = null;",
+					variable.Parameter.ParameterType.ToString().ToLower(),
+					variable.Parameter.Name);
+			}
+			else
+			{
+				WriteIndent();
+				WriteLine("{0} {1} =",
+					variable.Parameter.ParameterType.ToString().ToLower(),
+					variable.Parameter.Name);
+				WriteIndent();
+				WriteLine("asm {");
+
+				WriteLine(AsmWriter.Disassemble(blob.Shader));
+				WriteLine("}");
 			}
 		}
 		public void WritePass(Pass pass)

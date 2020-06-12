@@ -85,7 +85,7 @@ namespace SlimShader.DX9Shader.FX9
 			sb.AppendLine($"    InlineShader.StateIndex: {PassIndex} {PassIndex.ToString("X4")}");
 			sb.AppendLine($"    InlineShader.SamplerIndex: {SamplerStateIndex} {SamplerStateIndex.ToString("X4")}");
 			sb.AppendLine($"    InlineShader.AssignmentIndex: {AssignmentIndex} {AssignmentIndex.ToString("X4")}");
-			sb.AppendLine($"    InlineShader.IsVariable: {BlobType} {BlobType.ToString("X4")}");
+			sb.AppendLine($"    InlineShader.BlobType: {BlobType}");
 			sb.AppendLine($"    InlineShader.BlobSize: {BlobSize} {BlobSize.ToString("X4")}");
 			if (BlobType == StateBlobType.Variable)
 			{

@@ -611,8 +611,7 @@ namespace SlimShader.DX9Shader
 			}
 			if(shader.Prsi != null)
 			{
-				WriteLine($"// PRSI. Size {shader.Prsi.Size}");
-				Write(FormatUtil.FormatBytes(shader.Prsi.Data));
+				WriteLine(shader.Prsi.Dump());
 			}
 		}
 	}
