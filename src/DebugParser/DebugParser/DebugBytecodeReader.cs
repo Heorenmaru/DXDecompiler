@@ -171,6 +171,14 @@ namespace SlimShader.DebugParser
 			entry.Value = result.ToString();
 			return result;
 		}
+		public double ReadDouble(string name)
+		{
+			var result = _reader.ReadDouble();
+			var entry = AddEntry(name, 8);
+			entry.Type = "Double";
+			entry.Value = result.ToString();
+			return result;
+		}
 		public T ReadEnum32<T>(string name) where T : System.Enum
 		{
 			var result = Enum.ToObject(typeof(T), _reader.ReadUInt32());

@@ -17,7 +17,7 @@ namespace SlimShader.DX9Shader
 			var asmWriter = new EffectAsmWriter(effectChunk);
 			return asmWriter.Decompile();
 		}
-		public void Write(Stream stream)
+		protected override void Write()
 		{
 			foreach (var variable in EffectChunk.Variables)
 			{

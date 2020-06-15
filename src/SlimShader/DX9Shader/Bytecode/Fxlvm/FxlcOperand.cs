@@ -109,7 +109,7 @@ namespace SlimShader.DX9Shader.Bytecode.Fxlvm
 			switch (type)
 			{
 				case FxlcOperandType.Literal:
-					return string.Format("l{0}({1})", index, cli.GetLiteral(elementIndex, ComponentCount));
+					return string.Format("l{0}({1})", index, cli.GetLiteral(index));
 				case FxlcOperandType.Temp:
 					return string.Format("r{0}{1}", elementIndex, component);
 				case FxlcOperandType.Variable:

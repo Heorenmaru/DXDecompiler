@@ -10,11 +10,9 @@ namespace SlimShader.DX9Shader
 	public class AsmWriter : DecompileWriter
 	{
 		ShaderModel shader;
-		ConstantTable constantTable;
 		public AsmWriter(ShaderModel shader)
 		{
 			this.shader = shader;
-			constantTable = shader.ConstantTable;
 		}
 
 		public static string Disassemble(byte[] bytecode)
@@ -100,13 +98,11 @@ namespace SlimShader.DX9Shader
 		}
 		protected override void Write()
 		{
-			WriteConstantTable();
 			WritePreshader();
+			WriteConstantTable(shader.ConstantTable);
 			Indent++;
-			string shaderType = (shader.Type == ShaderType.Vertex) ? "vs" : "ps";
 			WriteIndent();
-			WriteLine("{0}_{1}_{2}", shaderType, shader.MajorVersion, shader.MinorVersion);
-
+			WriteLine("{0}", shader.ConstantTable.VersionString);
 			foreach (Token instruction in shader.Tokens)
 			{
 				WriteInstruction(instruction);
@@ -115,7 +111,7 @@ namespace SlimShader.DX9Shader
 			WriteLine();
 			WriteStatistics();
 		}
-		public void WriteConstantTable()
+		public void WriteConstantTable(ConstantTable constantTable)
 		{
 			if (constantTable == null) return;
 			WriteLine("//");
@@ -162,6 +158,7 @@ namespace SlimShader.DX9Shader
 		public void WritePreshader()
 		{
 			if (shader.Preshader == null) return;
+			WriteConstantTable(shader.Preshader.Shader.ConstantTable);
 			WriteLine(PreshaderAsmWriter.Disassemble(shader.Preshader.Shader));
 		}
 		public void WriteStatistics()

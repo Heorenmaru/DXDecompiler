@@ -8,11 +8,9 @@ using System.Text;
 
 namespace SlimShader.DX9Shader
 {
-	public class EffectHLSLWriter
+	public class EffectHLSLWriter : DecompileWriter
 	{
 		Fx9Chunk EffectChunk;
-		StreamWriter writer;
-		int indent = 0;
 		Dictionary<object, string> ShaderNames = new Dictionary<object, string>();
 		public EffectHLSLWriter(Fx9Chunk effectChunk)
 		{
@@ -21,16 +19,7 @@ namespace SlimShader.DX9Shader
 		public static string Decompile (Fx9Chunk effectChunk)
 		{
 			var asmWriter = new EffectHLSLWriter(effectChunk);
-			using (var stream = new MemoryStream())
-			{
-				asmWriter.Write(stream);
-				asmWriter.writer.Flush();
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					return reader.ReadToEnd();
-				}
-			}
+			return asmWriter.Decompile();
 		}
 		void BuildNameLookup()
 		{
@@ -52,9 +41,8 @@ namespace SlimShader.DX9Shader
 			}
 
 		}
-		public void Write(Stream stream)
+		protected override void Write()
 		{
-			writer = new StreamWriter(stream);
 			BuildNameLookup();
 			foreach (var variable in EffectChunk.Variables)
 			{
@@ -175,7 +163,7 @@ namespace SlimShader.DX9Shader
 				if(variable.SamplerStates.Count > 1)
 				{
 					WriteLine("{");
-					indent++;
+					Indent++;
 				}
 				for(int i = 0; i < variable.SamplerStates.Count; i++) {
 					var state = variable.SamplerStates[i];
@@ -183,7 +171,7 @@ namespace SlimShader.DX9Shader
 					WriteLine("sampler_state");
 					WriteIndent();
 					WriteLine("{");
-					indent++;
+					Indent++;
 					foreach (var assignment in state.Assignments)
 					{
 						WriteIndent();
@@ -197,7 +185,7 @@ namespace SlimShader.DX9Shader
 							WriteLine("{0} = {1};", assignment.Type, assignment.Value[0].UInt);
 						}
 					}
-					indent--;
+					Indent--;
 					WriteIndent();
 					Write("}");
 					if (variable.SamplerStates.Count == 1)
@@ -213,7 +201,7 @@ namespace SlimShader.DX9Shader
 				}
 				if (variable.SamplerStates.Count > 1)
 				{
-					indent--;
+					Indent--;
 					WriteIndent();
 					WriteLine("};");
 				}
@@ -273,12 +261,12 @@ namespace SlimShader.DX9Shader
 			}
 			WriteLine();
 			WriteLine("{");
-			indent++;
+			Indent++;
 			foreach (var pass in technique.Passes)
 			{
 				WritePass(pass);
 			}
-			indent--;
+			Indent--;
 			WriteLine("}");
 			WriteLine("");
 		}
@@ -294,13 +282,13 @@ namespace SlimShader.DX9Shader
 			WriteLine();
 			WriteIndent();
 			WriteLine("{");
-			indent++;
+			Indent++;
 			var shaderAssignments = pass.Assignments;
 			foreach (var assignment in shaderAssignments)
 			{
 				WriteAssignment(assignment);
 			}
-			indent--;
+			Indent--;
 			WriteIndent();
 			WriteLine("}");
 		}
@@ -329,34 +317,6 @@ namespace SlimShader.DX9Shader
 				Write(" // {0}", assignment.Value[0].UInt);
 			}
 			WriteLine();
-		}
-		public void WriteIndent()
-		{
-			writer.Write(new string(' ', indent * 4));
-		}
-		void WriteLine()
-		{
-			writer.WriteLine();
-		}
-
-		void WriteLine(string value)
-		{
-			writer.WriteLine(value);
-		}
-
-		void WriteLine(string format, params object[] args)
-		{
-			writer.WriteLine(format, args);
-		}
-
-		void Write(string value)
-		{
-			writer.Write(value);
-		}
-
-		void Write(string format, params object[] args)
-		{
-			writer.Write(format, args);
 		}
 	}
 }

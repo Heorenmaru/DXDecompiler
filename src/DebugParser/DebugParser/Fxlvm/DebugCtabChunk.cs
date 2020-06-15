@@ -48,7 +48,7 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 				ConstantDeclaration declaration = ReadConstantDeclaration(reader, chunkReader);
 				constantDeclarations.Add(declaration);
 			}
-			result.ConstantTable = new ConstantTable(creatorString, shaderModel, (int)majorVersion, (int)minorVersion, constantDeclarations);
+			result.ConstantTable = new ConstantTable(creatorString, shaderModel, (byte)majorVersion, (byte)minorVersion, constantDeclarations);
 			return result;
 		}
 

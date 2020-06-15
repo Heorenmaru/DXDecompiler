@@ -6,16 +6,14 @@ namespace DebugParser.DebugParser.DX9
 {
 	public class DebugCliToken
 	{
-		List<DebugNumber> Numbers = new List<DebugNumber>();
+		List<double> Numbers = new List<double>();
 		public static DebugCliToken Parse(DebugBytecodeReader reader)
 		{
 			var result = new DebugCliToken();
 			var count = reader.ReadUInt32("Count");
 			for(int i = 0; i < count; i++)
 			{
-				reader.AddIndent($"Number {i}");
-				result.Numbers.Add(DebugNumber.Parse(reader));
-				reader.RemoveIndent();
+				result.Numbers.Add(reader.ReadDouble($"Number {i}"));
 			}
 			return result;
 		}

@@ -7,32 +7,29 @@ namespace SlimShader.DX9Shader.Bytecode
 {
 	public class CliToken
 	{
-		List<Number> Numbers = new List<Number>();
-		public static CliToken Parse(BytecodeReader reader)
+		List<double> Numbers = new List<double>();
+		public byte[] Data;
+		public static CliToken Parse(BytecodeReader reader, uint size)
 		{
 			var result = new CliToken();
+			var dataReader = reader.CopyAtCurrentPosition();
+			result.Data = dataReader.ReadBytes((int)size * 4 - 4);
 			var count = reader.ReadUInt32();
 			for (int i = 0; i < count; i++)
 			{
-				result.Numbers.Add(Number.Parse(reader));
+				result.Numbers.Add(reader.ReadDouble());
 			}
 			return result;
 		}
 
-		public string GetLiteral(uint elementIndex, uint elementCount)
+		public string GetLiteral(uint index)
 		{
-			var sb = new StringBuilder();
-			for (int i = 0; i < elementCount; i++)
-			{
-				var index = elementIndex + i;
-				var number = Numbers[(int)index];
-				sb.Append(number.ToString());
-				if (i < elementCount - 1)
-				{
-					sb.Append(", ");
-				}
-			}
-			return sb.ToString();
+			return Numbers[(int)index].ToString();
+		}
+
+		public string Dump()
+		{
+			return FormatUtil.FormatBytes(Data);
 		}
 	}
 }

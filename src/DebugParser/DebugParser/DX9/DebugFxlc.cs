@@ -15,7 +15,7 @@ namespace SlimShader.DebugParser.DX9
 			for (int i = 0; i < tokenCount; i++)
 			{
 				var token = reader.PeakUint32();
-				var type = (FxlcTokenType)token.DecodeValue(20, 30);
+				var type = (FxlcOpcode)token.DecodeValue(20, 30);
 				reader.AddIndent($"Token{i}({type})");
 				result.Tokens.Add(DebugFxlcToken.Parse(reader));
 				reader.RemoveIndent();

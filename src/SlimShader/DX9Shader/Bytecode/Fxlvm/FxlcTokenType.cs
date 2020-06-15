@@ -1,6 +1,6 @@
 ﻿namespace SlimShader.DX9Shader.Bytecode.Fxlvm
 {
-	public enum FxlcTokenType
+	public enum FxlcOpcode
 	{
 		Mov = 256,
 		Neg = 257,

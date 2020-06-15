@@ -61,7 +61,7 @@
     <Compile Include="DebugParser\DX9\DebugConstantDeclaration.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantStructMember.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantType.cs" />
-    <Compile Include="DebugParser\DX9\DebugPresToken.cs" />
+    <Compile Include="DebugParser\DX9\DebugPreshader.cs" />
     <Compile Include="DebugParser\DX9\DebugPrsiToken.cs" />
     <Compile Include="DebugParser\DX9\DebugShaderModel.cs" />
     <Compile Include="DebugParser\DX9\DebugToken.cs" />

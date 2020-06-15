@@ -1,22 +1,16 @@
 ﻿using SlimShader.DX9Shader.Bytecode;
 using SlimShader.DX9Shader.Bytecode.Declaration;
 using SlimShader.DX9Shader.Bytecode.Fxlvm;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace SlimShader.DX9Shader.Decompiler
 {
-	class ExpressionHLSLWriter
+	class ExpressionHLSLWriter : DecompileWriter
 	{
 		ShaderModel Shader;
 		ConstantTable Ctab;
 		CliToken Cli;
-		StreamWriter writer;
 		string ExpressionName;
-		int indent = 0;
 		public ExpressionHLSLWriter(ShaderModel shader, string expressionName)
 		{
 			Shader = shader;
@@ -27,23 +21,13 @@ namespace SlimShader.DX9Shader.Decompiler
 		public static string Decompile(ShaderModel shader, string expressionName = "Expression")
 		{
 			var asmWriter = new ExpressionHLSLWriter(shader, expressionName);
-			using (var stream = new MemoryStream())
-			{
-				asmWriter.Write(stream);
-				asmWriter.writer.Flush();
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					return reader.ReadToEnd();
-				}
-			}
+			return asmWriter.Decompile();
 		}
-		public void Write(Stream stream)
+		protected override void Write()
 		{
-			writer = new StreamWriter(stream);
 			WriteLine($"float4 {ExpressionName}()");
 			WriteLine("{");
-			indent++;
+			Indent++;
 			WriteIndent();
 			WriteLine("float4 expr;");
 			foreach(var token in Shader.Fxlc.Tokens)
@@ -52,7 +36,7 @@ namespace SlimShader.DX9Shader.Decompiler
 			}
 			WriteIndent();
 			WriteLine("return expr;");
-			indent--;
+			Indent--;
 			WriteLine("}");
 
 			if(Shader.Preshader != null)
@@ -65,98 +49,98 @@ namespace SlimShader.DX9Shader.Decompiler
 		{
 			WriteIndent();
 			WriteLine($"// {token.ToString(Shader.ConstantTable, Shader.Cli)}");
-			switch (token.Type)
+			switch (token.Opcode)
 			{
-				case FxlcTokenType.Mov:
+				case Bytecode.Fxlvm.FxlcOpcode.Mov:
 					WriteIndent();
 					WriteLine("{0} = {1};",
 						token.Operands[0].ToString(Ctab, Cli),
 						token.Operands[1].ToString(Ctab, Cli));
 					break;
-				case FxlcTokenType.Neg:
+				case Bytecode.Fxlvm.FxlcOpcode.Neg:
 					WriteIndent();
 					WriteLine("{0} = -{1};",
 						token.Operands[0].ToString(Ctab, Cli),
 						token.Operands[1].ToString(Ctab, Cli));
 					break;
-				case FxlcTokenType.Frc:
+				case Bytecode.Fxlvm.FxlcOpcode.Frc:
 					WriteFunction("frac", token);
 					break;
-				case FxlcTokenType.Exp:
+				case Bytecode.Fxlvm.FxlcOpcode.Exp:
 					WriteFunction("exp", token);
 					break;
-				case FxlcTokenType.Log:
+				case Bytecode.Fxlvm.FxlcOpcode.Log:
 					WriteFunction("log", token);
 					break;
-				case FxlcTokenType.Rsq:
+				case Bytecode.Fxlvm.FxlcOpcode.Rsq:
 					WriteFunction("rsq", token);
 					break;
-				case FxlcTokenType.Sin:
+				case Bytecode.Fxlvm.FxlcOpcode.Sin:
 					WriteFunction("sin", token);
 					break;
-				case FxlcTokenType.Cos:
+				case Bytecode.Fxlvm.FxlcOpcode.Cos:
 					WriteFunction("cos", token);
 					break;
-				case FxlcTokenType.Asin:
+				case Bytecode.Fxlvm.FxlcOpcode.Asin:
 					WriteFunction("asin", token);
 					break;
-				case FxlcTokenType.Acos:
+				case Bytecode.Fxlvm.FxlcOpcode.Acos:
 					WriteFunction("acos", token);
 					break;
-				case FxlcTokenType.Atan:
+				case Bytecode.Fxlvm.FxlcOpcode.Atan:
 					WriteFunction("atam", token);
 					break;
-				case FxlcTokenType.Atan2:
+				case Bytecode.Fxlvm.FxlcOpcode.Atan2:
 					WriteFunction("atan2", token);
 					break;
-				case FxlcTokenType.Sqrt:
+				case Bytecode.Fxlvm.FxlcOpcode.Sqrt:
 					WriteFunction("sqrt", token);
 					break;
-				case FxlcTokenType.Ineg:
+				case Bytecode.Fxlvm.FxlcOpcode.Ineg:
 					WriteFunction("~int", token);
 					break;
-				case FxlcTokenType.Imax:
+				case Bytecode.Fxlvm.FxlcOpcode.Imax:
 					WriteFunction("(int)max(", token);
 					break;
-				case FxlcTokenType.Not:
+				case Bytecode.Fxlvm.FxlcOpcode.Not:
 					WriteFunction("!", token);
 					break;
-				case FxlcTokenType.Utof:
+				case Bytecode.Fxlvm.FxlcOpcode.Utof:
 					WriteFunction("utof", token);
 					break;
-				case FxlcTokenType.Ftoi:
+				case Bytecode.Fxlvm.FxlcOpcode.Ftoi:
 					WriteFunction("ftoi", token);
 					break;
-				case FxlcTokenType.Ftou:
+				case Bytecode.Fxlvm.FxlcOpcode.Ftou:
 					WriteFunction("ftou", token);
 					break;
-				case FxlcTokenType.Btoi:
+				case Bytecode.Fxlvm.FxlcOpcode.Btoi:
 					WriteFunction("btoi", token);
 					break;
-				case FxlcTokenType.Round:
+				case Bytecode.Fxlvm.FxlcOpcode.Round:
 					WriteFunction("round", token);
 					break;
-				case FxlcTokenType.Floor:
+				case Bytecode.Fxlvm.FxlcOpcode.Floor:
 					WriteFunction("floor", token);
 					break;
-				case FxlcTokenType.Ceil:
+				case Bytecode.Fxlvm.FxlcOpcode.Ceil:
 					WriteFunction("ceil", token);
 					break;
-				case FxlcTokenType.Min:
+				case Bytecode.Fxlvm.FxlcOpcode.Min:
 					WriteFunction("min", token);
 					break;
-				case FxlcTokenType.Max:
+				case Bytecode.Fxlvm.FxlcOpcode.Max:
 					WriteFunction("max", token);
 					break;
-				case FxlcTokenType.Add:
+				case Bytecode.Fxlvm.FxlcOpcode.Add:
 					WriteInfix("+", token);
 					break;
-				case FxlcTokenType.Mul:
+				case Bytecode.Fxlvm.FxlcOpcode.Mul:
 					WriteInfix("*", token);
 					break;
 
 
-				case FxlcTokenType.Lt:
+				case Bytecode.Fxlvm.FxlcOpcode.Lt:
 					WriteInfix("<", token);
 					break;
 			}
@@ -180,34 +164,6 @@ namespace SlimShader.DX9Shader.Decompiler
 				token.Operands[0].ToString(Ctab, Cli),
 				func,
 				string.Join(", ", operands));
-		}
-		public void WriteIndent()
-		{
-			writer.Write(new string(' ', indent * 4));
-		}
-		void WriteLine()
-		{
-			writer.WriteLine();
-		}
-
-		void WriteLine(string value)
-		{
-			writer.WriteLine(value);
-		}
-
-		void WriteLine(string format, params object[] args)
-		{
-			writer.WriteLine(format, args);
-		}
-
-		void Write(string value)
-		{
-			writer.Write(value);
-		}
-
-		void Write(string format, params object[] args)
-		{
-			writer.Write(format, args);
 		}
 	}
 }

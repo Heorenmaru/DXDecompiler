@@ -24,7 +24,7 @@ namespace SlimShader.DebugParser.DX9
 		public List<DebugToken> Tokens = new List<DebugToken>();
 		public DebugConstantTable ConstantTable;
 		public DebugCliToken Cli;
-		public DebugPresToken Pres;
+		public DebugPreshader Preshader;
 		public DebugPrsiToken Prsi;
 		public DebugFxlc Fxlc;
 		public static DebugShaderModel Parse(DebugBytecodeReader reader)
@@ -82,7 +82,7 @@ namespace SlimShader.DebugParser.DX9
 					Fxlc = DebugFxlc.Parse(reader);
 					break;
 				case CommentType.PRES:
-					Pres = DebugPresToken.Parse(reader);
+					Preshader = DebugPreshader.Parse(reader);
 					break;
 				case CommentType.PRSI:
 					Prsi = DebugPrsiToken.Parse(reader, (uint)size);

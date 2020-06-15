@@ -10,7 +10,7 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 {
 	public class DebugFxlcToken
 	{
-		public FxlcTokenType Type { get; private set; }
+		public FxlcOpcode Type { get; private set; }
 		public List<DebugFxlcOperand> Operands { get; private set; }
 
 		public uint Token0;
@@ -27,10 +27,10 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 
 			var token = reader.ReadUInt32($"Token");
 			var tokenComponentCount = token.DecodeValue(0, 2);
-			result.Type = (FxlcTokenType)token.DecodeValue(20, 30);
+			result.Type = (FxlcOpcode)token.DecodeValue(20, 30);
 			var singleFirstComponent = token.DecodeValue(31, 31);
 
-			Debug.Assert(Enum.IsDefined(typeof(FxlcTokenType), result.Type),
+			Debug.Assert(Enum.IsDefined(typeof(FxlcOpcode), result.Type),
 				$"Unknown FxlcTokenType {result.Type}");
 
 			Debug.Assert(token.DecodeValue(3, 19) == 0,

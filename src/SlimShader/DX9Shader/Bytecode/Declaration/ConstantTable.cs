@@ -8,14 +8,15 @@ namespace SlimShader.DX9Shader.Bytecode.Declaration
 	public class ConstantTable
 	{
 		public string Creator { get; private set; }
-		public string ShaderModel { get; private set; }
-		public int MajorVersion { get; private set; }
-		public int MinorVersion { get; private set; }
+		public string VersionString { get; private set; }
+		public byte MajorVersion { get; private set; }
+		public byte MinorVersion { get; private set; }
 		public List<ConstantDeclaration> ConstantDeclarations { get; private set; }
-		public ConstantTable(string creator, string shaderModel, int majorVersion, int minorVersion, List<ConstantDeclaration> constantDeclarations)
+		//TODO: Remove
+		public ConstantTable(string creator, string versionString, byte majorVersion, byte minorVersion, List<ConstantDeclaration> constantDeclarations)
 		{
 			Creator = creator;
-			ShaderModel = shaderModel;
+			VersionString = versionString;
 			MajorVersion = majorVersion;
 			MinorVersion = minorVersion;
 			ConstantDeclarations = constantDeclarations;
@@ -29,8 +30,8 @@ namespace SlimShader.DX9Shader.Bytecode.Declaration
 			var result = new ConstantTable();
 			var ctabSize = ctabReader.ReadUInt32();
 			var creatorOffset = ctabReader.ReadInt32();
-			var minorVersion = ctabReader.ReadByte();
-			var majorVersion = ctabReader.ReadByte();
+			result.MajorVersion = ctabReader.ReadByte();
+			result.MinorVersion = ctabReader.ReadByte();
 			var shaderType = (ShaderType)ctabReader.ReadUInt16();
 			var numConstants = ctabReader.ReadInt32();
 			var constantInfoOffset = ctabReader.ReadInt32();
@@ -45,7 +46,7 @@ namespace SlimShader.DX9Shader.Bytecode.Declaration
 			}
 
 			var shaderModelReader = ctabReader.CopyAtOffset(shaderModelOffset);
-			var shaderModel = shaderModelReader.ReadString();
+			result.VersionString = shaderModelReader.ReadString();
 
 			var creatorReader = ctabReader.CopyAtOffset(creatorOffset);
 			result.Creator = creatorReader.ReadString();

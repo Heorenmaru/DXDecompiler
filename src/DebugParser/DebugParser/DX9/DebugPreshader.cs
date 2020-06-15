@@ -1,12 +1,12 @@
 ﻿
 namespace SlimShader.DebugParser.DX9
 {
-	public class DebugPresToken
+	public class DebugPreshader
 	{
 		DebugShaderModel Shader;
-		public static DebugPresToken Parse(DebugBytecodeReader reader)
+		public static DebugPreshader Parse(DebugBytecodeReader reader)
 		{
-			var result = new DebugPresToken();
+			var result = new DebugPreshader();
 			result.Shader = DebugShaderModel.Parse(reader);
 			return result;
 		}

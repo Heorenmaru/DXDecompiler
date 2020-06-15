@@ -1,6 +1,6 @@
 ﻿namespace SlimShader.Chunks.Fxlvm
 {
-	public enum FxlcTokenType
+	public enum FxlcOpcode
 	{
 		Mov = 256,
 		Neg = 257,

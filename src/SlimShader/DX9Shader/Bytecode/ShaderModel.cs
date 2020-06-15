@@ -102,7 +102,7 @@ namespace SlimShader.DX9Shader
 							ConstantTable = ConstantTable.Parse(commentReader);
 							return null;
 						case CommentType.CLIT:
-							Cli = CliToken.Parse(commentReader);
+							Cli = CliToken.Parse(commentReader, (uint)size);
 							return null;
 						case CommentType.FXLC:
 							Fxlc = FxlcChunk.Parse(commentReader);

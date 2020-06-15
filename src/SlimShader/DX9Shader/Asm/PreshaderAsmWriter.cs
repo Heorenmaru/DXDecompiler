@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SlimShader.DX9Shader.Bytecode.Fxlvm;
 using System.Linq;
-using System.Text;
 
 namespace SlimShader.DX9Shader.Asm
 {
@@ -20,6 +18,22 @@ namespace SlimShader.DX9Shader.Asm
 		protected override void Write()
 		{
 			WriteLine("preshader");
+			foreach (var instruction in Preshader.Fxlc.Tokens)
+			{
+				WriteInstruction(instruction);
+			}
+		}
+		private void WriteInstruction(FxlcToken instruction)
+		{
+			var operands = instruction.Operands
+				.Select(o => FormatOperand(o));
+			WriteLine("{0} {1}",
+				instruction.Opcode.ToString().ToLower(),
+				string.Join(", ", operands));
+		}
+		string FormatOperand(FxlcOperand operand)
+		{
+			return operand.ToString(Preshader.ConstantTable, Preshader.Cli);
 		}
 	}
 }

@@ -8,71 +8,38 @@ using System.Text;
 
 namespace SlimShader.DX9Shader
 {
-	public class HlslWriter
+	public class HlslWriter : DecompileWriter
 	{
 		private readonly ShaderModel _shader;
 		private readonly bool _doAstAnalysis;
 
-		StreamWriter hlslWriter;
-		int indent = 0;
-
 		public RegisterState _registers;
+		string _entryPoint;
 
-		public HlslWriter(ShaderModel shader, bool doAstAnalysis = false)
+		public HlslWriter(ShaderModel shader, bool doAstAnalysis = false, string entryPoint = null)
 		{
 			_shader = shader;
 			_doAstAnalysis = doAstAnalysis;
+			if (string.IsNullOrEmpty(entryPoint))
+			{
+				entryPoint = $"{_shader.Type}Main";
+			}
+
 		}
 
-		public static string Decompile(byte[] bytecode)
+		public static string Decompile(byte[] bytecode, string entryPoint = null)
 		{
 			var shaderModel = ShaderReader.ReadShader(bytecode);
 			return Decompile(shaderModel);
 		}
-		public static string Decompile(ShaderModel shaderModel)
+		public static string Decompile(ShaderModel shaderModel, string entryPoint = null)
 		{
 			if (shaderModel.Type == ShaderType.Fx)
 			{
 				return EffectHLSLWriter.Decompile(shaderModel.EffectChunk);
 			}
-			var hlslWriter = new HlslWriter(shaderModel);
-			using (var stream = new MemoryStream())
-			{
-				hlslWriter.Write(stream);
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					return reader.ReadToEnd();
-				}
-			}
-		}
-
-		void WriteLine()
-		{
-			hlslWriter.WriteLine();
-		}
-		void WriteIndent()
-		{
-			if(indent > 0) hlslWriter.Write(new string('\t', indent));
-		}
-		void WriteLine(string value)
-		{
-			WriteIndent();
-			hlslWriter.WriteLine(value);
-		}
-
-		void WriteLine(string format, params object[] args)
-		{
-			WriteIndent();
-			hlslWriter.WriteLine(format, args);
-		}
-		void Write(string format)
-		{
-			hlslWriter.Write(format);
-		}
-		void Write(string format, params object[] args)
-		{
-			hlslWriter.Write(format, args);
+			var hlslWriter = new HlslWriter(shaderModel, false, entryPoint);
+			return hlslWriter.Decompile();
 		}
 
 		private string GetDestinationName(Token instruction)
@@ -116,7 +83,9 @@ namespace SlimShader.DX9Shader
 
 		private void WriteInstruction(Token instruction)
 		{
+			WriteIndent();
 			WriteLine($"// {instruction}");
+			WriteIndent();
 			switch (instruction.Opcode)
 			{
 				case Opcode.Abs:
@@ -145,12 +114,12 @@ namespace SlimShader.DX9Shader
 						GetSourceName(instruction, 1), GetSourceName(instruction, 2));
 					break;
 				case Opcode.Else:
-					indent--;
+					Indent--;
 					WriteLine("} else {");
-					indent++;
+					Indent++;
 					break;
 				case Opcode.Endif:
-					indent--;
+					Indent--;
 					WriteLine("}");
 					break;
 				case Opcode.Exp:
@@ -161,7 +130,7 @@ namespace SlimShader.DX9Shader
 					break;
 				case Opcode.If:
 					WriteLine("if ({0}) {{", GetSourceName(instruction, 0));
-					indent++;
+					Indent++;
 					break;
 				case Opcode.IfC:
 					if ((IfComparison)instruction.Modifier == IfComparison.GE &&
@@ -208,7 +177,7 @@ namespace SlimShader.DX9Shader
 						}
 						WriteLine("if ({0} {2} {1}) {{", GetSourceName(instruction, 0), GetSourceName(instruction, 1), ifComparison);
 					}
-					indent++;
+					Indent++;
 					break;
 				case Opcode.Log:
 					WriteLine("{0} = log2({1});", GetDestinationName(instruction), GetSourceName(instruction, 1));
@@ -363,14 +332,12 @@ namespace SlimShader.DX9Shader
 			
 
 		}
-		public void Write(Stream stream)
+		protected override void Write()
 		{
-			hlslWriter = new StreamWriter(stream);
 			if (_shader.Type == ShaderType.Tx)
 			{
 				Write($"// Writing expression");
 				WriteExpression(_shader);
-				hlslWriter.Flush();
 				return;
 			}
 			_registers = new RegisterState(_shader);
@@ -394,20 +361,23 @@ namespace SlimShader.DX9Shader
 			string methodReturnType = GetMethodReturnType();
 			string methodParameters = GetMethodParameters();
 			string methodSemantic = GetMethodSemantic();
-			WriteLine("{0} main({1}){2}", methodReturnType, methodParameters, methodSemantic);
+			WriteLine("{0} {1}({2}){3}", 
+				methodReturnType, 
+				_entryPoint, 
+				methodParameters,
+				methodSemantic);
 			WriteLine("{");
-			indent++;
+			Indent++;
 
 			if (_registers.MethodOutputRegisters.Count > 1)
 			{
 				var outputStructType = _shader.Type == ShaderType.Pixel ? "PS_OUT" : "VS_OUT";
+				WriteIndent();
 				WriteLine($"{outputStructType} o;");
-				WriteLine();
 			} else
 			{
 				var output = _registers.MethodOutputRegisters.First().Value;
 				WriteLine("{0} {1};", methodReturnType, _registers.GetRegisterName(output.RegisterKey));
-				WriteLine();
 			}
 			WriteTemps();
 			HlslAst ast = null;
@@ -434,9 +404,8 @@ namespace SlimShader.DX9Shader
 				}
 				
 			}
-			indent--;
+			Indent--;
 			WriteLine("}");
-			hlslWriter.Flush();
 		}
 
 		private void WriteConstantDeclarations()
@@ -468,12 +437,12 @@ namespace SlimShader.DX9Shader
 			{
 				WriteLine("");
 				WriteLine("{");
-				indent++;
+				Indent++;
 				foreach (var member in type.Members)
 				{
 					Write(member.Type, member.Name, true);
 				}
-				indent--;
+				Indent--;
 				WriteIndent();
 				Write("}");
 			}
@@ -492,12 +461,12 @@ namespace SlimShader.DX9Shader
 			var inputStructType = _shader.Type == ShaderType.Pixel ? "PS_IN" : "VS_IN";
 			WriteLine($"struct {inputStructType}");
 			WriteLine("{");
-			indent++;
+			Indent++;
 			foreach (var input in _registers.MethodInputRegisters.Values)
 			{
 				WriteLine($"{input.TypeName} {input.Name} : {input.Semantic};");
 			}
-			indent--;
+			Indent--;
 			WriteLine("};");
 			WriteLine();
 		}
@@ -507,13 +476,13 @@ namespace SlimShader.DX9Shader
 			var outputStructType = _shader.Type == ShaderType.Pixel ? "PS_OUT" : "VS_OUT";
 			WriteLine($"struct {outputStructType}");
 			WriteLine("{");
-			indent++;
+			Indent++;
 			foreach (var output in _registers.MethodOutputRegisters.Values)
 			{
 				WriteLine($"// {output.RegisterKey} {Operand.GetParamRegisterName(output.RegisterKey.Type, output.RegisterKey.Number)}");
 				WriteLine($"{output.TypeName} {output.Name} : {output.Semantic};");
 			}
-			indent--;
+			Indent--;
 			WriteLine("};");
 			WriteLine();
 		}
@@ -604,15 +573,26 @@ namespace SlimShader.DX9Shader
 		}
 		private void WriteExpression(ShaderModel shader)
 		{
+			WriteLine("void {0}Preshader(){{", _entryPoint);
+			Indent++;
 			WriteLine($"// {shader.Type}_{shader.MajorVersion}_{shader.MinorVersion}");
 			foreach(var token in shader.Fxlc.Tokens)
 			{
 				WriteLine($"// {token.ToString(shader.ConstantTable, shader.Cli)}");
 			}
-			if(shader.Prsi != null)
+			if (shader.Cli != null)
+			{
+				WriteLine();
+				WriteLine($"// CLI. Entries {shader.Cli.Data.Length / 4 - 1} Bytes {shader.Cli.Data.Length - 4 }");
+				WriteLine(shader.Cli.Dump());
+			}
+			if (shader.Prsi != null)
 			{
 				WriteLine(shader.Prsi.Dump());
 			}
+			Indent++;
+			WriteLine("}");
+
 		}
 	}
 }
