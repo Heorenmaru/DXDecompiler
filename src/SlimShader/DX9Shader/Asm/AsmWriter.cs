@@ -1,4 +1,5 @@
-﻿using SlimShader.DX9Shader.Bytecode.Declaration;
+﻿using SlimShader.DX9Shader.Asm;
+using SlimShader.DX9Shader.Bytecode.Declaration;
 using System;
 using System.IO;
 using System.Linq;
@@ -6,16 +7,14 @@ using System.Text;
 
 namespace SlimShader.DX9Shader
 {
-	public class AsmWriter
+	public class AsmWriter : DecompileWriter
 	{
 		ShaderModel shader;
 		ConstantTable constantTable;
-		StreamWriter asmWriter;
-		int indent = 0;
 		public AsmWriter(ShaderModel shader)
 		{
 			this.shader = shader;
-			constantTable = shader.ParseConstantTable();
+			constantTable = shader.ConstantTable;
 		}
 
 		public static string Disassemble(byte[] bytecode)
@@ -29,43 +28,11 @@ namespace SlimShader.DX9Shader
 			if (shaderModel.Type == ShaderType.Fx)
 			{
 				var effectWriter = new EffectAsmWriter(shaderModel.EffectChunk);
-				using (var stream = new MemoryStream())
-				{
-					effectWriter.Write(stream);
-					stream.Position = 0;
-					using (var reader = new StreamReader(stream, Encoding.UTF8))
-					{
-						return reader.ReadToEnd();
-					}
-				}
+				return effectWriter.Decompile();
 			}
 			var asmWriter = new AsmWriter(shaderModel);
-			using (var stream = new MemoryStream())
-			{
-				asmWriter.Write(stream);
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					return reader.ReadToEnd();
-				}
-			}
+			return asmWriter.Decompile();
 		}
-
-		void WriteLine()
-		{
-			asmWriter.WriteLine();
-		}
-
-		void WriteLine(string value)
-		{
-			asmWriter.WriteLine(value);
-		}
-
-		void WriteLine(string format, params object[] args)
-		{
-			asmWriter.WriteLine(format, args);
-		}
-
 		static string ApplyModifier(SourceModifier modifier, string value)
 		{
 			switch (modifier)
@@ -131,16 +98,11 @@ namespace SlimShader.DX9Shader
 			}
 			return sourceRegisterName;
 		}
-		public void WriteIndent()
+		protected override void Write()
 		{
-			asmWriter.Write(new string(' ', indent * 4));
-		}
-		public void Write(Stream stream)
-		{
-			asmWriter = new StreamWriter(stream);
-
-			WriteHeader();
-			indent++;
+			WriteConstantTable();
+			WritePreshader();
+			Indent++;
 			string shaderType = (shader.Type == ShaderType.Vertex) ? "vs" : "ps";
 			WriteIndent();
 			WriteLine("{0}_{1}_{2}", shaderType, shader.MajorVersion, shader.MinorVersion);
@@ -149,12 +111,11 @@ namespace SlimShader.DX9Shader
 			{
 				WriteInstruction(instruction);
 			}
-			indent--;
+			Indent--;
 			WriteLine();
 			WriteStatistics();
-			asmWriter.Flush();
 		}
-		public void WriteHeader()
+		public void WriteConstantTable()
 		{
 			if (constantTable == null) return;
 			WriteLine("//");
@@ -198,6 +159,11 @@ namespace SlimShader.DX9Shader
 			WriteLine("//");
 			WriteLine("");
 		}
+		public void WritePreshader()
+		{
+			if (shader.Preshader == null) return;
+			WriteLine(PreshaderAsmWriter.Disassemble(shader.Preshader.Shader));
+		}
 		public void WriteStatistics()
 		{
 			var instructions = shader.Tokens
@@ -221,7 +187,7 @@ namespace SlimShader.DX9Shader
 			}
 			if (arithmeticCount != instructionCount)
 			{
-				asmWriter.Write("// approximately {0} instruction {1} used ({2} texture, {3} arithmetic)",
+				Write("// approximately {0} instruction {1} used ({2} texture, {3} arithmetic)",
 					instructionCount,
 					instructionCount > 1 ? "slots" : "slot",
 					textureCount,
@@ -229,7 +195,7 @@ namespace SlimShader.DX9Shader
 			}
 			else
 			{
-				asmWriter.Write("// approximately {0} instruction {1} used",
+				Write("// approximately {0} instruction {1} used",
 					instructionCount,
 					instructionCount > 1 ? "slots" : "slot");
 			}
@@ -308,13 +274,17 @@ namespace SlimShader.DX9Shader
 		}
 		private void WriteInstruction(Token instruction)
 		{
-			if (AddIndentInstruction(instruction))
+			if (RemoveIndentInstruction(instruction))
 			{
-				indent++;
+				Indent--;
 			}
 			if (instruction.Opcode != Opcode.Comment && instruction.Opcode != Opcode.End)
 			{
 				WriteIndent();
+			}
+			if (AddIndentInstruction(instruction))
+			{
+				Indent++;
 			}
 			switch (instruction.Opcode)
 			{
@@ -555,10 +525,6 @@ namespace SlimShader.DX9Shader
 					WriteLine(instruction.Opcode.ToString());
 					//WriteLine("// Warning - Not Implemented");
 					throw new NotImplementedException($"Instruction not implemented {instruction.Opcode}");
-			}
-			if (RemoveIndentInstruction(instruction))
-			{
-				indent--;
 			}
 		}
 	}

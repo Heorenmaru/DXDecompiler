@@ -5,11 +5,9 @@ using System.Text;
 
 namespace SlimShader.DX9Shader
 {
-	public class EffectAsmWriter
+	public class EffectAsmWriter : DecompileWriter
 	{
 		FX9.Fx9Chunk EffectChunk;
-		StreamWriter asmWriter;
-		int indent = 0;
 		public EffectAsmWriter(FX9.Fx9Chunk effectChunk)
 		{
 			EffectChunk = effectChunk;
@@ -17,20 +15,10 @@ namespace SlimShader.DX9Shader
 		public static string Disassemble(FX9.Fx9Chunk effectChunk)
 		{
 			var asmWriter = new EffectAsmWriter(effectChunk);
-			using (var stream = new MemoryStream())
-			{
-				asmWriter.Write(stream);
-				asmWriter.asmWriter.Flush();
-				stream.Position = 0;
-				using (var reader = new StreamReader(stream, Encoding.UTF8))
-				{
-					return reader.ReadToEnd();
-				}
-			}
+			return asmWriter.Decompile();
 		}
 		public void Write(Stream stream)
 		{
-			asmWriter = new StreamWriter(stream);
 			foreach (var variable in EffectChunk.Variables)
 			{
 				if(variable.Parameter.ParameterType == ParameterType.PixelShader ||
@@ -45,16 +33,15 @@ namespace SlimShader.DX9Shader
 			{
 				WriteLine("technique {0}", technique.Name);
 				WriteLine("{");
-				indent++;
+				Indent++;
 				foreach(var pass in technique.Passes)
 				{
 					WritePass(pass);
 				}
-				indent--;
+				Indent--;
 				WriteLine("}");
 				WriteLine("");
 			}
-			asmWriter.Flush();
 		}
 		public void WriteShaderVariable(Variable variable) 
 		{
@@ -76,7 +63,8 @@ namespace SlimShader.DX9Shader
 				WriteLine("asm {");
 
 				WriteLine(AsmWriter.Disassemble(blob.Shader));
-				WriteLine("}");
+				WriteLine("};");
+				WriteLine("");
 			}
 		}
 		public void WritePass(Pass pass)
@@ -85,46 +73,48 @@ namespace SlimShader.DX9Shader
 			WriteLine("pass {0}", pass.Name);
 			WriteIndent();
 			WriteLine("{");
-			indent++;
+			Indent++;
 			var shaderAssignments = pass.Assignments
 				.Where(a => a.Type == StateType.VertexShader || a.Type == StateType.PixelShader);
 			foreach (var assignment in shaderAssignments)
 			{
 				WriteAssignment(assignment);
 			}
-			indent--;
+			Indent--;
 			WriteIndent();
 			WriteLine("}");
 		}
 		public void WriteAssignment(Assignment assignment)
 		{
 			WriteIndent();
-			WriteLine("{0} = ", assignment.Type.ToString().ToLower());
-			indent++;
-			WriteIndent();
-			WriteLine("asm {");
-
-			WriteIndent();
-			WriteLine("};");
-			indent--;
-		}
-		public void WriteIndent()
-		{
-			asmWriter.Write(new string(' ', indent * 4));
-		}
-		void WriteLine()
-		{
-			asmWriter.WriteLine();
-		}
-
-		void WriteLine(string value)
-		{
-			asmWriter.WriteLine(value);
-		}
-
-		void WriteLine(string format, params object[] args)
-		{
-			asmWriter.WriteLine(format, args);
+			EffectChunk.StateBlobLookup.TryGetValue(assignment, out StateBlob stateBlob);
+			if (stateBlob != null)
+			{
+				Write("{0} = ", assignment.Type.ToString().ToLower());
+				if(stateBlob.BlobType == StateBlobType.Variable)
+				{
+					WriteLine("<{0}>;", stateBlob.VariableName);
+				} else if(stateBlob.BlobType == StateBlobType.Shader)
+				{
+					WriteLine();
+					Indent++;
+					WriteIndent();
+					WriteLine("asm {");
+					var disasm = string.Join("\n", AsmWriter.Disassemble(stateBlob.Shader)
+						.Split('\n')
+						.Select(l => $"{new string(' ', Indent * 4)}{l}"));
+					WriteLine(disasm);
+					WriteIndent();
+					WriteLine("};");
+					Indent--;
+				} else if (stateBlob.BlobType == StateBlobType.IndexShader)
+				{
+					WriteLine("{0}[TODO];", stateBlob.VariableName);
+				}
+			} else
+			{
+				Write("{0} = TODO;", assignment.Type.ToString().ToLower());
+			}
 		}
 	}
 }

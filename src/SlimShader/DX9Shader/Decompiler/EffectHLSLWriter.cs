@@ -76,7 +76,7 @@ namespace SlimShader.DX9Shader
 		void WriteShader(StateBlob blob)
 		{
 			var shader = blob.Shader;
-			WriteLine($"// {ShaderNames[blob]} {shader.Type}_{shader.MajorVersion}_{shader.MinorVersion} Has PRES {shader.Pres != null}");
+			WriteLine($"// {ShaderNames[blob]} {shader.Type}_{shader.MajorVersion}_{shader.MinorVersion} Has PRES {shader.Preshader != null}");
 			var funcName = ShaderNames[blob];
 			var text = "";
 			if (blob.Shader.Type == ShaderType.Tx)

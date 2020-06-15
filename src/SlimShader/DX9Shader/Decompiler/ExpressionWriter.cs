@@ -55,7 +55,7 @@ namespace SlimShader.DX9Shader.Decompiler
 			indent--;
 			WriteLine("}");
 
-			if(Shader.Pres != null)
+			if(Shader.Preshader != null)
 			{
 				Write("Have Pres");
 			}

@@ -29,33 +29,6 @@ namespace SlimShader.DX9Shader
 			var reader = new BytecodeReader(data, 0, data.Length);
 			return ShaderModel.Parse(reader);
 		}
-		virtual public ShaderModel _ReadShader(byte[] data)
-		{
-			// Version token
-			byte minorVersion = ReadByte();
-			byte majorVersion = ReadByte();
-			ShaderType shaderType = (ShaderType)ReadUInt16();
-			if(shaderType == ShaderType.Fx)
-			{
-				var _shader = new ShaderModel(majorVersion, minorVersion, shaderType);
-				var bytecodeReader = new BytecodeReader(data, 4, data.Length - 4);
-				_shader.EffectChunk = FX9.Fx9Chunk.Parse(bytecodeReader, (uint)(data.Length - 4));
-				return _shader;
-			}
-			Debug.Assert(shaderType == ShaderType.Pixel || shaderType == ShaderType.Vertex || shaderType == ShaderType.Fx,
-				$"Shader does not contain a valid shader type {shaderType}");
-			var shader = new ShaderModel(majorVersion, minorVersion, shaderType);
-
-			while (true)
-			{
-				Token instruction = ReadInstruction(shader);
-				InstructionVerifier.Verify(instruction);
-				shader.Tokens.Add(instruction);
-				if (instruction.Opcode == Opcode.End) break;
-			}
-			shader.ParseConstantTable();
-			return shader;
-		}
 
 		private Token ReadInstruction(ShaderModel shaderModel)
 		{

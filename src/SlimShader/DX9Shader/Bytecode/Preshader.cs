@@ -2,12 +2,12 @@
 
 namespace SlimShader.DX9Shader.Bytecode
 {
-	public class PresToken
+	public class Preshader
 	{
 		public ShaderModel Shader;
-		public static PresToken Parse(BytecodeReader reader)
+		public static Preshader Parse(BytecodeReader reader)
 		{
-			var result = new PresToken();
+			var result = new Preshader();
 			result.Shader = ShaderModel.Parse(reader);
 			return result;
 		}

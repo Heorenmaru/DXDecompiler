@@ -377,9 +377,9 @@ namespace SlimShader.DX9Shader
 
 			WriteConstantDeclarations();
 
-			if (_shader.Pres != null)
+			if (_shader.Preshader != null)
 			{
-				WriteExpression(_shader.Pres.Shader);
+				WriteExpression(_shader.Preshader.Shader);
 			}
 			if (_registers.MethodInputRegisters.Count > 1)
 			{

@@ -148,6 +148,7 @@
     <Compile Include="Decompiler\ConversionFlags.cs" />
     <Compile Include="DX9Shader\Asm\AsmWriter.cs" />
     <Compile Include="DX9Shader\Asm\EffectAsmWriter.cs" />
+    <Compile Include="DX9Shader\Asm\PreshaderAsmWriter.cs" />
     <Compile Include="DX9Shader\Bytecode\CliToken.cs" />
     <Compile Include="DX9Shader\Bytecode\CommentType.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantMember.cs" />
@@ -160,7 +161,7 @@
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcToken.cs" />
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcTokenType.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
-    <Compile Include="DX9Shader\Bytecode\PresToken.cs" />
+    <Compile Include="DX9Shader\Bytecode\Preshader.cs" />
     <Compile Include="DX9Shader\Bytecode\PrsiToken.cs" />
     <Compile Include="DX9Shader\Bytecode\ShaderFlags.cs" />
     <Compile Include="DX9Shader\Decompiler\BytecodeParser.cs" />
@@ -231,6 +232,7 @@
     <Compile Include="DX9Shader\Decompiler\RegisterInputNode.cs" />
     <Compile Include="DX9Shader\Decompiler\TextureLoadOutputNode.cs" />
     <Compile Include="DX9Shader\Converter\DXBCConverter.cs" />
+    <Compile Include="DX9Shader\DecompileWriter.cs" />
     <Compile Include="DX9Shader\FX9\Annotation.cs" />
     <Compile Include="DX9Shader\FX9\AnnotationData.cs" />
     <Compile Include="DX9Shader\FX9\StateBlobType.cs" />

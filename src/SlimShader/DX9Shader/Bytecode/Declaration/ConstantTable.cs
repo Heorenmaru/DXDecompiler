@@ -48,7 +48,7 @@ namespace SlimShader.DX9Shader.Bytecode.Declaration
 			var shaderModel = shaderModelReader.ReadString();
 
 			var creatorReader = ctabReader.CopyAtOffset(creatorOffset);
-			var creatorString = creatorReader.ReadString();
+			result.Creator = creatorReader.ReadString();
 			return result;
 		}
 
