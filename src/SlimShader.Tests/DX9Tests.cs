@@ -47,6 +47,8 @@ namespace SlimShader.Tests
 			// Arrange.
 			var asmFileText = string.Join(Environment.NewLine,
 				File.ReadAllLines(file + ".asm").Select(x => x.Trim()));
+			asmFileText = TestUtils.StripDX9InstructionSlots(asmFileText);
+			asmFileText = TestUtils.TrimLines(asmFileText);
 			asmFileText = TestUtils.NormalizeAssembly(asmFileText);
 			// Act.
 			var bytecode = File.ReadAllBytes(file + ".o");
@@ -54,12 +56,15 @@ namespace SlimShader.Tests
 
 			var decompiledAsm = AsmWriter.Disassemble(shader);
 
-			var decompiledAsmText = string.Join(Environment.NewLine, decompiledAsm
-				.Split(new[] { Environment.NewLine }, StringSplitOptions.None)
-				.Select(x => x.Trim()));
-
 			File.WriteAllText($"{file}.d.asm", decompiledAsm);
+
+			var decompiledAsmText = decompiledAsm;
+			decompiledAsmText = TestUtils.StripDX9InstructionSlots(decompiledAsmText);
+			decompiledAsmText = TestUtils.TrimLines(decompiledAsmText);
 			decompiledAsmText = TestUtils.NormalizeAssembly(decompiledAsmText);
+
+			File.WriteAllText($"{file}.d1.asm", asmFileText);
+			File.WriteAllText($"{file}.d2.asm", decompiledAsmText);
 			// Assert.
 			Assert.That(decompiledAsmText, Is.EqualTo(asmFileText));
 		}

@@ -4,6 +4,7 @@
 	{
 		Mov = 256,
 		Neg = 257,
+		Rcp = 259,
 		Frc = 260,
 		Exp = 261,
 		Log = 262,
@@ -15,7 +16,7 @@
 		Atan = 268,
 		Sqrt = 274,
 		Ineg = 288,
-		Imax = 10000,
+		Imax = 100000,
 		Not = 289,
 		Utof = 305,
 		Ftoi = 306,
@@ -48,6 +49,7 @@
 		Ishl = 564,
 		Ushr = 566,
 		Movc = 769,
-		Dot = 1280
+		Dot = 1280,
+		D3ds_dotswiz = 1806
 	}
 }

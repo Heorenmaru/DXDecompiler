@@ -272,7 +272,6 @@ namespace SlimShader.DX9Shader
 		public int GetDestinationParamIndex()
 		{
 			if (Opcode == Opcode.Dcl) return 1;
-
 			return 0;
 		}
 

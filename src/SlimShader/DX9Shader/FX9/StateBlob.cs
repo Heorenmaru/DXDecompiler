@@ -20,7 +20,7 @@ namespace SlimShader.DX9Shader.FX9
 		public uint DataStart;
 		public uint DataEnd;
 		public ShaderModel Shader;
-		public ShaderType ShaderType;
+		public ShaderType ShaderType => Shader.Type;
 		public string VersionString
 		{
 			get
@@ -57,24 +57,26 @@ namespace SlimShader.DX9Shader.FX9
 			result.BlobType = (StateBlobType)shaderReader.ReadUInt32();
 			var dataReader = shaderReader.CopyAtCurrentPosition();
 			result.BlobSize = shaderReader.ReadUInt32();
-			var toRead = result.BlobSize + (result.BlobSize % 4 == 0 ? 0 : 4 - result.BlobSize % 4);
-			result.Data = shaderReader.ReadBytes((int)toRead);
+			var paddedSize = result.BlobSize + (result.BlobSize % 4 == 0 ? 0 : 4 - result.BlobSize % 4);
+			result.Data = shaderReader.ReadBytes((int)paddedSize);
 			if(result.BlobType == StateBlobType.Shader)
 			{
-				result.ShaderType = (ShaderType)BitConverter.ToUInt16(result.Data, 2);
-				result.Shader = result.Shader = ShaderReader.ReadShader(result.Data);
+				result.Shader = ShaderReader.ReadShader(result.Data);
 			}
 			else if (result.BlobType == StateBlobType.Variable)
 			{
 				result.VariableName = dataReader.TryReadString();
-			} else if(result.BlobType == StateBlobType.IndexShader)
+			} 
+			else if(result.BlobType == StateBlobType.IndexShader)
 			{
-				dataReader.ReadUInt32();
+				var blobSize = dataReader.ReadUInt32();
 				var variableSize = dataReader.ReadUInt32();
-				var variableData = dataReader.ReadBytes((int)variableSize);
-				result.VariableName = Encoding.UTF8.GetString(variableData, 0, variableData.Length - 1);
-				var shaderData = dataReader.ReadBytes((int)toRead);
-				result.Shader = result.Shader = ShaderReader.ReadShader(shaderData);
+				result.VariableName = dataReader.ReadString();
+				if (variableSize > (result.VariableName.Length + 1)) {
+					var paddingCount = variableSize - (result.VariableName.Length + 1);
+					var padding = dataReader.ReadBytes((int)paddingCount);
+				}
+				result.Shader = result.Shader = ShaderModel.Parse(dataReader);
 			}
 			return result;
 		}

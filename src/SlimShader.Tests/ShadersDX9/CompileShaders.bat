@@ -12,10 +12,11 @@ CALL CompileShader2.bat Internal Effect_ShaderArray.fx Effect_ShaderArray_FX fx_
 CALL CompileShader2.bat Internal Effect_StateBlock.fx Effect_StateBlock_FX fx_2_0 || GOTO :error
 CALL CompileShader2.bat Internal Effect_Expression.fx Effect_Expression_FX fx_2_0 || GOTO :error
 CALL CompileShader2.bat Internal Effect_Structs.fx Effect_Structs_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_ArrayIndex.fx Effect_ArrayIndex_FX fx_2_0 || GOTO :error
 
-CALL CompileShader.bat HLSLCrossCompiler/vs2 boolconst.hlsl boolconst vs_2_0 main || GOTO :error
+CALL CompileShader.bat HLSLCrossCompiler/vs2 boolconst.hlsl boolconst vs_2_0 main /Od || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 intrep.hlsl intrep vs_2_0 main || GOTO :error
-CALL CompileShader.bat HLSLCrossCompiler/vs2 loop.hlsl loop vs_2_0 main || GOTO :error
+CALL CompileShader.bat HLSLCrossCompiler/vs2 loop.hlsl loop vs_2_0 main /Od || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 mov.hlsl mov vs_2_0 main || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 pointsize.hlsl pointsize vs_2_0 main || GOTO :error
 CALL CompileShader.bat HLSLCrossCompiler/vs2 sign.hlsl sign vs_2_0 main || GOTO :error
@@ -210,7 +211,7 @@ CALL CompileShader2.bat SDK/Direct3D/ParallaxOcclusionMapping ParallaxOcclusionM
 
 CALL CompileShader.bat SDK/Direct3D/Pick Pick.fx Pick_VS vs_2_0 RenderSceneVS || GOTO :error
 CALL CompileShader.bat SDK/Direct3D/Pick Pick.fx Pick_PS ps_2_0 RenderScenePS || GOTO :error
-CALL CompileShader.bat SDK/Direct3D/Pick Pick.fx Pick_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat SDK/Direct3D/Pick Pick.fx Pick_FX fx_2_0 || GOTO :error
 
 CALL CompileShader.bat SDK/Direct3D/PixelMotionBlur PixelMotionBlur.fx PixelMotionBlur_WorldVS vs_2_0 WorldVertexShader || GOTO :error
 CALL CompileShader.bat SDK/Direct3D/PixelMotionBlur PixelMotionBlur.fx PixelMotionBlur_WorldPS ps_2_0 WorldPixelShader || GOTO :error

@@ -82,6 +82,7 @@
     <Compile Include="AssertTraceListener.cs" />
     <Compile Include="DX10Util\Extension.cs" />
     <Compile Include="DX9Tests.cs" />
+    <Content Include="ShadersDX9\Internal\Effect_ArrayIndex.fx" />
     <Content Include="ShadersDX9\Internal\Effect_EmbedAssembly.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -465,7 +466,6 @@
     <Content Include="Shaders\Sdk\Direct3D11\Direct3D11TutorialsFX11\Tutorial14.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="ShadersDX9\CompileShader2.bat" />
     <Content Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -664,9 +664,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.asm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -893,12 +890,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="ShadersDX9\CompileShader2.bat" />
-    <Content Include="ShadersDX9\CompileShader2.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="ShadersDX9\HlslCrossCompiler\ps2\tex2d.o">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="ShadersDX9\HlslCrossCompiler\ps2\uniformFuncParam.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -1780,9 +1771,6 @@
     <None Include="Shaders\3Dmigoto\sv_gsinstanceid.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Shaders\CompileShader.bat" />
-    <None Include="Shaders\CompileShader2.bat" />
-    <None Include="Shaders\CompileShaders.bat" />
     <Content Include="ShadersDX9\Sdk\Direct3D\AntiAlias\AntiAlias_ColorPS.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

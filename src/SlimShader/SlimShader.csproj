@@ -159,7 +159,7 @@
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOperand.cs" />
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOperandType.cs" />
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcToken.cs" />
-    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcTokenType.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOpcode.cs" />
     <Compile Include="DX9Shader\Bytecode\IfComparison.cs" />
     <Compile Include="DX9Shader\Bytecode\Preshader.cs" />
     <Compile Include="DX9Shader\Bytecode\PrsiToken.cs" />

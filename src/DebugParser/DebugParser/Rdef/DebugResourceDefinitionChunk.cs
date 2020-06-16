@@ -24,10 +24,7 @@ namespace SlimShader.DebugParser.Rdef
 		}
 		static int CalculateResourceBindingStride(DebugShaderVersion version)
 		{
-			if(version.ProgramType == ProgramType.LibraryShader)
-			{
-				return 32;
-			} else if(version.MajorVersion == 5 && version.MinorVersion == 1)
+			if(version.MajorVersion == 5 && version.MinorVersion == 1)
 			{
 				return 40;
 			} else
@@ -59,15 +56,16 @@ namespace SlimShader.DebugParser.Rdef
 
 			if (target.MajorVersion == 5 || target.ProgramType == ProgramType.LibraryShader)
 			{
-				if (target.MinorVersion == 0)
+				var isVersion5_1 = target.MajorVersion == 5 && target.MinorVersion == 1;
+				if (isVersion5_1)
+				{
+					var unknown0 = headerReader.ReadUInt32("unkRdefHeader");
+				}
+				else
 				{
 					string rd11 = headerReader.ReadUInt32("rd11").ToFourCcString();
 					if (rd11 != "RD11")
 						throw new ParseException("Expected RD11.");
-				}
-				else
-				{
-					var unknown0 = headerReader.ReadUInt32("unkRdefHeader");
 				}
 
 				var unkStride1 = headerReader.ReadUInt32("unkStride1"); // TODO

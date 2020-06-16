@@ -30,7 +30,7 @@ namespace SlimShader.DX9Shader.Bytecode.Fxlvm
 			var singleFirstComponent = token.DecodeValue(31, 31);
 
 			Debug.Assert(Enum.IsDefined(typeof(FxlcOpcode), result.Opcode),
-				$"Unknown FxlcTokenType {result.Opcode}");
+				$"Unknown FxlcOpcode {result.Opcode}");
 
 			Debug.Assert(token.DecodeValue(3, 19) == 0,
 				$"Unexpected data in FxlcToken bits 3-19 {token.DecodeValue(3, 19)}");

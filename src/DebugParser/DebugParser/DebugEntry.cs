@@ -8,6 +8,7 @@ namespace SlimShader.DebugParser
 	public class DebugEntry : IDumpable
 	{
 		public string Name;
+		public string DisplayValue;
 		public string Value { get; set; }
 		public int Indent { get; set; }
 		public uint RelativeIndex { get; set; }

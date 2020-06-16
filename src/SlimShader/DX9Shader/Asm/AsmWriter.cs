@@ -96,13 +96,30 @@ namespace SlimShader.DX9Shader
 			}
 			return sourceRegisterName;
 		}
+		string Version()
+		{
+			if(shader.ConstantTable != null)
+			{
+				return shader.ConstantTable.VersionString;
+			} else if(shader.Type == ShaderType.Vertex)
+			{
+				return $"vs_{shader.MajorVersion}_{shader.MinorVersion}";
+			}
+			else if (shader.Type == ShaderType.Pixel)
+			{
+				return $"ps_{shader.MajorVersion}_{shader.MinorVersion}";
+			} else
+			{
+				return $"{shader.Type}_{shader.MajorVersion}_{shader.MinorVersion}";
+			}
+		}
 		protected override void Write()
 		{
 			WritePreshader();
 			WriteConstantTable(shader.ConstantTable);
 			Indent++;
 			WriteIndent();
-			WriteLine("{0}", shader.ConstantTable.VersionString);
+			WriteLine("{0}", Version());
 			foreach (Token instruction in shader.Tokens)
 			{
 				WriteInstruction(instruction);

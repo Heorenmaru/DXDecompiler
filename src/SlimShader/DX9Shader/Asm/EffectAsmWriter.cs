@@ -45,20 +45,25 @@ namespace SlimShader.DX9Shader
 		}
 		public void WriteShaderVariable(Variable variable) 
 		{
-			var blob = this.EffectChunk.VariableBlobLookup[variable.Parameter];
+			var blob = EffectChunk.VariableBlobLookup[variable.Parameter];
+			WriteIndent();
+			Write("{0} {1}", 
+					variable.Parameter.ParameterType.ToString().ToLower(),
+					variable.Parameter.Name);
+			if(variable.Parameter.ElementCount > 1)
+			{
+				Write("[{0}]",
+					variable.Parameter.ElementCount);
+			}
+			Write(" = ");
 			if (blob.Shader == null)
 			{
 				WriteIndent();
-				WriteLine("{0} {1} = null;",
-					variable.Parameter.ParameterType.ToString().ToLower(),
-					variable.Parameter.Name);
+				WriteLine("null;");
 			}
 			else
 			{
-				WriteIndent();
-				WriteLine("{0} {1} =",
-					variable.Parameter.ParameterType.ToString().ToLower(),
-					variable.Parameter.Name);
+				WriteLine();
 				WriteIndent();
 				WriteLine("asm {");
 
@@ -74,11 +79,26 @@ namespace SlimShader.DX9Shader
 			WriteIndent();
 			WriteLine("{");
 			Indent++;
-			var shaderAssignments = pass.Assignments
-				.Where(a => a.Type == StateType.VertexShader || a.Type == StateType.PixelShader);
-			foreach (var assignment in shaderAssignments)
+			var vertexAssignment = pass.Assignments
+				.FirstOrDefault(a => a.Type == StateType.VertexShader);
+			if(vertexAssignment != null)
 			{
-				WriteAssignment(assignment);
+				WriteAssignment(vertexAssignment);
+			} else
+			{
+				WriteIndent();
+				WriteLine("//No embedded vertex shader");
+			}
+			var pixelAssignment = pass.Assignments
+				.FirstOrDefault(a => a.Type == StateType.PixelShader);
+			if (pixelAssignment != null)
+			{
+				WriteAssignment(pixelAssignment);
+			}
+			else
+			{
+				WriteIndent();
+				WriteLine("//No embedded pixel shader");
 			}
 			Indent--;
 			WriteIndent();
@@ -111,9 +131,14 @@ namespace SlimShader.DX9Shader
 				{
 					WriteLine("{0}[TODO];", stateBlob.VariableName);
 				}
-			} else
+			}
+			else if (assignment.Type == StateType.VertexShader)
 			{
-				Write("{0} = TODO;", assignment.Type.ToString().ToLower());
+				WriteLine("//No embedded vertex shader");
+			}
+			else if(assignment.Type == StateType.PixelShader)
+			{
+				WriteLine("//No embedded pixel shader");
 			}
 		}
 	}

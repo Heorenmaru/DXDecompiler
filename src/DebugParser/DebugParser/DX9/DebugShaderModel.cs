@@ -21,7 +21,7 @@ namespace SlimShader.DebugParser.DX9
 		public int MajorVersion { get; private set; }
 		public int MinorVersion { get; private set; }
 		public ShaderType Type { get; private set; }
-		public List<DebugToken> Tokens = new List<DebugToken>();
+		public List<IDebugToken> Tokens = new List<IDebugToken>();
 		public DebugConstantTable ConstantTable;
 		public DebugCliToken Cli;
 		public DebugPreshader Preshader;
@@ -41,12 +41,12 @@ namespace SlimShader.DebugParser.DX9
 				{
 					continue;
 				}
-				reader.AddIndent($"Token {result.Tokens.Count}");
+				reader.AddIndent($"T{result.Tokens.Count}");
 
 				var indent = reader.Members.OfType<DebugIndent>().Last();
-				DebugToken instruction = result.ReadInstruction(reader);
+				IDebugToken instruction = result.ReadInstruction(reader);
 				result.Tokens.Add(instruction);
-				indent.Name += $" {instruction.Opcode}";
+				indent.Name += $" {instruction.Opcode} {string.Join(" ", instruction.Operands)}";
 				reader.RemoveIndent();
 				if (instruction.Opcode == Opcode.End) break;
 			}
@@ -94,33 +94,35 @@ namespace SlimShader.DebugParser.DX9
 			reader._reader.BaseStream.Position = startPosition + size * 4;
 			return true;
 		}
-		DebugToken ReadInstruction(DebugBytecodeReader reader)
+		IDebugToken ReadInstruction(DebugBytecodeReader reader)
 		{
 			uint instructionToken = reader.ReadUInt32("Token");
 			Opcode opcode = (Opcode)(instructionToken & 0xffff);
-			int size;
+			uint size;
 			if (opcode == Opcode.Comment)
 			{
-				size = (int)((instructionToken >> 16) & 0x7FFF);
+				size = (uint)((instructionToken >> 16) & 0x7FFF);
 			}
 			else
 			{
-				size = (int)((instructionToken >> 24) & 0x0f);
+				size = (uint)((instructionToken >> 24) & 0x0f);
 			}
 			var entry = reader.Members.Last();
 			entry.AddNote("TokenOpcode", opcode.ToString());
 			entry.AddNote("TokenSize", size.ToString());
-			DebugToken token = new DebugToken();
-			token.Token = instructionToken;
-			token.Opcode = opcode;
+			IDebugToken result;
 			if (opcode == Opcode.Comment)
 			{
-				token.Data = reader.ReadBytes("CommentData", size * 4);
+				var token = new DebugToken();
+				token.Token = instructionToken;
+				token.Opcode = opcode;
+				token.Data = reader.ReadBytes("CommentData", (int)size * 4);
+				result = token;
 			} else
 			{
-				token.Data = reader.ReadBytes("InstructionData", size * 4);
+				result = DebugInstructionToken.Parse(reader, instructionToken, opcode, size);
 			}
-			return token;
+			return result;
 		}
 	}
 }

@@ -61,11 +61,17 @@
     <Compile Include="DebugParser\DX9\DebugConstantDeclaration.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantStructMember.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantType.cs" />
+    <Compile Include="DebugParser\DX9\DebugDestinationOperand.cs" />
+    <Compile Include="DebugParser\DX9\DebugOperandUtil.cs" />
+    <Compile Include="DebugParser\DX9\DebugSourceOperand.cs" />
+    <Compile Include="DebugParser\DX9\IDebugOperand.cs" />
     <Compile Include="DebugParser\DX9\DebugPreshader.cs" />
     <Compile Include="DebugParser\DX9\DebugPrsiToken.cs" />
     <Compile Include="DebugParser\DX9\DebugShaderModel.cs" />
     <Compile Include="DebugParser\DX9\DebugToken.cs" />
     <Compile Include="DebugParser\DX9\DebugFxlc.cs" />
+    <Compile Include="DebugParser\DX9\IDebugToken.cs" />
+    <Compile Include="DebugParser\DX9\DebugInstructionToken.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectAssignment.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectConstantAssignment.cs" />
     <Compile Include="DebugParser\Fx10\Assignemnt\DebugEffectConstantIndexAssignment.cs" />
@@ -139,6 +145,7 @@
     <Compile Include="DebugParser\Xsgn\DebugPatchConstantSignatureChunk.cs" />
     <Compile Include="DebugParser\Xsgn\DebugSignatureParameterDescription.cs" />
     <Compile Include="DebugParser\Xsgn\DebugSignatureParameterDescriptionCollection.cs" />
+    <Compile Include="DX9\SourceOperand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
