@@ -39,15 +39,13 @@ namespace SlimShader.Chunks.Fx10
 		{
 			var sb = new StringBuilder();
 			sb.Append(MemberType.ToString());
-			sb.Append(" = eval(");
-			if(Shader != null)
+			sb.Append(" = ");
+			if (Shader != null)
 			{
 				var chunk = Shader.GetChunk<FxlcChunk>();
-				var code = string.Join($"{Environment.NewLine}                    ",
-					chunk.Tokens);
-				sb.Append(code);
+				sb.Append(chunk.ToString());
 			}
-			sb.Append(");");
+			sb.Append(";");
 			return sb.ToString();
 		}
 	}

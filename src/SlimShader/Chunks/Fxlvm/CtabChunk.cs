@@ -7,48 +7,23 @@ using System.Text;
 
 namespace SlimShader.Chunks.Fxlvm
 {
+	/* 
+	* Format
+	* uint FourCC
+	* uint ChunkSize
+	* uint Count
+	* uint[] Numbers
+	*/
 	public class CtabChunk : BytecodeChunk
 	{
-		public uint MinorVersion { get; private set; }
-		public uint MajorVersion { get; private set; }
-		public uint ShaderType { get; private set; }
-
-		public ShaderFlags ShaderFlags { get; private set; }
-		public string CreatorString { get; private set; }
-		public string ShaderModel { get; private set; }
 		public ConstantTable ConstantTable { get; private set; }
-
-		public uint numConstants;
-		public uint creatorPosition;
 
 		public static BytecodeChunk Parse(BytecodeReader reader, uint chunkSize)
 		{
 			//TODO: Merge Ctab parsing with DX9 Ctab
 			var result = new CtabChunk();
 			var chunkReader = reader.CopyAtCurrentPosition();
-			var size = result.creatorPosition = chunkReader.ReadUInt32();
-			var creatorPosition = result.creatorPosition = chunkReader.ReadUInt32();
-			var minorVersion = result.MinorVersion = chunkReader.ReadByte();
-			var majorVersion = result.MajorVersion = chunkReader.ReadByte();
-			var shaderType = result.ShaderType = chunkReader.ReadUInt16();
-			var numConstants = result.numConstants = chunkReader.ReadUInt32();
-			var constantInfoPosition = chunkReader.ReadUInt32();
-			var shaderFlags = chunkReader.ReadUInt32();
-			var shaderModelPosition = chunkReader.ReadUInt32();
-
-			var creatorReader = reader.CopyAtOffset((int)creatorPosition);
-			var creatorString = result.CreatorString = creatorReader.ReadString();
-
-			var shaderModelReader = reader.CopyAtOffset((int)shaderModelPosition);
-			var shaderModel = result.ShaderModel = shaderModelReader.ReadString();
-
-			var constantDeclarations = new List<ConstantDeclaration>((int)numConstants);
-			for(int i = 0; i < numConstants; i++)
-			{
-				ConstantDeclaration declaration = ReadConstantDeclaration(reader, chunkReader);
-				constantDeclarations.Add(declaration);
-			}
-			result.ConstantTable = new ConstantTable(creatorString, shaderModel, (byte)majorVersion, (byte)minorVersion, constantDeclarations);
+			result.ConstantTable = ConstantTable.Parse(chunkReader);
 			return result;
 		}
 
@@ -104,13 +79,6 @@ namespace SlimShader.Chunks.Fxlvm
 		{
 			var sb = new StringBuilder();
 			sb.AppendLine(GetType().Name);
-			sb.AppendLine($"CreatorPosition: {creatorPosition} {creatorPosition.ToString("X4")}");
-			sb.AppendLine($"MinorVersion: {MinorVersion} {MinorVersion.ToString("X2")}");
-			sb.AppendLine($"MajorVersion: {MajorVersion} {MajorVersion.ToString("X2")}");
-			sb.AppendLine($"ShaderType: {ShaderType} {ShaderType.ToString("X2")}");
-			sb.AppendLine($"numConstants: {numConstants} {numConstants.ToString("X2")}");
-			sb.AppendLine($"CreatorString: {CreatorString}");
-			sb.AppendLine($"ShaderModel: {ShaderModel}");
 			foreach(var decl in ConstantTable.ConstantDeclarations)
 			{
 				sb.AppendLine($"ConstantDeclarations: {decl}");

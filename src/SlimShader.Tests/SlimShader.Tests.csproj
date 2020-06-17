@@ -89,7 +89,13 @@
     <Content Include="ShadersDX9\Internal\Effect_EmbedAssembly_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="ShadersDX9\Internal\Effect_Expression2.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="ShadersDX9\Internal\Effect_Expression.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ShadersDX9\Internal\Effect_Expression2_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ShadersDX9\Internal\Effect_Expression_FX.asm">
@@ -406,7 +412,13 @@
     <Content Include="Shaders\Internal\Effects\EffectExpressions_4_0_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Shaders\Internal\Effects\EffectExpressions_4_0_no_opt_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shaders\Internal\Effects\EffectExpressions_5_0_FX.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Shaders\Internal\Effects\EffectExpressions_5_0_no_opt_FX.asm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Shaders\Internal\Effects\EffectInterfaces.fx">
@@ -1039,6 +1051,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Internal\Effect_EmbedAssembly_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ShadersDX9\Internal\Effect_Expression2_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ShadersDX9\Internal\Effect_Expression_FX.o">
@@ -3948,7 +3963,13 @@
     <None Include="Shaders\Internal\Effects\EffectExpressions_4_0_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Shaders\Internal\Effects\EffectExpressions_4_0_no_opt_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\Internal\Effects\EffectExpressions_5_0_FX.o">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\Internal\Effects\EffectExpressions_5_0_no_opt_FX.o">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Shaders\Internal\Effects\EffectInterfaces2_5_FX.o">

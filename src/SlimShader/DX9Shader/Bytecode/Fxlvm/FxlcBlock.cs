@@ -6,12 +6,12 @@ using System.Text;
 
 namespace SlimShader.DX9Shader.Bytecode.Fxlvm
 {
-	public class FxlcChunk
+	public class FxlcBlock
 	{
 		public List<FxlcToken> Tokens = new List<FxlcToken>();
-		public static FxlcChunk Parse(BytecodeReader reader)
+		public static FxlcBlock Parse(BytecodeReader reader)
 		{
-			var result = new FxlcChunk();
+			var result = new FxlcBlock();
 			var tokenCount = reader.ReadUInt32();
 			for (int i = 0; i < tokenCount; i++)
 			{

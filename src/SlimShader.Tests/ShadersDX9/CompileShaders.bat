@@ -11,6 +11,7 @@ CALL CompileShader2.bat Internal Effect_SamplerArray.fx Effect_SamplerArray_FX f
 CALL CompileShader2.bat Internal Effect_ShaderArray.fx Effect_ShaderArray_FX fx_2_0 || GOTO :error
 CALL CompileShader2.bat Internal Effect_StateBlock.fx Effect_StateBlock_FX fx_2_0 || GOTO :error
 CALL CompileShader2.bat Internal Effect_Expression.fx Effect_Expression_FX fx_2_0 || GOTO :error
+CALL CompileShader2.bat Internal Effect_Expression2.fx Effect_Expression2_FX fx_2_0 || GOTO :error
 CALL CompileShader2.bat Internal Effect_Structs.fx Effect_Structs_FX fx_2_0 || GOTO :error
 CALL CompileShader2.bat Internal Effect_ArrayIndex.fx Effect_ArrayIndex_FX fx_2_0 || GOTO :error
 

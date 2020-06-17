@@ -4,6 +4,13 @@ using System.Text;
 
 namespace SlimShader.Chunks.Fxlvm
 {
+	/* 
+	 * Format
+	 * uint FourCC
+	 * uint ChunkSize
+	 * uint Count
+	 * uint[] Numbers
+	 */
 	public class Cli4Chunk : BytecodeChunk
 	{
 		public List<Number> Numbers { get; private set; }

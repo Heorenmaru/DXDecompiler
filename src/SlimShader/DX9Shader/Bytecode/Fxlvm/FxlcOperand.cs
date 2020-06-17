@@ -132,7 +132,95 @@ namespace SlimShader.DX9Shader.Bytecode.Fxlvm
 					return string.Format("unknown{0}{1}", elementIndex, component);
 			}
 		}
+		private string FormatComponent(ConstantTable ctab, Chunks.Fxlvm.Cli4Chunk cli, uint componentIndex, uint componentCount)
+		{
+			switch (componentCount)
+			{
+				case 1:
+					switch (componentIndex)
+					{
+						case 0:
+							return ".x";
+						case 1:
+							return ".y";
+						case 2:
+							return ".z";
+						case 3:
+							return ".w";
+						default:
+							return "";
+					}
+				case 2:
+					switch (componentIndex)
+					{
+						case 0:
+							return ".xy";
+						case 1:
+							return ".yz";
+						case 2:
+							return ".zw";
+						default:
+							return "";
+					}
+				case 3:
+					switch (componentIndex)
+					{
+						case 0:
+							return ".xyz";
+						case 1:
+							return ".yzw";
+						default:
+							return "";
+					}
+				default:
+					return "";
+			}
+		}
+		private string FormatOperand(ConstantTable ctab, Chunks.Fxlvm.Cli4Chunk cli, FxlcOperandType type, uint index)
+		{
+			var elementIndex = index / 4;
+			var componentIndex = index % 4;
+			var component = FormatComponent(componentIndex, ComponentCount);
+			switch (type)
+			{
+				case FxlcOperandType.Literal:
+					return string.Format("({0})", cli.GetLiteral(elementIndex, ComponentCount));
+				case FxlcOperandType.Temp:
+					return string.Format("r{0}{1}", elementIndex, component);
+				case FxlcOperandType.Variable:
+					return string.Format("{0}{1}",
+						ctab.GetVariable(elementIndex), component);
+				case FxlcOperandType.Expr:
+					if (ComponentCount == 1)
+					{
+						if (componentIndex == 0)
+						{
+							return string.Format("expr{0}", component);
+						}
+						else
+						{
+							return string.Format("expr0{0}", component);
+						}
+					}
+					return string.Format("expr{0}", component);
+				default:
+					return string.Format("unknown{0}{1}", elementIndex, component);
+			}
+		}
 		public string ToString(ConstantTable ctab, CliToken cli)
+		{
+			if (IsArray == 0)
+			{
+				return FormatOperand(ctab, cli, OpType, OpIndex);
+			}
+			else
+			{
+				return string.Format("{0}[{1}]",
+					FormatOperand(ctab, cli, ArrayType, ArrayIndex),
+					FormatOperand(ctab, cli, OpType, OpIndex));
+			}
+		}
+		public string ToString(ConstantTable ctab, Chunks.Fxlvm.Cli4Chunk cli)
 		{
 			if (IsArray == 0)
 			{

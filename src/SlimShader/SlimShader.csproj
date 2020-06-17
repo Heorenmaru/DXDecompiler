@@ -59,7 +59,6 @@
     <Compile Include="Chunks\Fx10\Assignemnt\EffectInlineShaderAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectVariableAssignment.cs" />
     <Compile Include="Chunks\Fx10\Assignemnt\EffectCompilerAssignmentType.cs" />
-    <Compile Include="Chunks\Fxlvm\FxlcToken.cs" />
     <Compile Include="Chunks\Fxlvm\Cli4Chunk.cs" />
     <Compile Include="Chunks\Fx10\EffectAnnotation.cs" />
     <Compile Include="Chunks\Fx10\EffectBuffer.cs" />
@@ -90,9 +89,6 @@
     <Compile Include="Chunks\Fx10\EffectObjectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectType.cs" />
     <Compile Include="Chunks\Fxlvm\FxlcChunk.cs" />
-    <Compile Include="Chunks\Fxlvm\FxlcTokenType.cs" />
-    <Compile Include="Chunks\Fxlvm\FxlcOperand.cs" />
-    <Compile Include="Chunks\Fxlvm\FxlcOperandType.cs" />
     <Compile Include="Chunks\Fx10\IEffectVariable.cs" />
     <Compile Include="Chunks\Fx10\EffectInterfaceInitializer.cs" />
     <Compile Include="Chunks\Fx10\NumericLayout.cs" />
@@ -155,7 +151,7 @@
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantTable.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantDeclaration.cs" />
     <Compile Include="DX9Shader\Bytecode\Declaration\ConstantType.cs" />
-    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcChunk.cs" />
+    <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcBlock.cs" />
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOperand.cs" />
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcOperandType.cs" />
     <Compile Include="DX9Shader\Bytecode\Fxlvm\FxlcToken.cs" />

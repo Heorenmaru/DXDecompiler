@@ -42,7 +42,7 @@ namespace SlimShader.DX9Shader
 		public Fx9Chunk EffectChunk { get; set; }
 		public IList<Token> Tokens { get; private set; }
 		public ConstantTable ConstantTable { get; private set; }
-		public FxlcChunk Fxlc { get; set; }
+		public FxlcBlock Fxlc { get; set; }
 		public CliToken Cli { get; set; }
 		public Preshader Preshader { get; set; }
 		public PrsiToken Prsi { get; set; }
@@ -105,7 +105,7 @@ namespace SlimShader.DX9Shader
 							Cli = CliToken.Parse(commentReader, (uint)size);
 							return null;
 						case CommentType.FXLC:
-							Fxlc = FxlcChunk.Parse(commentReader);
+							Fxlc = FxlcBlock.Parse(commentReader);
 							return null;
 						case CommentType.PRES:
 							Preshader = Preshader.Parse(commentReader);

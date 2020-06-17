@@ -1,5 +1,6 @@
 ﻿using SlimShader.Util;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SlimShader.DebugParser.Chunks.Fxlvm
@@ -19,7 +20,14 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 			var count = chunkReader.ReadUInt32("Count");
 			for(int i = 0; i < count; i++)
 			{
-				result.Numbers.Add(DebugNumber.Parse(chunkReader));
+				chunkReader.AddIndent($"Number {i}");
+				var info = chunkReader.Members.Last();
+				var number = DebugNumber.Parse(chunkReader);
+				result.Numbers.Add(number);
+				info.AddNote("Int", number.Int.ToString());
+				info.AddNote("Uint", number.UInt.ToString());
+				info.AddNote("Float", number.Float.ToString());
+				chunkReader.RemoveIndent();
 			}
 			return result;
 		}

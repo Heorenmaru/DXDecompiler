@@ -129,6 +129,7 @@ namespace SlimShader.DebugParser
 						new XAttribute("notes", noteText));
 				}
 				if(entry is DebugIndent di){
+					var noteText = string.Join(";", di.ExtraNotes);
 					label = new XElement("span", di.Name,
 						new XAttribute("class", "tree-label"),
 						new XAttribute("data-start", di.AbsoluteIndex),
@@ -140,7 +141,7 @@ namespace SlimShader.DebugParser
 						new XAttribute("rel-start", di.RelativeIndex),
 						new XAttribute("rel-end", di.RelativeIndex + di.Size),
 						new XAttribute("type", "Indent"),
-						new XAttribute("notes", "")
+						new XAttribute("notes", noteText)
 						);
 				}
 				if (entry is DebugBytecodeReader dr)

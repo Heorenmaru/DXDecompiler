@@ -13,6 +13,7 @@ namespace SlimShader.DebugParser
 		public uint RelativeIndex => Members.Count == 0 ? 0 : Members.First().RelativeIndex;
 		public string Value => "";
 		public string Type => "Indent";
+		public List<string> ExtraNotes = new List<string>();
 		public uint Size
 		{
 			get
@@ -42,7 +43,7 @@ namespace SlimShader.DebugParser
 
 		public void AddNote(string key, string value)
 		{
-			throw new System.NotImplementedException();
+			ExtraNotes.Add($"{key}: {value}");
 		}
 	}
 }

@@ -101,6 +101,8 @@ CALL CompileShader2.bat Internal/Effects EffectPacking.fx EffectPacking_5_0_FX f
 
 CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_4_0_FX fx_4_0 /Gdp || GOTO :error
 CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_5_0_FX fx_5_0 /Gdp || GOTO :error
+CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_4_0_no_opt_FX fx_4_0 /Gdp /Od || GOTO :error
+CALL CompileShader2.bat Internal/Effects EffectExpressions.fx EffectExpressions_5_0_no_opt_FX fx_5_0 /Gdp /Od || GOTO :error
 
 CALL CompileShader2.bat Internal/Effects EffectInterfaces.fx EffectInterfaces_5_FX fx_5_0 || GOTO :error
 

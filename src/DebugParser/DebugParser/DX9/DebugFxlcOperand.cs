@@ -1,9 +1,8 @@
-﻿using SlimShader.Chunks.Fxlvm;
-using SlimShader.Util;
+﻿using SlimShader.DX9Shader.Bytecode.Fxlvm;
 using System;
 using System.Diagnostics;
 
-namespace SlimShader.DebugParser.Chunks.Fxlvm
+namespace SlimShader.DebugParser.DX9
 {
 	public class DebugFxlcOperand
 	{

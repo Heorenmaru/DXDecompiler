@@ -1,12 +1,11 @@
-﻿using SlimShader.Chunks.Fxlvm;
+﻿using SlimShader.DX9Shader.Bytecode.Fxlvm;
 using SlimShader.Util;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
-namespace SlimShader.DebugParser.Chunks.Fxlvm
+namespace SlimShader.DebugParser.DX9
 {
 	public class DebugFxlcToken
 	{

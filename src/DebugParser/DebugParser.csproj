@@ -62,6 +62,8 @@
     <Compile Include="DebugParser\DX9\DebugConstantStructMember.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantType.cs" />
     <Compile Include="DebugParser\DX9\DebugDestinationOperand.cs" />
+    <Compile Include="DebugParser\DX9\DebugFxlcOperand.cs" />
+    <Compile Include="DebugParser\DX9\DebugFxlcToken.cs" />
     <Compile Include="DebugParser\DX9\DebugOperandUtil.cs" />
     <Compile Include="DebugParser\DX9\DebugSourceOperand.cs" />
     <Compile Include="DebugParser\DX9\IDebugOperand.cs" />
@@ -116,8 +118,6 @@
     <Compile Include="DebugParser\Fxlvm\DebugCli4Chunk.cs" />
     <Compile Include="DebugParser\Fxlvm\DebugCtabChunk.cs" />
     <Compile Include="DebugParser\Fxlvm\DebugFxlcChunk.cs" />
-    <Compile Include="DebugParser\Fxlvm\DebugFxlcOperand.cs" />
-    <Compile Include="DebugParser\Fxlvm\DebugFxlcToken.cs" />
     <Compile Include="DebugParser\DX9\DebugConstantTable.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassInstance.cs" />
     <Compile Include="DebugParser\Icfe\DebugClassType.cs" />
