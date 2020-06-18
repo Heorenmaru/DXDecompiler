@@ -56,7 +56,15 @@ namespace SlimShader.DX9Shader.Bytecode.Declaration
 		public string GetVariable(uint elementIndex)
 		{
 			var decl = ConstantDeclarations
-				.FirstOrDefault((v) => v.RegisterIndex == elementIndex);
+				.FirstOrDefault(d => d.ContainsIndex((int)elementIndex));
+			if(decl.ParameterClass == ParameterClass.MatrixColumns || 
+				decl.ParameterClass == ParameterClass.MatrixRows ||
+				decl.ParameterClass == ParameterClass.Struct ||
+				decl.Elements > 1)
+			{
+				var arrayIndex = elementIndex - decl.RegisterIndex;
+				return $"{decl.Name}[{arrayIndex}]";
+			}
 			if (decl == null)
 			{
 				return string.Format("var{0}", elementIndex);

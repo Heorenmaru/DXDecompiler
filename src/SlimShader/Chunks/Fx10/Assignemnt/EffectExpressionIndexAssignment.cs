@@ -45,7 +45,6 @@ namespace SlimShader.Chunks.Fx10
 			sb.Append(" = ");
 			sb.Append(ArrayName);
 			sb.Append("[");
-			sb.Append("eval(");
 			if (Shader != null)
 			{
 				var chunk = Shader.GetChunk<FxlcChunk>();
