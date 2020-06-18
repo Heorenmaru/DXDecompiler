@@ -141,10 +141,12 @@ class Manager {
 		this.detailView = document.getElementById("detailview");
 		this.bytes = document.getElementsByClassName("hex_byte");
 		this.ascii = document.getElementsByClassName("hex_ascii");
+		this.rows = document.getElementsByClassName("hex_row");
 		this.highlighted = [];
 		this.toggler = document.getElementsByClassName("caret");
 		this.labels = document.getElementsByClassName("tree-label");
 		this.highlightClasses = [];
+		this.highlightQueue = [];
 		for(var i = 0; i < 6; i++){
 			this.highlightClasses.push(`highlighted_${i}`);
 		}
@@ -185,23 +187,22 @@ class Manager {
 				var itemStart = parseInt(treeLabel.getAttribute("data-start"));
 				var itemEnd = parseInt(treeLabel.getAttribute("data-end"));
 				var classIndex = i % this.highlightClasses.length;
-				this.highlightByteRange(itemStart, itemEnd, this.highlightClasses[classIndex]);
+				this.queueHighlight(itemStart, itemEnd, this.highlightClasses[classIndex]);
 			}
 		} else {
-			this.highlightByteRange(dataStart, dataEnd, "highlighted");
+			this.queueHighlight(dataStart, dataEnd, "highlighted");
 		}
 		setDetailPanel(element, this.detailView);
+		this.runHighlighter();
 	}
 	onByteClick(element, evt){
 		var memberId = element.getAttribute("member");
 		var member = document.getElementById(memberId);
 		if (member === null) {
+			console.log("byte has no member");
 			this.clearHighlighted();
 			setDetailPanelUnusedMemory(element, this.detailView);
 			return;
-		}
-		if(!isScrolledIntoView(member)){
-			member.scrollIntoView();
 		}
 		member.click();
 		var parent = member;
@@ -212,6 +213,54 @@ class Manager {
 			}
 			parent = parent.parentElement;
 		}
+		if(!isScrolledIntoView(member)){
+			member.scrollIntoView();
+		}
+	}
+	queueHighlight(start, end, className){
+		this.highlightQueue.unshift([start, end, className]);
+	}
+	runHighlighter(){
+		var startTime = performance.now();
+		var count = 0;
+		var funcTimeout = this.highlightQueue.length > 5 ? 100 : 250;
+		while(this.highlightQueue.length > 0){
+			var entry = this.highlightQueue.pop();
+			var start = entry[0];
+			var end = entry[1];
+			var className = entry[2];
+			for(var i = start; i < end;){
+				if(i % 16 == 0 && i + 16 <= end){
+					this.highlightRow(Math.floor(i/16), className);
+					i += 16;
+					count += 16;
+				} else {
+					this.highlightByte(i, className);
+					i += 1;
+					count += 1;
+				}
+				var _elapsed = performance.now() - startTime;
+				if(_elapsed > funcTimeout){
+					console.log(`Ran highlighter, took ${_elapsed} ms to highlight ${count} bytes, setting timeout`);
+					this.highlightQueue.push([i, end, className]);
+					setTimeout(this.runHighlighter.bind(this), 1);
+					return;
+				}
+			}
+		}
+		var elapsed = performance.now() - startTime;
+		console.log(`Ran highlighter, took ${elapsed} ms to highlight ${count} bytes`);
+	}
+	highlightByte(index, className){
+		this.bytes[index].classList.add(className);
+		this.ascii[index].classList.add(className);
+		this.highlighted.push([this.bytes[index], className]);
+		this.highlighted.push([this.ascii[index], className]);
+	}
+
+	highlightRow(index, className){
+		this.rows[index].classList.add(className);
+		this.highlighted.push([this.rows[index], className]);
 	}
 	highlightByteRange(start, end, className){
 		for(var j = start; j < end && j < this.bytes.length; j++){
@@ -227,9 +276,10 @@ class Manager {
 			pair[0].classList.remove(pair[1]);
 		}
 		this.highlighted = [];
+		this.highlightQueue = [];
 	}
 }
 window.onload = function(){
 	console.log("hello");
-	var manager = new Manager();
+	window.manager = new Manager();
 }

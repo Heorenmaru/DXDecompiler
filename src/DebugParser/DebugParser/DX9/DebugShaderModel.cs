@@ -79,7 +79,7 @@ namespace SlimShader.DebugParser.DX9
 					Cli = DebugCliToken.Parse(reader);
 					break;
 				case CommentType.FXLC:
-					Fxlc = DebugFxlc.Parse(reader);
+					Fxlc = DebugFxlc.Parse(reader, (uint)size * 4);
 					break;
 				case CommentType.PRES:
 					Preshader = DebugPreshader.Parse(reader);

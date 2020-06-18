@@ -4,6 +4,7 @@ using SlimShader.DX9Shader;
 using SlimShader.DX9Shader.Bytecode.Fxlvm;
 using SlimShader.Util;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace SlimShader.DebugParser.Chunks.Fxlvm
@@ -17,7 +18,9 @@ namespace SlimShader.DebugParser.Chunks.Fxlvm
 		{
 			var result = new DebugFxlcChunk();
 			var chunkReader = reader.CopyAtCurrentPosition("FxlcChunkReader", reader);
-			result.Fxlc = DebugFxlc.Parse(chunkReader);
+			result.Fxlc = DebugFxlc.Parse(chunkReader, chunkSize);
+			var padding = chunkReader.ReadUInt32("Padding");
+			Debug.Assert(padding == 0xFFFF);
 			return result;
 		}
 	}

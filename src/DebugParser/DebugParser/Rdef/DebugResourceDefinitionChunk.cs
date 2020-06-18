@@ -44,7 +44,7 @@ namespace SlimShader.DebugParser.Rdef
 			var flags = headerReader.ReadEnum32<ShaderFlags>("flags");
 
 			var creatorOffset = headerReader.ReadUInt32("creatorOffset");
-			var creatorReader = reader.CopyAtOffset("CreatorString", reader, (int)creatorOffset);
+			var creatorReader = reader.CopyAtOffset("CreatorString", headerReader, (int)creatorOffset);
 			var creator = creatorReader.ReadString("creator");
 
 			var result = new DebugResourceDefinitionChunk

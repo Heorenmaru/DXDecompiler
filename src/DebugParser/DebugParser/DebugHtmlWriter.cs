@@ -209,7 +209,7 @@ namespace SlimShader.DebugParser
 			{
 				var row = new XElement("div",
 					new XAttribute("row", i / 16),
-					new XAttribute("class", "monospace"),
+					new XAttribute("class", "hex_row monospace"),
 					new XElement("span",  $"{i.ToString("X4")}:{nbsp}{nbsp}"));
 				element.Add(row);
 				for (int j = i; j < i + 16; j++)

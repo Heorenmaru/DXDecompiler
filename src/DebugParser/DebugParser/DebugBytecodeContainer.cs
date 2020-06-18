@@ -96,7 +96,6 @@ namespace SlimShader.DebugParser
 		}
 		public static DebugBytecodeContainer Parse(byte[] bytes)
 		{
-			var reader = new DebugBytecodeReader(bytes, 0, bytes.Length);
 			var result = new DebugBytecodeContainer(bytes);
 			result._rawBytes = bytes;
 			return result;

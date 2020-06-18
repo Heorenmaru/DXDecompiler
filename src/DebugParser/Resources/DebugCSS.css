@@ -60,30 +60,31 @@ ul, #myUL {
 :root {
     --highlight-count: 6;
 }
-.highlighted_0 {
+span.highlighted_0, div.highlighted_0 > .hex_byte, div.highlighted_0 > .hex_ascii {
     background-color: hsl(0,100%,40%);
     color: white;
 }
-.highlighted_1 {
+span.highlighted_1, div.highlighted_1 > .hex_byte, div.highlighted_1 > .hex_ascii {
     background-color: hsl(60,90%,30%);
     color: white;
 }
-.highlighted_2 {
+span.highlighted_2, div.highlighted_2 > .hex_byte, div.highlighted_2 > .hex_ascii {
     background-color: hsl(120,100%,35%);
     color: white;
 }
-.highlighted_3 {
+span.highlighted_3, div.highlighted_3 > .hex_byte, div.highlighted_3 > .hex_ascii {
     background-color: hsl(180, 100%,35%);
     color: white;
 }
-.highlighted_4 {
+span.highlighted_4, div.highlighted_4 > .hex_byte, div.highlighted_4 > .hex_ascii {
     background-color: hsl(240,100%,50%);
     color: white;
 }
-.highlighted_5 {
+span.highlighted_5, div.highlighted_5 > .hex_byte, div.highlighted_5 > .hex_ascii {
     background-color: hsl(300,100%,40%);
     color: white;
 }
+
 .unused {
     background-color: darkgray;
     color: white;

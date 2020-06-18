@@ -242,11 +242,17 @@ namespace SlimShader.DebugParser
 				sb.Append(nextCharacter);
 			}
 			int paddingCount = 0;
-			while (!EndOfBuffer && _reader.ReadByte() == 0xAB)
+			while (!EndOfBuffer)
 			{
-				paddingCount++;
+				if (_reader.ReadByte() == 0xAB)
+				{
+					paddingCount++;
+				} else
+				{
+					_reader.BaseStream.Position -= 1;
+					break;
+				}
 			}
-			_reader.BaseStream.Position -= 1;
 			var result = sb.ToString();
 			var entry = AddEntry(name, (uint)(result.Length + 1 + paddingCount));
 			entry.Value = result;
