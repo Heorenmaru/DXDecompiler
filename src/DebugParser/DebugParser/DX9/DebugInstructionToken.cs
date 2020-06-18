@@ -9,6 +9,9 @@ namespace DebugParser.DebugParser.DX9
 		uint token;
 		public Opcode Opcode { get; set; }
 		public List<IDebugOperand> Operands { get; set; } = new List<IDebugOperand>();
+		public int Modifier { get; set; }
+		public bool Predicated { get; set; }
+		public bool CoIssue { get; set; }
 		public static DebugInstructionToken Parse(DebugBytecodeReader reader, uint token, Opcode opcode, uint size)
 		{
 			var result = new DebugInstructionToken();

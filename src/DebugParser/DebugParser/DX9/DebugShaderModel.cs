@@ -122,6 +122,16 @@ namespace SlimShader.DebugParser.DX9
 			{
 				result = DebugInstructionToken.Parse(reader, instructionToken, opcode, size);
 			}
+			if (opcode != Opcode.Comment)
+			{
+				var token = result as DebugInstructionToken;
+				token.Modifier = (int)((instructionToken >> 16) & 0xff);
+				token.Predicated = (instructionToken & 0x10000000) != 0;
+				token.CoIssue = (instructionToken & 0x40000000) != 0;
+				entry.AddNote("Modifer", token.Modifier.ToString());
+				entry.AddNote("Predicated", token.Predicated.ToString());
+				entry.AddNote("CoIssue", token.CoIssue.ToString());
+			}
 			return result;
 		}
 	}

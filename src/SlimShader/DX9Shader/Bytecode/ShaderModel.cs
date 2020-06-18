@@ -7,6 +7,7 @@ using SlimShader.Util;
 using SlimShader.DX9Shader.Bytecode;
 using SlimShader.DX9Shader.Bytecode.Declaration;
 using SlimShader.DX9Shader.Bytecode.Fxlvm;
+using System.Diagnostics;
 
 namespace SlimShader.DX9Shader
 {
@@ -126,6 +127,7 @@ namespace SlimShader.DX9Shader
 			{
 				token = new InstructionToken(opcode, size, this);
 				var inst = token as InstructionToken;
+
 				for (int i = 0; i < size; i++)
 				{
 					token.Data[i] = reader.ReadUInt32();
@@ -159,6 +161,13 @@ namespace SlimShader.DX9Shader
 					{
 						inst.Operands.Add(new SourceOperand(token.Data[i]));
 					}
+				}
+				if (opcode != Opcode.Comment)
+				{
+					token.Modifier = (int)((instructionToken >> 16) & 0xff);
+					token.Predicated = (instructionToken & 0x10000000) != 0;
+					token.CoIssue = (instructionToken & 0x40000000) != 0;
+					Debug.Assert((instructionToken & 0xA0000000) == 0, $"Instruction has unexpected bits set {instructionToken & 0xE0000000}");
 				}
 			}
 			return token;

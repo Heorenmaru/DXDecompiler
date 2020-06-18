@@ -85,7 +85,7 @@ namespace SlimShader.DX9Shader
 					} else
 					{
 						inst.Operands.Add(new SourceOperand(token.Data[i]));
-					}					
+					}
 				}
 			}
 
